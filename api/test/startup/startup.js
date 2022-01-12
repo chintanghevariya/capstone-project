@@ -1,6 +1,7 @@
 // Import dependencies
 const chai = require('chai');
 const chaiHttp = require('chai-http');
+const mongoose = require('mongoose');
 
 // Add http dependency in chai
 chai.use(chaiHttp);
@@ -20,6 +21,10 @@ describe("Startup Tests", function() {
                 res.status.should.equal(200);
                 done();
             })
+    })
+
+    it ("Should connect to the mongodb database", function () {
+        mongoose.connection.readyState.should.equal(1);
     })
     
 })
