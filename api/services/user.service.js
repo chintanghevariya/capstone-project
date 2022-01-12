@@ -1,3 +1,4 @@
+const { generateToken } = require("../helpers/token");
 const User = require("../models/user");
 
 class UserService {
@@ -21,7 +22,8 @@ class UserService {
         }
         const user = new User(userDetails);
         await user.save();
-        return user;
+        const token = generateToken({ ...user });
+        return { token };
     }
     
 }
