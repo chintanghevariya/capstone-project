@@ -1,11 +1,18 @@
 // Import dependencies
 const express = require('express');
+const httpResponse = require('../helpers/httpResponse');
+const userService = require('../services/user.service');
 
 // Initialize router
 const userRouter = express.Router();
 
-userRouter.post('/', function (req, res, next) {
-    res.sendStatus(200);
+userRouter.post('/', async function (req, res, next) {
+    try {
+        const result = await userService.createUser(req.body);
+        httpResponse.sendSuccess(res, "User created successfully", result);
+    } catch (e) {
+        httpResponse.sendFailure(res, e.message);
+    }
 });
 
 module.exports = userRouter;
