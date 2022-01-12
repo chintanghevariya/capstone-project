@@ -37,5 +37,9 @@ app.get('/', function (req, res) {
     res.status(200).send("Server started");
 })
 
+// Import routers and use in server
+const userRouter = require('./routes/user.routes');
+app.use('/users', userRouter);
+
 // Export app for testing
 module.exports = app
