@@ -199,6 +199,24 @@ describe("User tests", function () {
                     done();
                 })
         });
+
+        it ("Should throw error if email is in use", function (done) {
+            const user = {
+                email: "aarytrivedi@gmail.com",
+                firstName: "Aary",
+                lastName: "Trivedi",
+                password: "123456"
+            }
+            createUser(user)
+                .end(function (err, res) {
+                    res.status.should.equal(400);
+                    res.body.should.haveOwnProperty("status");
+                    res.body.should.haveOwnProperty("error");
+                    res.body.status.should.equal("Failure");
+                    res.body.error.should.equal("Email is already in use");
+                    done();
+                })
+        })
     })
 
 })

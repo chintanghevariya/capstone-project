@@ -11,6 +11,9 @@ const app = require('../../app');
 
 chai.should();
 
+// Set env to test for further tests
+process.env.NODE_ENV = "test"
+
 describe("Startup Tests", function() {
 
     it ("Should start the server", function (done) {
