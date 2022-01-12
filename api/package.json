@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "npx nodemon app",
-    "test": "mocha"
+    "test": "mocha test/**/*.js --timeout 10000  --exit"
   },
   "keywords": [],
   "author": "",
