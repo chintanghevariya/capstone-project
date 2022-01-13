@@ -15,4 +15,13 @@ userRouter.post('/', async function (req, res, next) {
     }
 });
 
+userRouter.post('/login', async function (req, res, next) {
+    try {
+        const result = await userService.loginUser(req.body);
+        httpResponse.sendSuccess(res, "Authenticated successfully", result);
+    } catch (e) {
+        httpResponse.sendFailure(res, e.message);
+    }
+})
+
 module.exports = userRouter;

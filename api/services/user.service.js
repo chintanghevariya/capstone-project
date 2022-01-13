@@ -29,6 +29,25 @@ class UserService {
         const token = generateToken({ ...user });
         return { token };
     }
+
+    async loginUser(userDetails) {
+        const { email, password } = userDetails;
+        if (email === undefined || email === null) {
+            throw new Error("Email is required");
+        }
+        if (password === undefined || password === null) {
+            throw new Error("Password is required");
+        }
+        const user = await User.findOne({ email });
+        if (user === null) {
+            throw new Error("Email is incorrect");
+        }
+        if (user.password !== password) {
+            throw new Error("Password is incorrect");
+        }
+        const token = generateToken({ ...user })
+        return { token }
+    }
     
 }
 
