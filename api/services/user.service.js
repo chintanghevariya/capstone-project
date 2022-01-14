@@ -1,4 +1,5 @@
 const { generateToken } = require("../helpers/token");
+const validEmail = require("../helpers/validEmail");
 const User = require("../models/user");
 
 class UserService {
@@ -7,6 +8,9 @@ class UserService {
         const { email, firstName, lastName, password } = userDetails;
         if (email === undefined || email === null || email.trim().length === 0) {
             throw new Error("Email cannot be empty");
+        }
+        if (!validEmail(email)) {
+            throw new Error("Email is not in proper format");
         }
         if (firstName === undefined || firstName === null || firstName.trim().length === 0) {
             throw new Error("First name cannot be empty");
@@ -24,10 +28,14 @@ class UserService {
         if (userWithEmail !== null) {
             throw new Error("Email is already in use")
         }
-        const user = new User(userDetails);
-        await user.save();
-        const token = generateToken({ ...user });
-        return { token };
+        try {
+            const user = new User(userDetails);
+            await user.save();
+            const token = generateToken({ ...user });
+            return { token };
+        } catch (e) {
+            console.log("Something went wrong");
+        }
     }
 
     async loginUser(userDetails) {

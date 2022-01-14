@@ -58,6 +58,21 @@ describe("User tests", function () {
                 })
         })
 
+        it ("Should throw error if email is not in proper format", function (done) {
+            const user = {
+                email: "test"
+            };
+            createUser(user)
+                .end(function (err, res) {
+                    res.status.should.be.equal(400);
+                    res.body.should.haveOwnProperty("status");
+                    res.body.should.haveOwnProperty("error");
+                    res.body.status.should.equal("Failure");
+                    res.body.error.should.equal("Email is not in proper format");
+                    done();
+                })
+        })
+
         it ("Should throw error if firstName is not present", function (done) {
             const user = {
                 email: "aarytrivedi@gmail.com",
