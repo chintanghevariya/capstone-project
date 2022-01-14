@@ -16,6 +16,14 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
+    },
+    role: {
+        type: String,
+        default: "passenger"
+    },
+    driverDetailsValid: {
+        type: Boolean,
+        default: false
     }
 });
 
