@@ -24,7 +24,7 @@ class UserService {
         if (password.trim().length < 6) {
             throw new Error("Password must be of 6 characters");
         }
-        const userWithEmail = await User.findOne({ email: userDetails.email });
+        const userWithEmail = await User.findOne({ email });
         if (userWithEmail !== null) {
             throw new Error("Email is already in use")
         }
