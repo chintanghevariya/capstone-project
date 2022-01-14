@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-import Signup from "./Signup";
+import Signup from "./components/Signup";
 export default class App extends React.Component{
     render(){
         return (
