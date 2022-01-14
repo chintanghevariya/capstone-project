@@ -28,14 +28,10 @@ class UserService {
         if (userWithEmail !== null) {
             throw new Error("Email is already in use")
         }
-        try {
-            const user = new User(userDetails);
-            await user.save();
-            const token = generateToken({ ...user });
-            return { token };
-        } catch (e) {
-            console.log("Something went wrong");
-        }
+        const user = new User(userDetails);
+        await user.save();
+        const token = generateToken({ ...user });
+        return { token };
     }
 
     async loginUser(userDetails) {
@@ -48,7 +44,7 @@ class UserService {
         }
         const user = await User.findOne({ email });
         if (user === null) {
-            throw new Error("Email is incorrect");
+            throw new Error("This email is not associated to any account");
         }
         if (user.password !== password) {
             throw new Error("Password is incorrect");

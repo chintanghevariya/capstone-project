@@ -283,7 +283,7 @@ describe("User tests", function () {
                     res.body.should.haveOwnProperty("status");
                     res.body.should.haveOwnProperty("error");
                     res.body.status.should.equal("Failure");
-                    res.body.error.should.equal("Email is incorrect");
+                    res.body.error.should.equal("This email is not associated to any account");
                     done();
                 })
         })
