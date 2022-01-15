@@ -41,5 +41,8 @@ app.get('/', function (req, res) {
 const userRouter = require('./routes/user.routes');
 app.use('/users', userRouter);
 
+const ridesRouter = require('./routes/rides.routes');
+app.use('/rides', ridesRouter)
+
 // Export app for testing
 module.exports = app
