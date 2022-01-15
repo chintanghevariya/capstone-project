@@ -24,7 +24,7 @@ const rideSchema = new mongoose.Schema({
         type: locationSchema,
         required: true
     },
-    startDate: Date,
+    startDateAndTime: Date,
     numberOfSeats: {
         type: Number,
         required: true
