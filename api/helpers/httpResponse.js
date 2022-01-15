@@ -8,6 +8,13 @@ class HttpResponse {
         })
     }
 
+    sendUnauthorized(response) {
+        response.status(401).send({
+            status: "Failure",
+            message: "Unauthorized Access"
+        })
+    }
+
     sendFailure(response, error) {
         response.status(400).send({
             status: "Failure",
