@@ -72,11 +72,3 @@ describe("Stripe and payment tests", function () {
     })
 
 })
-
-function createRide(ride) {
-    return chai.request(app)
-        .post('/rides')
-        .set("Content-Type", "application/json")
-        .set("Authorization", "Bearer " + token)
-        .send(ride)
-}
