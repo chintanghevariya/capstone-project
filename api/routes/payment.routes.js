@@ -1,0 +1,19 @@
+// Import dependencies
+const express = require('express');
+const httpResponse = require('../helpers/httpResponse');
+const { verifyToken } = require('../helpers/token');
+const paymentService = require('../services/payment.service');
+
+const paymentRouter = express.Router();
+
+// Create stripe customer route
+paymentRouter.post('/customer', verifyToken, async function (req, res, next) {
+    try {
+        await paymentService.createCustomer(req.user);
+        httpResponse.sendSuccess(res, "Customer account created", {});
+    } catch (e) {
+        httpResponse.sendFailure(res, e.message);
+    }
+});
+
+module.exports = paymentRouter;
