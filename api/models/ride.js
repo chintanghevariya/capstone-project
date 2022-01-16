@@ -15,6 +15,32 @@ const locationSchema = new mongoose.Schema({
     }
 })
 
+const rideException = new mongoose.Schema({
+    isCancelled: {
+        type: Boolean,
+        default: false
+    },
+    isRescheduled: {
+        type: Boolean,
+        default: false
+    },
+    rideDate: {
+        type: Date,
+        default: Date.now
+    }
+})
+
+const riderExcetion = new mongoose.Schema({
+    isCancelled: {
+        type: Boolean,
+        default: true
+    },
+    rideDate: {
+        type: Date,
+        default: Date.now
+    }
+})
+
 const rideSchema = new mongoose.Schema({
     from: {
         type: locationSchema,
@@ -46,6 +72,18 @@ const rideSchema = new mongoose.Schema({
     isRecurring: {
         type: Boolean,
         default: false
+    },
+    occursEvery: {
+        type: [String],
+        default: []
+    },
+    riderExceptions: {
+        type: [riderExcetion],
+        default: []
+    },
+    rideExceptions: {
+        type: [rideException],
+        default: []
     }
 })
 
