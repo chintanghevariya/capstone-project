@@ -17,4 +17,14 @@ ridesRouter.get("/", verifyToken, async function (req, res, next) {
     }
 })
 
+// Create rides route
+ridesRouter.post("/", verifyToken, async function (req, res, next) {
+    try {
+        const ride = await ridesService.createRide(req.body);
+        httpResponse.sendSuccess(res, "Ride created successfully", ride);
+    } catch (e) {
+        httpResponse.sendFailure(res, e.message);
+    }
+})
+
 module.exports = ridesRouter;
