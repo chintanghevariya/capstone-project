@@ -16,4 +16,14 @@ paymentRouter.post('/customer', verifyToken, async function (req, res, next) {
     }
 });
 
+// Create stripe SetupIntent route
+paymentRouter.post('/setup', verifyToken, async function (req, res, next) {
+    try {
+        const secret = await paymentService.createSetupIntent(req.user);
+        httpResponse.sendSuccess(res, "Setup intent created", { secret });
+    } catch (e) {
+        httpResponse.sendFailure(res, e.message);
+    }
+})
+
 module.exports = paymentRouter;
