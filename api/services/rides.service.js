@@ -130,14 +130,10 @@ class RidesService {
             ...otherFilters
         };
         if (from) {
-            formattedFilters.from = {
-                locationName: from
-            }
+            formattedFilters["from.locationName"] = from
         }
         if (to) {
-            formattedFilters.to = {
-                locationName: to
-            }
+            formattedFilters["to.locationName"] = to
         }
         return formattedFilters;
     }

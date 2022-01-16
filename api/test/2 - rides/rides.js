@@ -868,7 +868,7 @@ describe("Rides Tests", function () {
                     res.body.should.haveOwnProperty("data")
                     res.body.status.should.equal("Success");
                     res.body.message.should.equal("Rides fetched successfully")
-                    res.body.data.length.should.be.greaterThan(-1);
+                    res.body.data.length.should.be.greaterThan(0);
                     done()
                 })
         })
