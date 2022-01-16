@@ -42,6 +42,10 @@ const rideSchema = new mongoose.Schema({
     stops: {
         type: [locationSchema],
         default: []
+    },
+    isRecurring: {
+        type: Boolean,
+        default: false
     }
 })
 
