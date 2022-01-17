@@ -86,22 +86,24 @@ export default class Login extends Component {
            <View
             style={{flex:1, backgroundColor:'#ffffff'}}
             showsHorizontalScrollIndicator={false}>
-                <StatusBar style='dark'/>
+                {/* <StatusBar style='dark'/> */}
                 <ImageBackground
                     source={require('../images/login.png')}
                     style={
-                        {height:Dimensions.get('window')}.height
+                        {height:Dimensions.get('screen')}.height
                     }
                 >
             <View style={styles.view}>
                 <Text style={styles.heading}>Login</Text>
                     <TextInput placeholder={"Enter your Email"}
+                    returnKeyType ="next"
                     autoCapitalize='none'
                     style={[styles.input,
                         !this.state.emailValidate? styles.error : styles.success]}
                     onChangeText={(text)=>this.handleEmail(text)}
                     />
                     <TextInput placeholder = {"Enter your password"}
+                    returnKeyType ="go"
                     secureTextEntry={true}
                     onChangeText={(text)=>this.handlePassword(text)}
                     style={{ height: 42 , width : "80%" , borderBottomWidth : 1, marginTop : "5%"}}
