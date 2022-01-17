@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
         width : '100%',
         alignSelf : "center",
         textAlign : "center",
-        opacity:0.2,
+        opacity:0.5,
         color:'black'
     },
 
