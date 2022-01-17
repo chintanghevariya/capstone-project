@@ -23,7 +23,8 @@ export default class Login extends Component {
             this.setState({
                 error:"Please enter valid email",
                 isError:true,
-                emailValidate:false
+                emailValidate:false,
+                submitBtn:true
             })
             return false
         }
@@ -32,6 +33,8 @@ export default class Login extends Component {
                 isError:false,
                 email:text,
                 emailValidate:true,
+                submitBtn:false,
+                error:''
             }) 
             return true
         }
@@ -41,7 +44,8 @@ export default class Login extends Component {
             this.setState({
                 error:"Password field can not be empty",
                 passValidate:false,
-                isError:true
+                isError:true,
+                submitBtn:true
             })
             return false
         }
@@ -49,7 +53,8 @@ export default class Login extends Component {
             this.setState({
                 error:"password must be 6 characters!",
                 passValidate:false,
-                isError:true
+                isError:true,
+                submitBtn:true
             })
             return false
         }
@@ -58,7 +63,8 @@ export default class Login extends Component {
                 password:text,
                 isError:false,
                 submitBtn:false,
-                passValidate:true    
+                passValidate:true,
+                error:''    
                 }) 
             return true
         }
@@ -90,6 +96,7 @@ export default class Login extends Component {
             <View style={styles.view}>
                 <Text style={styles.heading}>Login</Text>
                     <TextInput placeholder={"Enter your Email"}
+                    autoCapitalize='none'
                     style={[styles.input,
                         !this.state.emailValidate? styles.error : styles.success]}
                     onChangeText={(text)=>this.handleEmail(text)}
@@ -99,15 +106,14 @@ export default class Login extends Component {
                     onChangeText={(text)=>this.handlePassword(text)}
                     style={{ height: 42 , width : "80%" , borderBottomWidth : 1, marginTop : "5%"}}
                     />
+                    <Text></Text>
+                    <Text style={styles.errMsg}>{this.state.error}</Text>
                     <View style={{marginTop : "10%" , width : "80%"}}>
                         <Button disabled={this.state.submitBtn} // submitbtn value is true then the button will be disabled
                             style={this.state.passValidate && this.state.emailValidate? styles.enabled : styles.disabled}//passBtn and emailBtn helps the button to define the css to use if both are true then and then the css of enable will be applied
                             onPress={()=> this.handleSubmit()}
                             >Login</Button>
-                        <Text>{console.log(this.state.isError)}</Text>
-                        <Text>{console.log(this.state.passValidate)}</Text>
-                        <Text>{console.log(this.state.emailValidate)}</Text>
-                        <Text>{console.log(this.state.submitBtn)}</Text>
+                            <Text></Text>
                         <Button style={styles.btn2}>forgot password ?</Button>
                     </View>
             </View>
@@ -182,5 +188,8 @@ const styles = StyleSheet.create({
         width : "80%" , 
         borderBottomWidth : 1, 
         marginTop : "5%"
+    },
+    errMsg:{
+        color:'red'
     }
 })
