@@ -2,6 +2,121 @@ import React, { Component } from 'react'
 import { Button, StatusBar } from 'native-base'
 import {View, ScrollView, Text, ImageBackground , Dimensions, StyleSheet, TextInput } from 'react-native'
 
+export default class Login extends Component {
+
+    constructor(){
+        super();
+        this.state = {
+            email:"",
+            password:"",
+            emailValidate:false,
+            passValidate:false,
+            error:'',
+            isError:false,
+            submitBtn:true
+        }
+    }
+
+    handleEmail=(text)=>{
+        let pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+        if(!pattern.test(text)){
+            this.setState({
+                error:"Please enter valid email",
+                isError:true,
+                emailValidate:false
+            })
+            return false
+        }
+        else{
+            this.setState({
+                isError:false,
+                email:text,
+                emailValidate:true,
+            }) 
+            return true
+        }
+    }
+    handlePassword=(text)=>{
+        if(text === ""){
+            this.setState({
+                error:"Password field can not be empty",
+                passValidate:false,
+                isError:true
+            })
+            return false
+        }
+        else if(text.length <= 6){
+            this.setState({
+                error:"password must be 6 characters!",
+                passValidate:false,
+                isError:true
+            })
+            return false
+        }
+        else if(this.state.emailValidate){
+                this.setState({
+                password:text,
+                isError:false,
+                submitBtn:false,
+                passValidate:true    
+                }) 
+            return true
+        }
+    }
+
+    handleSubmit=()=>{
+        const{isError,error} = this.state
+        if(this.state.emailValidate && this.state.passValidate){
+            alert("Success")
+        }
+        else if(isError){
+            alert(`${error}`)
+        }else{
+            alert("errr")
+        }
+    }
+    render(){
+        return (
+           <View
+            style={{flex:1, backgroundColor:'#ffffff'}}
+            showsHorizontalScrollIndicator={false}>
+                <StatusBar style='dark'/>
+                <ImageBackground
+                    source={require('../images/login.png')}
+                    style={
+                        {height:Dimensions.get('window')}.height
+                    }
+                >
+            <View style={styles.view}>
+                <Text style={styles.heading}>Login</Text>
+                    <TextInput placeholder={"Enter your Email"}
+                    style={[styles.input,
+                        !this.state.emailValidate? styles.error : styles.success]}
+                    onChangeText={(text)=>this.handleEmail(text)}
+                    />
+                    <TextInput placeholder = {"Enter your password"}
+                    secureTextEntry={true}
+                    onChangeText={(text)=>this.handlePassword(text)}
+                    style={{ height: 42 , width : "80%" , borderBottomWidth : 1, marginTop : "5%"}}
+                    />
+                    <View style={{marginTop : "10%" , width : "80%"}}>
+                        <Button disabled={this.state.submitBtn} // submitbtn value is true then the button will be disabled
+                            style={this.state.passValidate && this.state.emailValidate? styles.enabled : styles.disabled}//passBtn and emailBtn helps the button to define the css to use if both are true then and then the css of enable will be applied
+                            onPress={()=> this.handleSubmit()}
+                            >Login</Button>
+                        <Text>{console.log(this.state.isError)}</Text>
+                        <Text>{console.log(this.state.passValidate)}</Text>
+                        <Text>{console.log(this.state.emailValidate)}</Text>
+                        <Text>{console.log(this.state.submitBtn)}</Text>
+                        <Button style={styles.btn2}>forgot password ?</Button>
+                    </View>
+            </View>
+        </ImageBackground>
+        </View>
+        )
+    }
+
+}
 
 const styles = StyleSheet.create({
     enabled:{
@@ -24,6 +139,7 @@ const styles = StyleSheet.create({
     },
 
     input:{
+        borderColor:'black',
         height: 42 , 
         width : "80%" , 
         borderBottomWidth : 1, 
@@ -52,104 +168,19 @@ const styles = StyleSheet.create({
         fontSize:42,
         alignSelf : "center",
         textAlign : "center"
+    },
+    error:{
+        borderColor:'red',
+        height: 42 , 
+        width : "80%" , 
+        borderBottomWidth : 1, 
+        marginTop : "5%"
+    },
+    success:{
+        borderColor:'green',
+        height: 42 , 
+        width : "80%" , 
+        borderBottomWidth : 1, 
+        marginTop : "5%"
     }
 })
-
-export default class login extends Component {
-
-    constructor(){
-        super();
-        this.state = {
-            emailBtn:false,
-            passBtn:false,
-            submitBtn:true
-        }
-    }
-
-    emailValidation(){
-        const regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-        if(!this.state.email || regex.test(this.state.email) === false){
-            this.setState({
-                error: "Email is not valid"
-                
-            });
-            alert("please enter email ID in correct format")
-            return false;
-        }
-        return true;
-    }
-
-    validate_field=()=>{
-        const {email, password} = this.state
-
-        if(email == ""){
-            alert("please fill email ID")
-            return false
-        }else{
-            if(password == ""){
-                alert("please fill password"),
-                this.setState({emailBtn:false})  //disable the login buton if there any error in validation
-                return false
-            }else{
-            if(this.emailValidation()){
-                alert("success")
-                return true
-            }
-        }
-    }
-    }
-    readEmail=(e)=>{
-        this.setState({
-            [e.target.name]:e.target.value,
-            emailBtn : true,
-            submitBtn:false
-        })
-    }
-    readPassword=(e)=>{
-        this.setState({
-            [e.target.name]:e.target.value,
-            passBtn : true,
-            submitBtn:false
-        })
-    }
-
-    render(){
-        return (
-           <ScrollView
-            style={{flex:1, backgroundColor:'#ffffff'}}
-            showsHorizontalScrollIndicator={false}>
-                <StatusBar style='dark'/>
-                <ImageBackground
-                    source={require('../images/login.png')}
-                    style={
-                        {height:Dimensions.get('window')}.height
-                    }
-                >
-            <View style={styles.view}>
-                <Text style={styles.heading}>Login</Text>
-                    <TextInput placeholder={"Enter your Email"}
-                    name = 'email'
-                    onChange={this.readEmail}
-                    style={styles.input}
-                    />
-                    <TextInput placeholder = {"Enter your password"}
-                    secureTextEntry={true}
-                    name = 'password'
-                    onChange={this.readPassword}
-                    style={{ height: 42 , width : "80%" , borderBottomWidth : 1, marginTop : "5%"}}
-                    />
-                    <View style={{marginTop : "10%" , width : "80%"}}>
-                        <Button disabled={this.state.submitBtn} // submitbtn value is true then the button will be disabled
-                            style={this.state.passBtn && this.state.emailBtn? styles.enabled : styles.disabled}//passBtn and emailBtn helps the button to define the css to use if both are true then and then the css of enable will be applied
-                            onPress={()=> this.validate_field()}>Login</Button>
-                        <Text></Text>
-
-                        <Button style={styles.btn2}>forgot password ?</Button>
-                    </View>
-            </View>
-        </ImageBackground>
-        </ScrollView>
-        )
-    }
-
-}
