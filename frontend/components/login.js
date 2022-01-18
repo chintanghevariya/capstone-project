@@ -49,15 +49,6 @@ export default class Login extends Component {
             })
             return false
         }
-        else if(text.length <= 6){
-            this.setState({
-                error:"password must be 6 characters!",
-                passValidate:false,
-                isError:true,
-                submitBtn:true
-            })
-            return false
-        }
         else if(this.state.emailValidate){
                 this.setState({
                 password:text,
@@ -185,13 +176,14 @@ const styles = StyleSheet.create({
         marginTop : "5%"
     },
     success:{
-        borderColor:'green',
+        borderColor:'#006400',
         height: 42 , 
         width : "80%" , 
         borderBottomWidth : 1, 
         marginTop : "5%"
     },
     errMsg:{
+        fontWeight:'bold',
         color:'red'
     }
 })
