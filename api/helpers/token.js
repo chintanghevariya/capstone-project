@@ -18,6 +18,7 @@ function generateToken(data) {
 function verifyToken(req, res, next) {
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1]
+    const tokenSecret = config["JWT_SECRET"];
 
     if (token == null) {
         httpResponse.sendUnauthorized(res, "Token missing");
