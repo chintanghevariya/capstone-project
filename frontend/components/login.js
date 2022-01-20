@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Button } from 'native-base'
 import axios from 'axios';
 import {Alert,View, Text, ImageBackground , Dimensions, StyleSheet, TextInput } from 'react-native'
-import {Spinner} from 'react-bootstrap'
 import Loading from './Loading';
 
 export default class Login extends Component {
@@ -15,7 +14,6 @@ export default class Login extends Component {
             emailValidate:false,
             passValidate:false,
             error:'',
-            // isError:false,
             submitBtn:true,
             isLoading:false
         }
@@ -25,7 +23,6 @@ export default class Login extends Component {
         if(!pattern.test(text)){
             this.setState({
                 error:"Please enter valid email",
-                // isError:true,
                 emailValidate:false,
                 submitBtn:true
             })
@@ -33,7 +30,6 @@ export default class Login extends Component {
         }
         else{
             this.setState({
-                // isError:false,
                 email:text,
                 emailValidate:true,
                 submitBtn:false,
@@ -47,7 +43,6 @@ export default class Login extends Component {
             this.setState({
                 error:"Password field can not be empty",
                 passValidate:false,
-                // isError:true,
                 submitBtn:true
             })
             return false
@@ -55,7 +50,6 @@ export default class Login extends Component {
         else if(this.state.emailValidate){
                 this.setState({
                 password:text,
-                // isError:false,
                 submitBtn:false,
                 passValidate:true,
                 error:''    
@@ -87,12 +81,10 @@ export default class Login extends Component {
                 this.setState({isLoading:false})
                 
             } catch (e) {
-                debugger
                 this.setState({
                     error:e.response.data.error,
-                    // isError:true
                 })
-                // alert(e.response.data.error)
+                alert(e.response.data.error)
                 this.setState({isLoading:false})
                 
             }

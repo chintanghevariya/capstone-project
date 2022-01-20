@@ -18,7 +18,6 @@
   },
   "dependencies": {
     "@react-navigation/native": "^6.0.6",
-    "react-bootstrap":"^1.3.0",
     "axios": "^0.25.0",
     "bootstrap": "^5.1.3",
     "expo": "~42.0.0",
@@ -43,6 +42,6 @@
     "url": "https://github.com/GeekyAnts/nativebase-templates/issues"
   },
   "homepage": "https://github.com/GeekyAnts/nativebase-templates#readme",
-  "author": "Aditya Jamuar",
+  "author": "Rutik Patel, Chintan Ghevaria",
   "private": true
 }
