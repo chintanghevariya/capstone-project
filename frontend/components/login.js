@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
-import { Button, StatusBar } from 'native-base'
-import {View, ScrollView, Text, ImageBackground , Dimensions, StyleSheet, TextInput } from 'react-native'
+import { Button } from 'native-base'
+import axios from 'axios';
+import {Alert,View, Text, ImageBackground , Dimensions, StyleSheet, TextInput } from 'react-native'
+import {Spinner} from 'react-bootstrap'
+import Loading from './Loading';
 
 export default class Login extends Component {
 
@@ -12,18 +15,17 @@ export default class Login extends Component {
             emailValidate:false,
             passValidate:false,
             error:'',
-            isError:false,
-            submitBtn:true
+            // isError:false,
+            submitBtn:true,
+            isLoading:false
         }
     }
-
-    
     handleEmail=(text)=>{
         let pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
         if(!pattern.test(text)){
             this.setState({
                 error:"Please enter valid email",
-                isError:true,
+                // isError:true,
                 emailValidate:false,
                 submitBtn:true
             })
@@ -31,7 +33,7 @@ export default class Login extends Component {
         }
         else{
             this.setState({
-                isError:false,
+                // isError:false,
                 email:text,
                 emailValidate:true,
                 submitBtn:false,
@@ -45,7 +47,7 @@ export default class Login extends Component {
             this.setState({
                 error:"Password field can not be empty",
                 passValidate:false,
-                isError:true,
+                // isError:true,
                 submitBtn:true
             })
             return false
@@ -53,7 +55,7 @@ export default class Login extends Component {
         else if(this.state.emailValidate){
                 this.setState({
                 password:text,
-                isError:false,
+                // isError:false,
                 submitBtn:false,
                 passValidate:true,
                 error:''    
@@ -62,25 +64,51 @@ export default class Login extends Component {
         }
     }
 
-    handleSubmit=()=>{
-        const{isError,error} = this.state
+    handleSubmit = async (e) => {
+        const{error,email,password} = this.state
         if(this.state.emailValidate && this.state.passValidate){
-            alert("Success")
+            try {
+                const config={
+                    headers:{
+                        "Content-type":"application/json"
+                    }
+                }
+                this.setState({isLoading:true})
+                debugger
+                const {data} = await axios.post(
+                    `http://localhost:4000/users/login`,
+                    {
+                        email, // R@P.com   
+                        password,// Rutik123
+                    },
+                    config
+                );  
+                Alert.alert(data.message);
+                this.setState({isLoading:false})
+                
+            } catch (e) {
+                debugger
+                this.setState({
+                    error:e.response.data.error,
+                    // isError:true
+                })
+                // alert(e.response.data.error)
+                this.setState({isLoading:false})
+                
+            }
         }
-        else if(isError){
-            alert(`${error}`)
-        }else{
-            alert("errr")
-        }
+       else{
+           Alert.alert("Something went wrong")
+       }
     }
     render(){
         return (
+        <>
            <View
             style={{flex:1, backgroundColor:'#ffffff'}}
             showsHorizontalScrollIndicator={false}>
-                {/* <StatusBar style='dark'/> */}
                 <ImageBackground
-                    source={require('../images/login.png')}
+                    source={require('../assets/login.png')}
                     style={
                         {height:Dimensions.get('screen')}.height
                     }
@@ -91,7 +119,7 @@ export default class Login extends Component {
                     returnKeyType ="next"
                     autoCapitalize='none'
                     style={[styles.input,
-                        !this.state.emailValidate? styles.error : styles.success]}
+                        !this.state.emailValidate? null : styles.success]}
                     onChangeText={(text)=>this.handleEmail(text)}
                     />
                     <TextInput placeholder = {"Enter your password"}
@@ -108,14 +136,17 @@ export default class Login extends Component {
                             onPress={()=> this.handleSubmit()}
                             >Login</Button>
                             <Text></Text>
+
                         <Button style={styles.btn2}>forgot password ?</Button>
                     </View>
             </View>
+            {this.state.isLoading?<Loading/>:null}
         </ImageBackground>
+       
         </View>
+        </>
         )
     }
-
 }
 
 const styles = StyleSheet.create({
