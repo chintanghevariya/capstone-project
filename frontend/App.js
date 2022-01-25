@@ -4,6 +4,7 @@ import {
   extendTheme,
 } from "native-base";
 import Login from "./components/login";
+import Signup from "./components/Signup";
 
 
 // Define the config
@@ -19,7 +20,7 @@ export default function App() {
   return (
     <>
     <NativeBaseProvider>
-      <Login/>
+      <Signup/>
     </NativeBaseProvider>
     </>
   );
