@@ -4,7 +4,7 @@ import {
   extendTheme,
 } from "native-base";
 import Login from "./components/login";
-import Signup from "./components/Signup";
+import StripeConsent from "./components/payment/stripe-consent";
 
 
 // Define the config
@@ -20,7 +20,7 @@ export default function App() {
   return (
     <>
     <NativeBaseProvider>
-      <Signup/>
+      <StripeConsent />
     </NativeBaseProvider>
     </>
   );
