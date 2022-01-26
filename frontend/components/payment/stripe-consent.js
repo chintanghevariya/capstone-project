@@ -6,7 +6,15 @@ import { createCustomer } from '../../api/stripe';
 export default function StripeConsent() {
 
     const onSubmit = () => {
-        createCustomer();
+        createCustomer()
+            .then(response => {
+                const [result, error] = response;
+                if (error) {
+                    alert(error);
+                    return;
+                }
+                alert(result.data.message);
+            });
     }
 
     return (
