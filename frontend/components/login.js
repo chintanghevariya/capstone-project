@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
 import { Button } from 'native-base'
 import axios from 'axios';
-import {Alert,View, Text, ImageBackground , Dimensions, StyleSheet, TextInput } from 'react-native'
+import {Alert,View, Text, ImageBackground ,TouchableOpacity, Dimensions, StyleSheet, TextInput } from 'react-native'
 import Loading from './Loading';
 
 export default class Login extends Component {
-
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.state = {
             email:"",
             password:"",
@@ -15,9 +14,13 @@ export default class Login extends Component {
             passValidate:false,
             error:'',
             submitBtn:true,
-            isLoading:false
+            isLoading:false,
         }
+        this.handleEmail = this.handleEmail.bind(this);
+        this.handlePassword = this.handlePassword.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
+
     handleEmail=(text)=>{
         let pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
         if(!pattern.test(text)){
@@ -68,7 +71,6 @@ export default class Login extends Component {
                     }
                 }
                 this.setState({isLoading:true})
-                debugger
                 const {data} = await axios.post(
                     `http://localhost:4000/users/login`,
                     {
@@ -77,35 +79,31 @@ export default class Login extends Component {
                     },
                     config
                 );  
-                Alert.alert(data.message);
                 this.setState({isLoading:false})
+                this.props.navigation.navigate('DashBoard')
                 
             } catch (e) {
                 this.setState({
                     error:e.response.data.error,
                 })
-                alert(e.response.data.error)
-                this.setState({isLoading:false})
-                
+                this.setState({isLoading:false}) 
             }
         }
        else{
            Alert.alert("Something went wrong")
+           this.setState({isLoading:false})
        }
     }
     render(){
         return (
         <>
-           <View
-            style={{flex:1, backgroundColor:'#ffffff'}}
-            showsHorizontalScrollIndicator={false}>
-                <ImageBackground
-                    source={require('../assets/login.png')}
-                    style={
-                        {height:Dimensions.get('screen')}.height
-                    }
-                >
-            <View style={styles.view}>
+        <ImageBackground
+                source={require('../assets/login.png')}
+                style={
+                    {height:Dimensions.get('screen')}.height
+                }
+            >
+            <View style={styles.container}>
                 <Text style={styles.heading}>Login</Text>
                     <TextInput placeholder={"Enter your Email"}
                     returnKeyType ="next"
@@ -115,6 +113,7 @@ export default class Login extends Component {
                     onChangeText={(text)=>this.handleEmail(text)}
                     />
                     <TextInput placeholder = {"Enter your password"}
+                
                     returnKeyType ="go"
                     secureTextEntry={true}
                     onChangeText={(text)=>this.handlePassword(text)}
@@ -122,24 +121,30 @@ export default class Login extends Component {
                     />
                     <Text></Text>
                     <Text style={styles.errMsg}>{this.state.error}</Text>
-                    <View style={{marginTop : "10%" , width : "80%"}}>
+                    <View style={{ width : "80%"}}>
                         <Button disabled={this.state.submitBtn} // submitbtn value is true then the button will be disabled
                             style={this.state.passValidate && this.state.emailValidate? styles.enabled : styles.disabled}//passBtn and emailBtn helps the button to define the css to use if both are true then and then the css of enable will be applied
                             onPress={()=> this.handleSubmit()}
                             >Login</Button>
                             <Text></Text>
 
-                        <Button style={styles.btn2}>forgot password ?</Button>
+                        <Button style={styles.btn2}>forgot password </Button>
+                    
+                        <View style={styles.signupTextCont}>
+                            <Text style={styles.signupText}>Don't have account yet?</Text>
+                            <TouchableOpacity onPress={()=>this.props.navigation.navigate('Signup')}><Text style={styles.signupButton}> Sign Up</Text></TouchableOpacity>
+                        </View> 
                     </View>
-            </View>
+                </View>
             {this.state.isLoading?<Loading/>:null}
         </ImageBackground>
-       
-        </View>
         </>
         )
     }
+
 }
+
+
 
 const styles = StyleSheet.create({
     enabled:{
@@ -160,7 +165,29 @@ const styles = StyleSheet.create({
         opacity:0.5,
         color:'black'
     },
-
+    container:{
+        flex:1,
+        justifyContent:"center",
+        alignItems:"center",
+        flexDirection:"column" 
+    },
+    signupTextCont:{
+        flexGrow:1,
+        alignItems : "center",
+        paddingVertical:20,
+        alignSelf : "center",
+        justifyContent:"flex-end",
+        flexDirection:"row"
+    },
+    signupText:{
+        fontSize:16,
+    },
+    signupButton:{
+        fontSize:20,
+        justifyContent : "center",
+        alignSelf : "center",
+        fontWeight:'500',
+    },
     input:{
         borderColor:'black',
         height: 42 , 
@@ -177,15 +204,7 @@ const styles = StyleSheet.create({
         alignSelf : "center",
         textAlign : "center"
     },
-
-    view:{
-        width : "100%", 
-        height : "100%", 
-        justifyContent:"center",
-        alignSelf:"center",
-        alignContent:"center",
-        alignItems:"center" 
-    },
+    
     heading:{
         color:'#000000',
         fontSize:42,
@@ -211,3 +230,4 @@ const styles = StyleSheet.create({
         color:'red'
     }
 })
+

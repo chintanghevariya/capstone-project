@@ -2,10 +2,12 @@ import React from "react";
 import {
   NativeBaseProvider,
   extendTheme,
-} from "native-base";
-import Login from "./components/login";
-import Signup from "./components/Signup"
 
+} from "native-base";
+import View from'react-native'
+import Login from './components/Login'
+import Routes from './components/Routes'
+import Signup from "./components/Signup";
 
 // Define the config
 const config = {
@@ -18,11 +20,9 @@ export const theme = extendTheme({ config });
 
 export default function App() {
   return (
-    <>
-    <NativeBaseProvider>
-      <Signup/>
-    </NativeBaseProvider>
-    </>
+      <NativeBaseProvider>
+        <Routes/>
+      </NativeBaseProvider>
   );
 }
 
