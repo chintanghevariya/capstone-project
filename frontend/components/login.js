@@ -60,7 +60,6 @@ export default class Login extends Component {
             return true
         }
     }
-
     handleSubmit = async (e) => {
         const{error,email,password} = this.state
         if(this.state.emailValidate && this.state.passValidate){
