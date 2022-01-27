@@ -1,20 +1,16 @@
 import React from "react";
-import { Button, Input, Row } from 'native-base'
+import { Button,Input } from 'native-base'
 import {
   StyleSheet,  
   Text,
   View,
-  Dimensions,
   ImageBackground,
-  ScrollView,
-  SafeAreaView,
-  Alert,
-  TextInput,
+  TouchableOpacity
 } from "react-native";
+import axios from 'axios';
 import  RadioForm from 'react-native-simple-radio-button';
-import { flex } from "styled-system";
 
-var radio_props = [
+const radio_props = [
   {label: 'Driver', value: 0 },
   {label: 'Passenger', value: 1 }
 ];
@@ -41,40 +37,37 @@ export default class Signup extends React.Component{
           changedPassword:"",
           role:"",
           tester:false,
-          
         }
+        this.handleFirstName=this.handleFirstName.bind(this)
+        this.handleLastName=this.handleLastName.bind(this)
+        this.handleEmail=this.handleEmail.bind(this)
+        this.handleNumber=this.handleNumber.bind(this)
+        this.handlePassword=this.handlePassword.bind(this)
+        this.handleConfirmPassword=this.handleConfirmPassword.bind(this)
+        this.handleSubmit=this.handleSubmit.bind(this)
       }
-      
+        
       handleFirstName =(text)=>{
         if(text.trim() === ""){
           this.setState({
-            error:"Please enter First Name",
+            error:"Please enter First Name .",
             isError:true,
             submitButton:false,
             fnameValidate:false
           })
           return false
         }
-        if(this.state.numValidate&&this.state.passValidate && this.state.emailValidate && this.state.fnameValidate && this.state.lnameValidate){
-          this.setState({submitButton:true})
-        }
         else{
           this.setState({
             isError:false,
-            submitButton:true,
+            // submitButton:true,
             firstname:text,
             error:"",
             fnameValidate:true
           })
-          // if (1>0){
-          //   Alert.alert(` 
-          //   -${this.state.fnameValidate}
-          //   `)
-          // }
           return true
         }
-    }
-
+      }
       handleLastName =(text)=>{
         if(text.trim() === ""){
           this.setState({
@@ -90,7 +83,7 @@ export default class Signup extends React.Component{
         }
         else{
           this.setState({
-            submitButton:true,
+            // submitButton:true,
             isError:false,
             lastname:text,
             error:"",
@@ -98,8 +91,8 @@ export default class Signup extends React.Component{
           })
           return true
         }
-    }
-    handleEmail =(text)=>{
+      }
+      handleEmail =(text)=>{
         let pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
         if(!pattern.test(text)){
           this.setState({
@@ -124,7 +117,6 @@ export default class Signup extends React.Component{
         return true
         }
       }
-
       handleNumber =(text)=>{
         let pattern = new RegExp(/^[0-9\b]+$/);
         if(text === "")
@@ -132,7 +124,7 @@ export default class Signup extends React.Component{
           this.setState({
             error:"Phone Number is not valid",
             isError:true,
-            submitButton:true,
+            submitButton:false,
             numValidate:true
         })
         return false
@@ -160,7 +152,7 @@ export default class Signup extends React.Component{
         }
         else{
           this.setState({
-            submitButton:true,
+            // submitButton:true,
             isError:false,
             phonenumber: text,
             numValidate:true,
@@ -169,7 +161,6 @@ export default class Signup extends React.Component{
         return true
         }
       }
-
       handlePassword =(text)=>{
         const{password} = this.state
         
@@ -216,17 +207,15 @@ export default class Signup extends React.Component{
         else
         {
           this.setState({
-            submitButton:true,
+            // submitButton:true,
             tempPassword:text.trim(),
             isError:false,
             error:""  
           }) 
           return true
         }
-       }
-       
+       } 
       }
-
       handleConfirmPassword=(text)=>{
         if(text.trim() === ""){
             this.setState({
@@ -259,35 +248,72 @@ export default class Signup extends React.Component{
           return true
         }
       }
-
-      handleSubmit=()=>{
-        const{isError,error} = this.state
-        if(this.state.numValidate && this.state.passValidate && this.state.emailValidate && this.state.fnameValidate && this.state.lnameValidate)
-        {
-          alert(` 
-            ${this.state.firstname}
-            ${this.state.lastname}
-            ${this.state.email}
-            ${this.state.phonenumber}
-            ${this.state.tempPassword}
-            ${this.state.password}
-            ${this.state.role}`)
-         }
-       else if(isError){
-            alert(`${error}`)
-         }
-        else{
-            alert("Please fill the information")
-         }
+      handleRole=(text)=>
+      {
+        if(!text){
+          this.setState({
+            role:radio_props[1].label
+          })
+        }
+        this.setState({
+        role : radio_props[text].label
+        }) 
+        return true   
       }
+      handleSubmit= async (e) => {
+        const{isError,error} = this.state
+        if(this.state.fnameValidate && this.state.lnameValidate && this.state.emailValidate && this.state.numValidate && this.state.passValidate)
+        {
+          try{
+            const config={
+              headers: {
+                "Content-type" : "application/json"
+              }
+            }
+            const {data} = await axios.post(`http://localhost:4000/users/`,
+              {
+                email: this.state.email,
+                firstName: this.state.firstname,
+                lastName: this.state.lastname,
+                password:this.state.password,
+                role:this.state.role,
+              },
+              config
+                );  
+                alert(data.message)  
 
-    handleRole=(text)=>
-    {
-      this.setState({
-      role : text
-      }) 
-      return true   
+                // this.setState({ error: JSON.stringify(data) })
+
+            } catch (e) {
+              alert(e.response.data.error)  
+
+                  // this.setState({
+                  //     error:JSON.stringify(e.response.data)
+                  // })
+            }
+        }
+       else{
+           Alert.alert("Something went wrong")
+       }
     }
+          // alert(` 
+          //   ${this.state.firstname}
+          //   ${this.state.lastname}
+          //   ${this.state.email}
+          //   ${this.state.phonenumber}
+          //   ${this.state.tempPassword}
+          //   ${this.state.password}
+          //   ${this.state.role}`)
+      //    }
+        
+      //   else if(isError){
+      //       alert(`${error}`)
+      //   }
+      //   else{
+      //       alert("Please fill the information")
+      //   }
+      // }
+     
       
     render(){   
     return (
@@ -296,28 +322,28 @@ export default class Signup extends React.Component{
       showsVerticalScrollIndicator={false}>
         <ImageBackground
            source={require('../assets/login.png')}
-           style={
-               {height:Dimensions.get('window')}.height
-                }
+           style={styles.imgBackground}
            > 
         <View style={styles.container}>
         <Text style={styles.title}>Create an</Text><Text style={styles.title}>Account</Text>
             <Text>First Name</Text>
-            <TextInput
+            <Input
                 style={[styles.input]}
                 placeholder="John"
                 keyboardType="ascii-capable"
                 onChangeText = {(value)=>this.handleFirstName(value)}
             />
+            <Text></Text>
             <Text>Last Name</Text>
-            <TextInput
+            <Input
                 style={[styles.input]}
                 placeholder="Doe"
                 keyboardType="ascii-capable"
                 onChangeText = {(value)=>this.handleLastName(value)} 
             />
+            <Text></Text>
             <Text>Email</Text>
-            <TextInput
+            <Input
                 placeholder="johndoe@domain.com"
                 keyboardType='email-address'
                 autoCapitalize="none"
@@ -325,8 +351,9 @@ export default class Signup extends React.Component{
                 this.state.emailValidate? styles.success : null]}
                 onChangeText = {(value)=>this.handleEmail(value)} 
             />
+            <Text></Text>
             <Text>Phone Number</Text>
-            <TextInput
+            <Input
                 style={[styles.input]}
                 type="number"
                 placeholder="412-123-4567"
@@ -334,93 +361,115 @@ export default class Signup extends React.Component{
                 onChangeText = {(value)=>this.handleNumber(value)}
                 maxLength={10} 
             />
+            <Text></Text>
             <Text>Password</Text>
-            <TextInput
+            <Input
                 style={[styles.input]}
                 placeholder="********"
                 secureTextEntry={true}
                 onChangeText = {(value)=>this.handlePassword(value)} 
                 />
+            <Text></Text>
             <Text>Confirm Password</Text>
-            <TextInput
+            <Input
                 style={[styles.input]}
                 placeholder="********"
                 secureTextEntry={true}
                 onChangeText = {(value)=>this.handleConfirmPassword(value)} 
                     />
+            <Text></Text>
             <Text>Role</Text>
-                  <RadioForm
-                      radio_props={radio_props}
-                      initial={this.state.role}
-                      formHorizontal={true}
-                      onPress={(value) =>this.handleRole(radio_props[value].label)}
-
-
-                  />
+                <RadioForm
+                    radio_props={radio_props}
+                    itemShowKey="label"
+                    itemRealKey="value"
+                    formHorizontal={true}
+                    initial={1}
+                    value={1}
+                    onPress={(value) =>this.handleRole(value)}
+                />
             <Text style={styles.errMsg}>{this.state.error}</Text>
-             <Button enabled={this.state.submitButton} // submitbtn value is true then the button will be disabled
+
+             <Button disabled={!this.state.submitButton} // submitbtn value is true then the button will be disabled
               style={this.state.passValidate && this.state.emailValidate && this.state.numValidate
                 && this.state.fnameValidate && this.state.lnameValidate? styles.enabled : styles.disabled}//passBtn and emailBtn helps the button to define the css to use if both are true then and then the css of enable will be applied
               onPress={()=> this.handleSubmit()}
-              ><Text>Sign Up</Text></Button> 
+              >Sign Up</Button> 
               
+              <View style={styles.signupTextCont}>
+                  <Text style={styles.signupText}>Already have account?</Text>
+                  <TouchableOpacity onPress={()=>this.props.navigation.navigate('login')}><Text style={styles.signupButton}> Login</Text></TouchableOpacity>
+              </View>
         </View>
         </ImageBackground>
-        </View>
-        
-
-
+      </View>
         );
     }
 } 
 const styles = StyleSheet.create({
-  errMsg:{
+  imgBackground:{
+    height:'100%'
+  },
+signupTextCont:{
+  padding:20,
+  alignItems : "center",
+  alignSelf : "center",
+  justifyContent:"flex-end",
+  flexDirection:"row"
+},
+signupText:{
+    fontSize:16,
+},
+signupButton:{
+    fontSize:20,
+    justifyContent : "center",
+    alignSelf : "center",
+    fontWeight:'500',
+},
+input:{
+  height:'4%'
+},
+errMsg:{
+  fontWeight:'bold',
+  color:'red'
+},
+success:{
+    borderColor:'#006400',
+},
+title:{
+    justifyContent:'center',
+    alignContent:'center',
+    fontSize:25,
     fontWeight:'bold',
-    color:'red'
-  },
-  input: {
-    height: 40,
-    marginBottom:10,
-    borderWidth: 1,
-    padding: 10,
-  },
-  success:{
-      borderColor:'#006400',
-  },
-    title:{
-      fontSize:40,
-      fontWeight:'bold',
-      paddingBottom:5,
-      marginBottom:10,
-    },
-    container:{
-        flex:1,
-        justifyContent:'center',
-        alignContent:'center',
-        paddingLeft:30,
-        paddingRight:30
-    },
-  enabled:{
-      backgroundColor:'#21A656',
-      justifyContent : "center",
-      alignItems : "center",
-      width : '100%',
-      alignSelf : "center",
-      textAlign : "center",
-  },
-  disabled:{
-      backgroundColor:'#21A656',
-      justifyContent : "center",
-      alignItems : "center",
-      width : '100%',
-      alignSelf : "center",
-      textAlign : "center",
-      // opacity:0.5,
-      color:'black'
-  },
-    role:{
-        flexDirection: 'row',
-        borderColor:'black',
-        borderRadius:3,
-    }
+},
+container:{
+    flex:1,
+    justifyContent:'center',
+    alignContent:'center',
+    paddingLeft:50,
+    paddingRight:50
+},
+enabled:{
+  backgroundColor:'#21A656',
+  justifyContent : "center",
+  alignItems : "center",
+  width : '100%',
+  alignSelf : "center",
+  textAlign : "center",
+},
+disabled:{
+  backgroundColor:'#90d3ab',
+  justifyContent : "center",
+  alignItems : "center",
+  width : '100%',
+  alignSelf : "center",
+  textAlign : "center",
+  opacity:0.5,
+  color:'black'
+},
+  role:{
+    flexDirection: 'row',
+    borderColor:'black',
+    borderRadius:3,
+  }
   })
