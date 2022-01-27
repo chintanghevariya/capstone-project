@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@react-navigation/native": "^6.0.6",
+    "@react-navigation/native-stack": "^6.2.5",
+    "react-native-router-flux": "^4.3.1"
+  }
+}

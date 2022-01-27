@@ -10,7 +10,7 @@ userRouter.post('/', async function (req, res, next) {
     try {
         const result = await userService.createUser(req.body);
         httpResponse.sendSuccess(res, "User created successfully", result);
-    } catch (e) {
+    }catch (e) {
         httpResponse.sendFailure(res, e.message);
     }
 });
