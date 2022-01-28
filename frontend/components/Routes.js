@@ -19,7 +19,6 @@ export default class Routes extends Component{
                >
                <Stack.Screen name="SplashScreen" component={SplashScreen} options={{gestureEnabled: false }} /> 
                <Stack.Screen name="Login" component={Login} options={{gestureEnabled: false }}/>  
-
                <Stack.Screen name="Signup" component={Signup} options={{gestureEnabled: false }}/>
                <Stack.Screen name="DashBoard" component={DashBoard} options={{gestureEnabled: false }}/>
             </Stack.Navigator>

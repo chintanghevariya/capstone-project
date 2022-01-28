@@ -4,7 +4,7 @@ import {
   extendTheme,
 
 } from "native-base";
-import Login from "./components/login";
+import Login from "./components/Login";
 import StripeConsent from "./components/payment/stripe-consent";
 import Signup from "./components/Signup";
 
