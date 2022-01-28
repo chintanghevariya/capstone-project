@@ -277,7 +277,6 @@ export default class Signup extends React.Component{
             const {data} = await axios.post(`http://localhost:4000/users/`,
               {
 
-                
                 email: this.state.email,
                 firstName: this.state.firstname,
                 lastName: this.state.lastname,

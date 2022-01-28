@@ -1,74 +1,61 @@
-import React, { Component } from 'react'
+import React, { Component, useState } from 'react'
 import { Button } from 'native-base'
 import axios from 'axios';
-import {Alert,View, Text, ImageBackground , Dimensions, StyleSheet, TextInput } from 'react-native'
+import {Alert,View, Text, ImageBackground ,TouchableOpacity, Dimensions, StyleSheet, TextInput } from 'react-native'
 import Loading from './Loading';
 
-export default class Login extends Component {
+export const LoginContext = React.createContext()
+//redux  useContex
+export default function Login({navigation})  {
+    const [email,setEmail] = useState("");
+    const [password,setPassword] = useState("");
+    const [emailValidate,setEmailValidate] = useState(false);
+    const [passValidate,setPassValidate] = useState(false);
+    const [error,setError] = useState("");
+    const [submitBtn,setSubmitBtn] = useState(true);
+    const [isLoading,setIsLoading] = useState(false);
+    const [token,setToken] = useState('')
 
-    constructor(){
-        super();
-        this.state = {
-            email:"",
-            password:"",
-            emailValidate:false,
-            passValidate:false,
-            error:'',
-            submitBtn:true,
-            isLoading:false
-        }
-    }
-    handleEmail=(text)=>{
+    const handleEmail=(text)=>{
         let pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
         if(!pattern.test(text)){
-            this.setState({
-                error:"Please enter valid email",
-                emailValidate:false,
-                submitBtn:true
-            })
+            setError("Please enter valid email"),
+            setEmailValidate(false),
+            setSubmitBtn(true)
             return false
         }
         else{
-            this.setState({
-                email:text,
-                emailValidate:true,
-                submitBtn:false,
-                error:''
-            }) 
+            setEmail(text)
+            setEmailValidate(true)
+            setSubmitBtn(false)
+            setError('')
             return true
         }
     }
-    handlePassword=(text)=>{
-        if(text === ""){
-            this.setState({
-                error:"Password field can not be empty",
-                passValidate:false,
-                submitBtn:true
-            })
+    const handlePassword=(text)=>{
+        if(text.trim() === ""){
+                setError("Password field can not be empty"),
+                setPassValidate(false)
+                setSubmitBtn(true)
             return false
         }
-        else if(this.state.emailValidate){
-                this.setState({
-                password:text,
-                submitBtn:false,
-                passValidate:true,
-                error:''    
-                }) 
+        else if(emailValidate){
+                setPassword(text)
+                setSubmitBtn(false)
+                setPassValidate(true)
+                setError('')
             return true
         }
     }
-
-    handleSubmit = async (e) => {
-        const{error,email,password} = this.state
-        if(this.state.emailValidate && this.state.passValidate){
+    const handleSubmit = async (e) => {
+        if(emailValidate && passValidate){
             try {
                 const config={
                     headers:{
                         "Content-type":"application/json"
                     }
                 }
-                this.setState({isLoading:true})
-                debugger
+                setIsLoading(true)
                 const {data} = await axios.post(
                     `http://localhost:4000/users/login`,
                     {
@@ -77,70 +64,71 @@ export default class Login extends Component {
                     },
                     config
                 );  
-                Alert.alert(data.message);
-                this.setState({isLoading:false})
+                setToken(`${data.data.token}`)
+                // console.warn(`${data.data.token}`)
+                navigation.navigate('DashBoard')
+                setIsLoading(false)
                 
             } catch (e) {
-                this.setState({
-                    error:e.response.data.error,
-                })
-                alert(e.response.data.error)
-                this.setState({isLoading:false})
-                
-            }
+                    setError(e.response.data.error),
+                    setIsLoading(false)
+                    Alert.alert(error)
+                }
         }
        else{
+           setIsLoading(false)
            Alert.alert("Something went wrong")
        }
     }
-    render(){
         return (
         <>
-           <View
-            style={{flex:1, backgroundColor:'#ffffff'}}
-            showsHorizontalScrollIndicator={false}>
-                <ImageBackground
-                    source={require('../assets/login.png')}
-                    style={
-                        {height:Dimensions.get('screen')}.height
-                    }
-                >
-            <View style={styles.view}>
+        <LoginContext.Provider value={token}>
+
+        <ImageBackground
+                source={require('../assets/login.png')}
+                style={
+                    {height:Dimensions.get('screen')}.height
+                }
+            >
+            <View style={styles.container}>
                 <Text style={styles.heading}>Login</Text>
                     <TextInput placeholder={"Enter your Email"}
                     returnKeyType ="next"
                     autoCapitalize='none'
                     style={[styles.input,
-                        !this.state.emailValidate? null : styles.success]}
-                    onChangeText={(text)=>this.handleEmail(text)}
+                        !emailValidate? null : styles.success]}
+                    onChangeText={(text)=>handleEmail(text)}
                     />
                     <TextInput placeholder = {"Enter your password"}
+                
                     returnKeyType ="go"
                     secureTextEntry={true}
-                    onChangeText={(text)=>this.handlePassword(text)}
+                    onChangeText={(text)=>handlePassword(text)}
                     style={{ height: 42 , width : "80%" , borderBottomWidth : 1, marginTop : "5%"}}
                     />
                     <Text></Text>
-                    <Text style={styles.errMsg}>{this.state.error}</Text>
-                    <View style={{marginTop : "10%" , width : "80%"}}>
-                        <Button disabled={this.state.submitBtn} // submitbtn value is true then the button will be disabled
-                            style={this.state.passValidate && this.state.emailValidate? styles.enabled : styles.disabled}//passBtn and emailBtn helps the button to define the css to use if both are true then and then the css of enable will be applied
-                            onPress={()=> this.handleSubmit()}
+                    <Text style={styles.errMsg}>{error}</Text>
+                    <Text></Text>
+                    <View style={{ width : "80%"}}>
+                        <Button disabled={submitBtn} // submitbtn value is true then the button will be disabled
+                            style={passValidate && emailValidate? styles.enabled : styles.disabled}//passBtn and emailBtn helps the button to define the css to use if both are true then and then the css of enable will be applied
+                            onPress={()=> handleSubmit()}
                             >Login</Button>
                             <Text></Text>
 
-                        <Button style={styles.btn2}>forgot password ?</Button>
+                        <Button style={styles.btn2}>forgot password </Button>
+                        <View style={styles.signupTextCont}>
+                            <Text style={styles.signupText}>Don't have account yet?</Text>
+                            <TouchableOpacity onPress={()=>navigation.navigate('Signup')}><Text style={styles.signupButton}> Sign Up</Text></TouchableOpacity>
+                        </View> 
                     </View>
-            </View>
-            {this.state.isLoading?<Loading/>:null}
+                </View>
+            {isLoading?<Loading/>:null}
         </ImageBackground>
-       
-        </View>
+        </LoginContext.Provider>
         </>
         )
     }
-}
-
 const styles = StyleSheet.create({
     enabled:{
         backgroundColor:'#21A656',
@@ -160,7 +148,29 @@ const styles = StyleSheet.create({
         opacity:0.5,
         color:'black'
     },
-
+    container:{
+        flex:1,
+        justifyContent:"center",
+        alignItems:"center",
+        flexDirection:"column" 
+    },
+    signupTextCont:{
+        flexGrow:1,
+        alignItems : "center",
+        paddingVertical:20,
+        alignSelf : "center",
+        justifyContent:"flex-end",
+        flexDirection:"row"
+    },
+    signupText:{
+        fontSize:16,
+    },
+    signupButton:{
+        fontSize:20,
+        justifyContent : "center",
+        alignSelf : "center",
+        fontWeight:'500',
+    },
     input:{
         borderColor:'black',
         height: 42 , 
@@ -177,15 +187,7 @@ const styles = StyleSheet.create({
         alignSelf : "center",
         textAlign : "center"
     },
-
-    view:{
-        width : "100%", 
-        height : "100%", 
-        justifyContent:"center",
-        alignSelf:"center",
-        alignContent:"center",
-        alignItems:"center" 
-    },
+    
     heading:{
         color:'#000000',
         fontSize:42,
@@ -211,3 +213,4 @@ const styles = StyleSheet.create({
         color:'red'
     }
 })
+
