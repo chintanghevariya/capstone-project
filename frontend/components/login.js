@@ -1,75 +1,61 @@
-import React, { Component } from 'react'
+import React, { Component, useState } from 'react'
 import { Button } from 'native-base'
 import axios from 'axios';
 import {Alert,View, Text, ImageBackground ,TouchableOpacity, Dimensions, StyleSheet, TextInput } from 'react-native'
 import Loading from './Loading';
 
-export default class Login extends Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            email:"",
-            password:"",
-            emailValidate:false,
-            passValidate:false,
-            error:'',
-            submitBtn:true,
-            isLoading:false,
-        }
-        this.handleEmail = this.handleEmail.bind(this);
-        this.handlePassword = this.handlePassword.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
+export const LoginContext = React.createContext()
+//redux  useContex
+export default function Login({navigation})  {
+    const [email,setEmail] = useState("");
+    const [password,setPassword] = useState("");
+    const [emailValidate,setEmailValidate] = useState(false);
+    const [passValidate,setPassValidate] = useState(false);
+    const [error,setError] = useState("");
+    const [submitBtn,setSubmitBtn] = useState(true);
+    const [isLoading,setIsLoading] = useState(false);
+    const [token,setToken] = useState('')
 
-    handleEmail=(text)=>{
+    const handleEmail=(text)=>{
         let pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
         if(!pattern.test(text)){
-            this.setState({
-                error:"Please enter valid email",
-                emailValidate:false,
-                submitBtn:true
-            })
+            setError("Please enter valid email"),
+            setEmailValidate(false),
+            setSubmitBtn(true)
             return false
         }
         else{
-            this.setState({
-                email:text,
-                emailValidate:true,
-                submitBtn:false,
-                error:''
-            }) 
+            setEmail(text)
+            setEmailValidate(true)
+            setSubmitBtn(false)
+            setError('')
             return true
         }
     }
-    handlePassword=(text)=>{
-        if(text === ""){
-            this.setState({
-                error:"Password field can not be empty",
-                passValidate:false,
-                submitBtn:true
-            })
+    const handlePassword=(text)=>{
+        if(text.trim() === ""){
+                setError("Password field can not be empty"),
+                setPassValidate(false)
+                setSubmitBtn(true)
             return false
         }
-        else if(this.state.emailValidate){
-                this.setState({
-                password:text,
-                submitBtn:false,
-                passValidate:true,
-                error:''    
-                }) 
+        else if(emailValidate){
+                setPassword(text)
+                setSubmitBtn(false)
+                setPassValidate(true)
+                setError('')
             return true
         }
     }
-    handleSubmit = async (e) => {
-        const{error,email,password} = this.state
-        if(this.state.emailValidate && this.state.passValidate){
+    const handleSubmit = async (e) => {
+        if(emailValidate && passValidate){
             try {
                 const config={
                     headers:{
                         "Content-type":"application/json"
                     }
                 }
-                this.setState({isLoading:true})
+                setIsLoading(true)
                 const {data} = await axios.post(
                     `http://localhost:4000/users/login`,
                     {
@@ -78,24 +64,26 @@ export default class Login extends Component {
                     },
                     config
                 );  
-                this.setState({isLoading:false})
-                this.props.navigation.navigate('DashBoard')
+                setToken(`${data.data.token}`)
+                // console.warn(`${data.data.token}`)
+                navigation.navigate('DashBoard')
+                setIsLoading(false)
                 
             } catch (e) {
-                this.setState({
-                    error:e.response.data.error,
-                })
-                this.setState({isLoading:false}) 
-            }
+                    setError(e.response.data.error),
+                    setIsLoading(false)
+                    Alert.alert(error)
+                }
         }
        else{
+           setIsLoading(false)
            Alert.alert("Something went wrong")
-           this.setState({isLoading:false})
        }
     }
-    render(){
         return (
         <>
+        <LoginContext.Provider value={token}>
+
         <ImageBackground
                 source={require('../assets/login.png')}
                 style={
@@ -108,43 +96,39 @@ export default class Login extends Component {
                     returnKeyType ="next"
                     autoCapitalize='none'
                     style={[styles.input,
-                        !this.state.emailValidate? null : styles.success]}
-                    onChangeText={(text)=>this.handleEmail(text)}
+                        !emailValidate? null : styles.success]}
+                    onChangeText={(text)=>handleEmail(text)}
                     />
                     <TextInput placeholder = {"Enter your password"}
                 
                     returnKeyType ="go"
                     secureTextEntry={true}
-                    onChangeText={(text)=>this.handlePassword(text)}
+                    onChangeText={(text)=>handlePassword(text)}
                     style={{ height: 42 , width : "80%" , borderBottomWidth : 1, marginTop : "5%"}}
                     />
                     <Text></Text>
-                    <Text style={styles.errMsg}>{this.state.error}</Text>
+                    <Text style={styles.errMsg}>{error}</Text>
+                    <Text></Text>
                     <View style={{ width : "80%"}}>
-                        <Button disabled={this.state.submitBtn} // submitbtn value is true then the button will be disabled
-                            style={this.state.passValidate && this.state.emailValidate? styles.enabled : styles.disabled}//passBtn and emailBtn helps the button to define the css to use if both are true then and then the css of enable will be applied
-                            onPress={()=> this.handleSubmit()}
+                        <Button disabled={submitBtn} // submitbtn value is true then the button will be disabled
+                            style={passValidate && emailValidate? styles.enabled : styles.disabled}//passBtn and emailBtn helps the button to define the css to use if both are true then and then the css of enable will be applied
+                            onPress={()=> handleSubmit()}
                             >Login</Button>
                             <Text></Text>
 
                         <Button style={styles.btn2}>forgot password </Button>
-                    
                         <View style={styles.signupTextCont}>
                             <Text style={styles.signupText}>Don't have account yet?</Text>
-                            <TouchableOpacity onPress={()=>this.props.navigation.navigate('Signup')}><Text style={styles.signupButton}> Sign Up</Text></TouchableOpacity>
+                            <TouchableOpacity onPress={()=>navigation.navigate('Signup')}><Text style={styles.signupButton}> Sign Up</Text></TouchableOpacity>
                         </View> 
                     </View>
                 </View>
-            {this.state.isLoading?<Loading/>:null}
+            {isLoading?<Loading/>:null}
         </ImageBackground>
+        </LoginContext.Provider>
         </>
         )
     }
-
-}
-
-
-
 const styles = StyleSheet.create({
     enabled:{
         backgroundColor:'#21A656',
