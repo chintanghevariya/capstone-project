@@ -5,6 +5,7 @@ import Login from './Login';
 import Signup from '../components/Signup';
 import DashBoard from '../components/DashBoard';
 import SplashScreen from './SplashScreen';
+import Profile from './HomeComponents/Profile';
 
 const Stack = createNativeStackNavigator();
 

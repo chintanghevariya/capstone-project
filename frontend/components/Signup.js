@@ -119,7 +119,7 @@ export default class Signup extends React.Component{
       }
       handleNumber =(text)=>{
         let pattern = new RegExp(/^[0-9\b]+$/);
-        if(text === "")
+        if(text.trim() === "")
         {
           this.setState({
             error:"Phone Number is not valid",
@@ -265,7 +265,6 @@ export default class Signup extends React.Component{
         }  
       }
       handleSubmit= async (e) => {
-        const{isError,error} = this.state
         if(this.state.fnameValidate && this.state.lnameValidate && this.state.emailValidate && this.state.numValidate && this.state.passValidate)
         {
           try{
@@ -276,28 +275,27 @@ export default class Signup extends React.Component{
             }
             const {data} = await axios.post(`http://localhost:4000/users/`,
               {
-
-                
                 email: this.state.email,
                 firstName: this.state.firstname,
                 lastName: this.state.lastname,
                 password:this.state.password,
                 phonenumber : this.state.phonenumber.toString(),
                 role:this.state.role,
-
               },
               config
-                );  
-                alert(data.message)  
+              );  
+              alert(data.message)
+              this.props.navigation.navigate('DashBoard') 
+              // user should redirect to the screen called profile byt right now I(rutik) can't figure out how to go will do it later
             } catch (e) {
                 alert(e.response.data.error)  
+                this.setState({error:e.response.data.error})
             }
         }
        else{
-                Alert.alert("Something went wrong")
+            Alert.alert("Something went wrong")
        }
     }
-     
       
     render(){   
     return (
@@ -368,8 +366,8 @@ export default class Signup extends React.Component{
                     itemShowKey="label"
                     itemRealKey="value"
                     formHorizontal={true}
-                    initial={0}
-                    value={0}
+                    initial={1}
+                    value={1}
                     onPress={(value) =>this.handleRole(value)}
                 />
             <Text style={styles.errMsg}>{this.state.error}</Text>
@@ -382,7 +380,7 @@ export default class Signup extends React.Component{
               
               <View style={styles.signupTextCont}>
                   <Text style={styles.signupText}>Already have account?</Text>
-                  <TouchableOpacity onPress={()=>this.props.navigation.navigate('login')}><Text style={styles.signupButton}> Login</Text></TouchableOpacity>
+                  <TouchableOpacity onPress={()=>this.props.navigation.navigate('Login')}><Text style={styles.signupButton}> Login</Text></TouchableOpacity>
               </View>
         </View>
         </ImageBackground>
