@@ -250,15 +250,19 @@ export default class Signup extends React.Component{
       }
       handleRole=(text)=>
       {
-        if(!text){
+        if(!text)
+        {
           this.setState({
             role:radio_props[1].label
           })
         }
-        this.setState({
-        role : radio_props[text].label
-        }) 
-        return true   
+        else
+        {
+          this.setState({
+          role : radio_props[text].label
+          }) 
+        return true 
+        }  
       }
       handleSubmit= async (e) => {
         const{isError,error} = this.state
@@ -286,11 +290,11 @@ export default class Signup extends React.Component{
                 );  
                 alert(data.message)  
             } catch (e) {
-              alert(e.response.data.error)  
+                alert(e.response.data.error)  
             }
         }
        else{
-           Alert.alert("Something went wrong")
+                Alert.alert("Something went wrong")
        }
     }
      
