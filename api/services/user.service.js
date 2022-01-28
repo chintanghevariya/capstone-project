@@ -30,7 +30,7 @@ class UserService {
         }
         const user = new User(userDetails);
         await user.save();
-        const token = generateToken({ ...user });
+        const token = generateToken({ ...user._doc });
         return { token };
     }
 
@@ -49,7 +49,7 @@ class UserService {
         if (user.password !== password) {
             throw new Error("Password is incorrect");
         }
-        const token = generateToken({ ...user })
+        const token = generateToken({ ...user._doc })
         return { token }
     }
     

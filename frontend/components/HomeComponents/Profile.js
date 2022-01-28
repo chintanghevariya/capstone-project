@@ -4,14 +4,7 @@ import { NavigationContext } from '@react-navigation/native';
 
 export default class Profile extends Component {
   static contextType = NavigationContext
-
-  componentDidMount(){
-      let abc = this.context
-      debugger
-      debugger
-  }
   render() {
-    
     return (
         <View style={Styles.container}>
             <Text>Profile</Text>

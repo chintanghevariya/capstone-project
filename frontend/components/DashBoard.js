@@ -1,6 +1,5 @@
 import React,{Component} from 'react';
 import { Text, View,Image } from 'react-native';
-// import { NavigationContainer } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from './HomeComponents/Home';
@@ -9,18 +8,8 @@ import Chat from './HomeComponents/Chat';
 import Notification from './HomeComponents/Notification';
 import Profile from './HomeComponents/Profile';
 
-// const icons = {
-
-//   "Home": "ios-home"
-  
-//   1:55 PM
-//   }
-  
-//   1:55 PM
-//   icons[route.name]
-
 const Tab = createBottomTabNavigator();
-export default class Dash extends Component {
+export default class DashBoard extends Component {
   render() {
     return (
 

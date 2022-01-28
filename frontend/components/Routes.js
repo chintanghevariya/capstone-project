@@ -11,16 +11,17 @@ const Stack = createNativeStackNavigator();
 export default class Routes extends Component{
    render(){
       return(
-         <NavigationContainer>
+         <NavigationContainer navigationOptions= {{gesturesEnabled: false}}>
              <Stack.Navigator
                screenOptions={{
                   headerShown: false
                }}
                >
-               <Stack.Screen name="SplashScreen" component={SplashScreen} />
-               <Stack.Screen name="Login" component={Login} />
-               <Stack.Screen name="Signup" component={Signup} />
-               <Stack.Screen name="DashBoard" component={DashBoard} />
+               <Stack.Screen name="SplashScreen" component={SplashScreen} options={{gestureEnabled: false }} /> 
+               <Stack.Screen name="Login" component={Login} options={{gestureEnabled: false }}/>  
+
+               <Stack.Screen name="Signup" component={Signup} options={{gestureEnabled: false }}/>
+               <Stack.Screen name="DashBoard" component={DashBoard} options={{gestureEnabled: false }}/>
             </Stack.Navigator>
          </NavigationContainer>
       )
