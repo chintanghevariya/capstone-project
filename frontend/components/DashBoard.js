@@ -1,6 +1,5 @@
 import React,{Component} from 'react';
 import { Text, View,Image } from 'react-native';
-// import { NavigationContainer } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from './HomeComponents/Home';
@@ -9,18 +8,13 @@ import Chat from './HomeComponents/Chat';
 import Notification from './HomeComponents/Notification';
 import Profile from './HomeComponents/Profile';
 
-// const icons = {
-//   "Home": "ios-home" 
-//   }
-//   icons[route.name]
-
 const Tab = createBottomTabNavigator();
 export default class DashBoard extends Component {
   render() {
     return (
 
       <Tab.Navigator
-        screenOptions={({ route }) => ({
+      screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
@@ -46,10 +40,10 @@ export default class DashBoard extends Component {
         tabBarInactiveTintColor: 'gray',
       })}
     >
-          <Tab.Screen name="Home" component={Home} />
+          <Tab.Screen name="Home" component={Home}/>
           <Tab.Screen name="Search" component={Search}/>
           <Tab.Screen name="Chat" component={Chat} options={{ tabBarBadge: 1 }}/>
-          <Tab.Screen name="Notification" component={Notification} options={{ tabBarBadge: 7}}/>
+          <Tab.Screen name="Notification" component={Notification} options={{ tabBarBadge: 1 }}/>
           <Tab.Screen name="Profile" component={Profile}/>
         </Tab.Navigator>
      )
