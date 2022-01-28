@@ -1,16 +1,15 @@
-import React, { Component } from 'react';
-import { View,StyleSheet,Text } from 'react-native';
+import React, { useContext } from 'react';
+import { View,StyleSheet,Text } from 'react-native'
+import { LoginContext } from '../Login';
 
-export default class Home extends Component {
-  render() {
+export default function Home() {
+    const token = useContext(LoginContext)
     return (
         <View style={Styles.container}>
             <Text>Home Screen</Text>
-            <Text>Welcome to our app</Text>
         </View>
     );
-  }
-}
+    }
 
 const Styles = StyleSheet.create({
     container:{

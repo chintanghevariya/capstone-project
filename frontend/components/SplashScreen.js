@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { ImageBackground,View,Image, StyleSheet,TouchableOpacity,Text } from 'react-native';
 
+
+
 export default class SplashScreen extends Component {
   render() {
     return (
@@ -56,7 +58,7 @@ const Styles = StyleSheet.create({
         opacity:0.7
     },
     signupTextCont:{
-        paddingVertical:'20%',
+        paddingVertical:'15%',
         alignSelf : "center",
         flexDirection:"row"
     },
@@ -66,3 +68,4 @@ const Styles = StyleSheet.create({
     }
 
 })
+

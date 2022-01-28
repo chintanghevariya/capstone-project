@@ -1,14 +1,13 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { View,StyleSheet,Text } from 'react-native';
-export default class Chat extends Component {
-  render() {
+
+export default function Chat() {
     return (
         <View style={Styles.container}>
             <Text>Chat Screen</Text>
         </View>
     );
   }
-}
 
 const Styles = StyleSheet.create({
     container:{

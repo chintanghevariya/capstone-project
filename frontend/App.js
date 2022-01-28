@@ -4,10 +4,8 @@ import {
   extendTheme,
 
 } from "native-base";
-import View from'react-native'
-import Login from './components/Login'
+
 import Routes from './components/Routes'
-import Signup from "./components/Signup";
 
 // Define the config
 const config = {
