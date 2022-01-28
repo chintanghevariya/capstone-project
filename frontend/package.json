@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@react-aria/interactions": "^3.7.0",
-    "@react-native-community/masked-view": "0.1.10",
+    "@react-native-community/masked-view": "^0.1.10",
     "@react-navigation/bottom-tabs": "^6.0.9",
     "@react-navigation/core": "^6.1.0",
     "@react-navigation/material-bottom-tabs": "^6.0.9",
