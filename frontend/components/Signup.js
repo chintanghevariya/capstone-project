@@ -83,7 +83,7 @@ export default class Signup extends React.Component{
         }
         else{
           this.setState({
-            // submitButton:true,
+            //submitButton:true,
             isError:false,
             lastname:text,
             error:"",
@@ -198,7 +198,7 @@ export default class Signup extends React.Component{
         {
             this.setState({
               tempPassword : text.trim(),
-              error:"Password does not match.2",
+              error:"Password does not match.",
               isError:true,
               submitButton:false
           })
@@ -219,7 +219,7 @@ export default class Signup extends React.Component{
       handleConfirmPassword=(text)=>{
         if(text.trim() === ""){
             this.setState({
-              error:"Please Enter password!1",
+              error:"Please Enter password!",
               isError:true,
               submitButton:false
           })
@@ -228,7 +228,7 @@ export default class Signup extends React.Component{
         else if(this.state.tempPassword !== text.trim()) {
             this.setState({
               password:text.trim(),
-              error:"Passwords does not match.1",
+              error:"Passwords does not match.",
               isError:true,
               submitButton:false,
               passValidate:false
@@ -272,47 +272,27 @@ export default class Signup extends React.Component{
             }
             const {data} = await axios.post(`http://localhost:4000/users/`,
               {
+
+                
                 email: this.state.email,
                 firstName: this.state.firstname,
                 lastName: this.state.lastname,
                 password:this.state.password,
+                phonenumber : this.state.phonenumber.toString(),
                 role:this.state.role,
+
               },
               config
                 );  
                 alert(data.message)  
-
-                // this.setState({ error: JSON.stringify(data) })
-
             } catch (e) {
               alert(e.response.data.error)  
-
-                  // this.setState({
-                  //     error:JSON.stringify(e.response.data)
-                  // })
             }
         }
        else{
            Alert.alert("Something went wrong")
        }
     }
-          // alert(` 
-          //   ${this.state.firstname}
-          //   ${this.state.lastname}
-          //   ${this.state.email}
-          //   ${this.state.phonenumber}
-          //   ${this.state.tempPassword}
-          //   ${this.state.password}
-          //   ${this.state.role}`)
-      //    }
-        
-      //   else if(isError){
-      //       alert(`${error}`)
-      //   }
-      //   else{
-      //       alert("Please fill the information")
-      //   }
-      // }
      
       
     render(){   
@@ -384,8 +364,8 @@ export default class Signup extends React.Component{
                     itemShowKey="label"
                     itemRealKey="value"
                     formHorizontal={true}
-                    initial={1}
-                    value={1}
+                    initial={0}
+                    value={0}
                     onPress={(value) =>this.handleRole(value)}
                 />
             <Text style={styles.errMsg}>{this.state.error}</Text>
