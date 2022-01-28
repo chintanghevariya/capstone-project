@@ -7,6 +7,7 @@ import {
   ImageBackground,
   TouchableOpacity
 } from "react-native";
+import axios from 'axios';
 import  RadioForm from 'react-native-simple-radio-button';
 
 const radio_props = [
@@ -49,7 +50,7 @@ export default class Signup extends React.Component{
       handleFirstName =(text)=>{
         if(text.trim() === ""){
           this.setState({
-            error:"Please enter First Name",
+            error:"Please enter First Name .",
             isError:true,
             submitButton:false,
             fnameValidate:false
@@ -82,7 +83,7 @@ export default class Signup extends React.Component{
         }
         else{
           this.setState({
-            // submitButton:true,
+            //submitButton:true,
             isError:false,
             lastname:text,
             error:"",
@@ -197,7 +198,7 @@ export default class Signup extends React.Component{
         {
             this.setState({
               tempPassword : text.trim(),
-              error:"Password does not match.2",
+              error:"Password does not match.",
               isError:true,
               submitButton:false
           })
@@ -218,7 +219,7 @@ export default class Signup extends React.Component{
       handleConfirmPassword=(text)=>{
         if(text.trim() === ""){
             this.setState({
-              error:"Please Enter password!1",
+              error:"Please Enter password!",
               isError:true,
               submitButton:false
           })
@@ -227,7 +228,7 @@ export default class Signup extends React.Component{
         else if(this.state.tempPassword !== text.trim()) {
             this.setState({
               password:text.trim(),
-              error:"Passwords does not match.1",
+              error:"Passwords does not match.",
               isError:true,
               submitButton:false,
               passValidate:false
@@ -247,38 +248,56 @@ export default class Signup extends React.Component{
           return true
         }
       }
-      handleSubmit=()=>{
-        const{isError,error} = this.state
-        if(this.state.numValidate && this.state.passValidate && this.state.emailValidate && this.state.fnameValidate && this.state.lnameValidate)
-        {
-          alert(` 
-            ${this.state.firstname}
-            ${this.state.lastname}
-            ${this.state.email}
-            ${this.state.phonenumber}
-            ${this.state.tempPassword}
-            ${this.state.password}
-            ${this.state.role}`)
-         }
-        else if(isError){
-            alert(`${error}`)
-        }
-        else{
-            alert("Please fill the information")
-        }
-      }
       handleRole=(text)=>
       {
-        if(!text){
+        if(!text)
+        {
           this.setState({
             role:radio_props[1].label
           })
         }
-        this.setState({
-        role : radio_props[text].label
-        }) 
-        return true   
+        else
+        {
+          this.setState({
+          role : radio_props[text].label
+          }) 
+        return true 
+        }  
       }
+      handleSubmit= async (e) => {
+        const{isError,error} = this.state
+        if(this.state.fnameValidate && this.state.lnameValidate && this.state.emailValidate && this.state.numValidate && this.state.passValidate)
+        {
+          try{
+            const config={
+              headers: {
+                "Content-type" : "application/json"
+              }
+            }
+            const {data} = await axios.post(`http://localhost:4000/users/`,
+              {
+
+                
+                email: this.state.email,
+                firstName: this.state.firstname,
+                lastName: this.state.lastname,
+                password:this.state.password,
+                phonenumber : this.state.phonenumber.toString(),
+                role:this.state.role,
+
+              },
+              config
+                );  
+                alert(data.message)  
+            } catch (e) {
+                alert(e.response.data.error)  
+            }
+        }
+       else{
+                Alert.alert("Something went wrong")
+       }
+    }
+     
       
     render(){   
     return (
@@ -349,8 +368,8 @@ export default class Signup extends React.Component{
                     itemShowKey="label"
                     itemRealKey="value"
                     formHorizontal={true}
-                    initial={1}
-                    value={1}
+                    initial={0}
+                    value={0}
                     onPress={(value) =>this.handleRole(value)}
                 />
             <Text style={styles.errMsg}>{this.state.error}</Text>
@@ -363,7 +382,7 @@ export default class Signup extends React.Component{
               
               <View style={styles.signupTextCont}>
                   <Text style={styles.signupText}>Already have account?</Text>
-                  <TouchableOpacity onPress={()=>this.props.navigation.navigate('Login')}><Text style={styles.signupButton}> Login</Text></TouchableOpacity>
+                  <TouchableOpacity onPress={()=>this.props.navigation.navigate('login')}><Text style={styles.signupButton}> Login</Text></TouchableOpacity>
               </View>
         </View>
         </ImageBackground>
