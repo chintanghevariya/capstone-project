@@ -45,7 +45,7 @@ export default class DashBoard extends Component {
           <Tab.Screen name="Chat" component={Chat} options={{ tabBarBadge: 1 }}/>
           <Tab.Screen name="Notification" component={Notification} options={{ tabBarBadge: 1 }}/>
           <Tab.Screen name="Profile" component={Profile}/>
-        </Tab.Navigator>
+      </Tab.Navigator>
      )
   }
 }

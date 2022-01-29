@@ -1,12 +1,13 @@
-import React, { useContext } from 'react';
-import { View,StyleSheet,Text } from 'react-native'
-import { LoginContext } from '../Login';
+import React from 'react';
+import { View,StyleSheet } from 'react-native'
+import { Button } from 'native-base';
+import Token from '../Token'
 
 export default function Home() {
-    const token = useContext(LoginContext)
+    
     return (
         <View style={Styles.container}>
-            <Text>Home Screen</Text>
+            <Button onPress={()=>Token('token')}>click me</Button>
         </View>
     );
     }

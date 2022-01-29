@@ -1,11 +1,13 @@
-import React, { Component, useState } from 'react'
+import React, { useState } from 'react'
 import { Button } from 'native-base'
 import axios from 'axios';
 import {Alert,View, Text, ImageBackground ,TouchableOpacity, Dimensions, StyleSheet, TextInput } from 'react-native'
 import Loading from './Loading';
+import * as SecureStore from 'expo-secure-store';
 
-export const LoginContext = React.createContext()
-//redux  useContex
+async function save(key,value){
+    await SecureStore.setItemAsync(key,value);
+}
 export default function Login({navigation})  {
     const [email,setEmail] = useState("");
     const [password,setPassword] = useState("");
@@ -14,7 +16,6 @@ export default function Login({navigation})  {
     const [error,setError] = useState("");
     const [submitBtn,setSubmitBtn] = useState(true);
     const [isLoading,setIsLoading] = useState(false);
-    const [token,setToken] = useState('')
 
     const handleEmail=(text)=>{
         let pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
@@ -64,9 +65,9 @@ export default function Login({navigation})  {
                     },
                     config
                 );  
-                setToken(`${data.data.token}`)
-                // console.warn(`${data.data.token}`)
-                navigation.navigate('DashBoard')
+                SecureStore.setItemAsync('token',data.data.token).then(
+                    navigation.navigate('DashBoard')                    
+                );
                 setIsLoading(false)
                 
             } catch (e) {
@@ -82,8 +83,6 @@ export default function Login({navigation})  {
     }
         return (
         <>
-        <LoginContext.Provider value={token}>
-
         <ImageBackground
                 source={require('../assets/login.png')}
                 style={
@@ -125,7 +124,6 @@ export default function Login({navigation})  {
                 </View>
             {isLoading?<Loading/>:null}
         </ImageBackground>
-        </LoginContext.Provider>
         </>
         )
     }

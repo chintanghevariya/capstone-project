@@ -9,12 +9,12 @@ import {
 } from "react-native";
 import axios from 'axios';
 import  RadioForm from 'react-native-simple-radio-button';
+import * as SecureStore from 'expo-secure-store';
 
 const radio_props = [
   {label: 'Driver', value: 0 },
   {label: 'Passenger', value: 1 }
 ];
-
 export default class Signup extends React.Component{
     constructor(props) {
         super(props);
@@ -284,8 +284,10 @@ export default class Signup extends React.Component{
               },
               config
               );  
+              SecureStore.setItemAsync('token',data.data.token).then(
+                navigation.navigate('DashBoard')                    
+              );
               alert(data.message)
-              this.props.navigation.navigate('DashBoard') 
               // user should redirect to the screen called profile byt right now I(rutik) can't figure out how to go will do it later
             } catch (e) {
                 alert(e.response.data.error)  
@@ -366,8 +368,8 @@ export default class Signup extends React.Component{
                     itemShowKey="label"
                     itemRealKey="value"
                     formHorizontal={true}
-                    initial={1}
-                    value={1}
+                    initial={0}
+                    value={0}
                     onPress={(value) =>this.handleRole(value)}
                 />
             <Text style={styles.errMsg}>{this.state.error}</Text>

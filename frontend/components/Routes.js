@@ -1,16 +1,13 @@
-import React,{Component} from 'react'
+import React,{useState} from 'react'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from './Login';
 import Signup from '../components/Signup';
 import DashBoard from '../components/DashBoard';
 import SplashScreen from './SplashScreen';
-import Profile from './HomeComponents/Profile';
 
 const Stack = createNativeStackNavigator();
-
-export default class Routes extends Component{
-   render(){
+export default function Routes(){
       return(
          <NavigationContainer navigationOptions= {{gesturesEnabled: false}}>
              <Stack.Navigator
@@ -20,12 +17,12 @@ export default class Routes extends Component{
                >
                <Stack.Screen name="SplashScreen" component={SplashScreen} options={{gestureEnabled: false }} /> 
                <Stack.Screen name="Login" component={Login} options={{gestureEnabled: false }}/>  
-               <Stack.Screen name="Signup" component={Signup} options={{gestureEnabled: false }}/>
-               <Stack.Screen name="DashBoard" component={DashBoard} options={{gestureEnabled: false }}/>
+               <Stack.Screen name="Signup" component={Signup} options={{gestureEnabled: false }}/> 
+               <Stack.Screen name="DashBoard" component={DashBoard} options={{gestureEnabled: false }}/> 
             </Stack.Navigator>
          </NavigationContainer>
       )
    }
-}
+
 
 
