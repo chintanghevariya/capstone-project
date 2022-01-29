@@ -65,11 +65,10 @@ export default function Login({navigation})  {
                     },
                     config
                 );  
-                SecureStore.setItemAsync('token',data.data.token).then(
+                save('token',data.data.token).then(
                     navigation.navigate('DashBoard')                    
                 );
                 setIsLoading(false)
-                
             } catch (e) {
                     setError(e.response.data.error),
                     setIsLoading(false)
@@ -211,4 +210,3 @@ const styles = StyleSheet.create({
         color:'red'
     }
 })
-

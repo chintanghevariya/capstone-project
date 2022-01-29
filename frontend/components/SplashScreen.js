@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { ImageBackground,View,Image, StyleSheet,TouchableOpacity,Text } from 'react-native';
 
-
 export default class SplashScreen extends Component {
   render() {
     return (
@@ -27,7 +26,6 @@ export default class SplashScreen extends Component {
     );
   }
 }
-
 const Styles = StyleSheet.create({
     container:{
         display:'flex',

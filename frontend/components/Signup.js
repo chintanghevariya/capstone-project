@@ -15,6 +15,9 @@ const radio_props = [
   {label: 'Driver', value: 0 },
   {label: 'Passenger', value: 1 }
 ];
+async function save(key, value) {
+  await SecureStore.setItemAsync(key, value);
+}
 export default class Signup extends React.Component{
     constructor(props) {
         super(props);
@@ -284,11 +287,11 @@ export default class Signup extends React.Component{
               },
               config
               );  
-              SecureStore.setItemAsync('token',data.data.token).then(
+              save('token',data.data.token).then(
                 navigation.navigate('DashBoard')                    
               );
               alert(data.message)
-              // user should redirect to the screen called profile byt right now I(rutik) can't figure out how to go will do it later
+              // user should redirect to the screen called profile but right now I(rutik) can't figure out how to go, will do it later
             } catch (e) {
                 alert(e.response.data.error)  
                 this.setState({error:e.response.data.error})
