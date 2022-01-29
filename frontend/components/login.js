@@ -3,11 +3,8 @@ import { Button } from 'native-base'
 import axios from 'axios';
 import {Alert,View, Text, ImageBackground ,TouchableOpacity, Dimensions, StyleSheet, TextInput } from 'react-native'
 import Loading from './Loading';
-import * as SecureStore from 'expo-secure-store';
+import { setToken } from "../../frontend/helpers/Token";
 
-async function save(key,value){
-    await SecureStore.setItemAsync(key,value);
-}
 export default function Login({navigation})  {
     const [email,setEmail] = useState("");
     const [password,setPassword] = useState("");
@@ -65,7 +62,7 @@ export default function Login({navigation})  {
                     },
                     config
                 );  
-                save('token',data.data.token).then(
+                setToken('token',data.data.token).then(
                     navigation.navigate('DashBoard')                    
                 );
                 setIsLoading(false)

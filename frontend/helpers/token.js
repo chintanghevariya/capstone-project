@@ -1,11 +1,9 @@
 import * as SecureStore from 'expo-secure-store';
 
-export default async function Token(key='token') {
-    let result = await SecureStore.getItemAsync(key);
-    if(result)
-      return true
-    return false
-  }
-
-
-
+export default async function getToken() {
+  let result = await SecureStore.getItemAsync('token');
+  alert(JSON.stringify(result))
+}
+export async function setToken(token, value) {
+  await SecureStore.setItemAsync('token', value);
+}

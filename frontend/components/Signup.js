@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import axios from 'axios';
 import  RadioForm from 'react-native-simple-radio-button';
-import * as SecureStore from 'expo-secure-store';
+import { setToken } from "../../frontend/helpers/Token";
 
 const radio_props = [
   {label: 'Driver', value: 0 },
@@ -284,10 +284,9 @@ export default class Signup extends React.Component{
               },
               config
               );  
-              SecureStore.setItemAsync('token',data.data.token).then(
+              setToken('token',data.data.token).then(
                 this.props.navigation.navigate('DashBoard',{screen:'Profile'})                    
               );
-              // user should redirect to the screen called profile byt right now I(rutik) can't figure out how to go will do it later
             } catch (e) {
                 alert(e.response.data.error)  
                 this.setState({error:e.response.data.error})
