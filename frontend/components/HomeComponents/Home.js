@@ -1,12 +1,13 @@
 import React from 'react';
 import { Text,View,StyleSheet } from 'react-native'
 import { Button } from 'native-base';
-import getToken from '../../helpers/Token'
+import {getToken} from '../../helpers/Token'
 
 export default function Home() {
     return (
         <View style={Styles.container}>
-            <Button onPress={() =>getToken()}>click me</Button>
+            <Text>Home screen</Text>
+            <Button onPress={() => getToken().then((value) => alert(value))}>click me</Button>
         </View>
     );
     }
