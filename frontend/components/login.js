@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { useFocusEffect } from '@react-navigation/native';
 import { Button } from 'native-base'
 import axios from 'axios';
 import {Alert,View, Text, ImageBackground ,TouchableOpacity, Dimensions, StyleSheet, TextInput } from 'react-native'
@@ -26,7 +25,7 @@ export default function Login({navigation})  {
             setPassValidate(passValidate)
             setError(error)
             setSubmitBtn(submitBtn)
-        });
+        }); 
 
         return unsubscribe;
     }, [navigation]);
