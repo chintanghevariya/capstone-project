@@ -1,22 +1,9 @@
-import React from 'react';
-import {View,Text,StyleSheet} from 'react-native'
-import TempToken from '../components/Login'
+import * as SecureStore from 'expo-secure-store';
 
-const Token = (props) => {
-  return (
-      <View style= {Styles.container}>
-          <Text>{}</Text>
-          <TempToken/>
-      </View>
-      
-  );
-};
-const Styles = StyleSheet.create({
-    container:{
-        flex:1,
-        justifyContent:'center',
-        alignContent:'center',  
-    },
-})
-export default Token;
-
+export async function getToken() {
+  let result = await SecureStore.getItemAsync('token');
+  return result
+}
+export async function setToken(value) {
+  await SecureStore.setItemAsync('token', value);
+}

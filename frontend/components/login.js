@@ -1,11 +1,12 @@
-import React, { Component, useState } from 'react'
+import React, { useState } from 'react'
+import { useFocusEffect } from '@react-navigation/native';
 import { Button } from 'native-base'
 import axios from 'axios';
 import {Alert,View, Text, ImageBackground ,TouchableOpacity, Dimensions, StyleSheet, TextInput } from 'react-native'
 import Loading from './Loading';
+import { setToken } from "../../frontend/helpers/Token";
+import { getToken } from "../../frontend/helpers/Token";
 
-export const LoginContext = React.createContext()
-//redux  useContex
 export default function Login({navigation})  {
     const [email,setEmail] = useState("");
     const [password,setPassword] = useState("");
@@ -14,8 +15,22 @@ export default function Login({navigation})  {
     const [error,setError] = useState("");
     const [submitBtn,setSubmitBtn] = useState(true);
     const [isLoading,setIsLoading] = useState(false);
-    const [token,setToken] = useState('')
 
+    React.useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            // Screen was focused
+            // Do something
+            setEmail(email)
+            setPassword(password)
+            setEmailValidate(emailValidate)
+            setPassValidate(passValidate)
+            setError(error)
+            setSubmitBtn(submitBtn)
+        });
+
+        return unsubscribe;
+    }, [navigation]);
+    
     const handleEmail=(text)=>{
         let pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
         if(!pattern.test(text)){
@@ -64,26 +79,25 @@ export default function Login({navigation})  {
                     },
                     config
                 );  
-                setToken(`${data.data.token}`)
-                // console.warn(`${data.data.token}`)
-                navigation.navigate('DashBoard')
+                
+                setToken(data.data.token).then(
+                    navigation.navigate('DashBoard')                    
+                );
                 setIsLoading(false)
                 
             } catch (e) {
-                    setError(e.response.data.error),
-                    setIsLoading(false)
-                    Alert.alert(error)
-                }
+                setError(e.response.data.error),
+                setIsLoading(false)
+                Alert.alert(error)
+            }
         }
        else{
            setIsLoading(false)
-           Alert.alert("Something went wrong")
+        //    Alert.alert("Something went wrong")
        }
     }
         return (
         <>
-        <LoginContext.Provider value={token}>
-
         <ImageBackground
                 source={require('../assets/login.png')}
                 style={
@@ -106,7 +120,6 @@ export default function Login({navigation})  {
                     onChangeText={(text)=>handlePassword(text)}
                     style={{ height: 42 , width : "80%" , borderBottomWidth : 1, marginTop : "5%"}}
                     />
-                    <Text></Text>
                     <Text style={styles.errMsg}>{error}</Text>
                     <Text></Text>
                     <View style={{ width : "80%"}}>
@@ -125,7 +138,6 @@ export default function Login({navigation})  {
                 </View>
             {isLoading?<Loading/>:null}
         </ImageBackground>
-        </LoginContext.Provider>
         </>
         )
     }
@@ -213,4 +225,3 @@ const styles = StyleSheet.create({
         color:'red'
     }
 })
-

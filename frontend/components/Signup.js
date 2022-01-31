@@ -9,14 +9,14 @@ import {
 } from "react-native";
 import axios from 'axios';
 import  RadioForm from 'react-native-simple-radio-button';
+import { setToken } from "../../frontend/helpers/Token";
 
 const radio_props = [
   {label: 'Driver', value: 0 },
   {label: 'Passenger', value: 1 }
 ];
-
 export default class Signup extends React.Component{
-    constructor(props) {
+  constructor(props) {
         super(props);
         this.state = {
           firstname: "",
@@ -119,7 +119,7 @@ export default class Signup extends React.Component{
       }
       handleNumber =(text)=>{
         let pattern = new RegExp(/^[0-9\b]+$/);
-        if(text === "")
+        if(text.trim() === "")
         {
           this.setState({
             error:"Phone Number is not valid",
@@ -265,7 +265,6 @@ export default class Signup extends React.Component{
         }  
       }
       handleSubmit= async (e) => {
-        const{isError,error} = this.state
         if(this.state.fnameValidate && this.state.lnameValidate && this.state.emailValidate && this.state.numValidate && this.state.passValidate)
         {
           try{
@@ -276,27 +275,27 @@ export default class Signup extends React.Component{
             }
             const {data} = await axios.post(`http://localhost:4000/users/`,
               {
-
                 email: this.state.email,
                 firstName: this.state.firstname,
                 lastName: this.state.lastname,
                 password:this.state.password,
                 phonenumber : this.state.phonenumber.toString(),
                 role:this.state.role,
-
               },
               config
-                );  
-                alert(data.message)  
+              );  
+              setToken('token',data.data.token).then(
+                this.props.navigation.navigate('DashBoard',{screen:'Profile'})                    
+              );
             } catch (e) {
                 alert(e.response.data.error)  
+                this.setState({error:e.response.data.error})
             }
         }
        else{
-                Alert.alert("Something went wrong")
+            Alert.alert("Something went wrong")
        }
     }
-     
       
     render(){   
     return (
@@ -381,7 +380,7 @@ export default class Signup extends React.Component{
               
               <View style={styles.signupTextCont}>
                   <Text style={styles.signupText}>Already have account?</Text>
-                  <TouchableOpacity onPress={()=>this.props.navigation.navigate('login')}><Text style={styles.signupButton}> Login</Text></TouchableOpacity>
+                  <TouchableOpacity onPress={()=>this.props.navigation.navigate('Login')}><Text style={styles.signupButton}> Login</Text></TouchableOpacity>
               </View>
         </View>
         </ImageBackground>
