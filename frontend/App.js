@@ -2,11 +2,13 @@ import React from "react";
 import {
   NativeBaseProvider,
   extendTheme,
+
 } from "native-base";
-import Login from "./components/login";
+import Login from "./components/Login";
 import StripeConsent from "./components/payment/stripe-consent";
-import { StripeProvider } from "@stripe/stripe-react-native";
-import SetupCustomerCard from "./components/payment/setup-customer-card";
+import Signup from "./components/Signup";
+
+import Routes from './components/Routes'
 
 // Define the config
 const config = {
@@ -19,12 +21,9 @@ export const theme = extendTheme({ config });
 
 export default function App() {
   return (
-    <StripeProvider
-      publishableKey="pk_test_51JipKvJSijMdla1x0pJ2EjkQpvgsfESI7zbqPwExNQ9nHlGTy2XUXk0kZc2Tq9J6XiYmzGm5umC3U9gP2zetDD6K00TOImtlbb">
       <NativeBaseProvider>
-        <SetupCustomerCard />
+        <Routes/>
       </NativeBaseProvider>
-    </StripeProvider>
   );
 }
 
