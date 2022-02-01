@@ -5,7 +5,6 @@ import Login from './Login';
 import Signup from '../components/Signup';
 import DashBoard from '../components/DashBoard';
 import SplashScreen from './SplashScreen';
-import ErrorScreen from './ErrorScreen';
 import {getToken} from '../helpers/Token';
 
 const Stack = createNativeStackNavigator();
@@ -31,7 +30,7 @@ export default function Routes(){
                <Stack.Screen name="DashBoard" component={DashBoard}/> 
                </>
                :
-               <Stack.Screen name="ErrorScreen" component={ErrorScreen} options={{ gestureEnabled: false }} /> 
+               null
                }
             </Stack.Navigator>
          </NavigationContainer>
