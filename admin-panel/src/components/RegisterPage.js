@@ -1,11 +1,11 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import { Component } from 'react'
+import axios from 'axios'
 
+import '../App.css'
 
-import '../../App.css'
-
-export default class RegisterPage extends Component {
+class RegisterPage extends Component {
     constructor() {
         super();
         this.state = {
@@ -26,40 +26,50 @@ export default class RegisterPage extends Component {
         });
     }
          
-    handleSubmit(event) {
-        event.preventDefault();
+    handleSubmit = async (e) => {
       
-        if (this.validate()) {
-            console.log(this.state);
-      
-            let input = {};
-            input["username"] = "";
-            input["lastname"] = "";
-            
-            input["email"] = "";
-            input["password"] = "";
-            input["confirm_password"] = "";
-            this.setState({ input: input });
-      
-            alert("You are register to the admin panel");
+      if (this.validate()) {
+        console.log(this.state);
+        try {
+          const data =
+              {
+                  email: this.state.input.email,
+                  firstName: this.state.input.firstname,
+                  lastName: this.state.input.lastname,
+                  password: this.state.input.password,
+              }
+          console.log(data);
+          axios.post('http://localhost:4000/users', data)
+              .then(res => console.log(res.data));  
+          this.setState({
+              firstName: '',
+              lastName: '',
+              email: '',
+              password: '',
+              
+              })
+         } catch (e) {
+          alert(e.response.data.error)
         }
+      }
     }
+  
       
     validate(){
         let input = this.state.input;
         let errors = {};
         let isValid = true;
        
-        if (!input["username"]) {
+        if (!input["firstname"]) {
             isValid = false;
-            errors["username"] = "Please enter your username.";
+            errors["firstname"] = "Please enter your firstname.";
         }
       
-        if (typeof input["username"] !== "undefined") {
+        if (typeof input["firstname"] !== "undefined") {
             const re = /^\S*$/;
-            if (input["username"].length < 4 || !re.test(input["username"])) {
+            if (input["firstname"].length < 4 || !re.test(input["firstname"])) {
                 isValid = false;
-                errors["username"] = "Please enter valid username.";
+                errors["firstname"] = "Please enter valid firstname.";
             }
         }
         if (!input["lastname"]) {
@@ -67,7 +77,7 @@ export default class RegisterPage extends Component {
             errors["lastname"] = "Please enter your lastname.";
         }
       
-        if (typeof input["lastname"] !== "lastname") {
+        if (input["lastname"] !== "lastname") {
             const re = /^\S*$/;
             if (input["lastname"].length < 4 || !re.test(input["lastname"])) {
                 isValid = false;
@@ -127,69 +137,69 @@ export default class RegisterPage extends Component {
                 <h1>Register for Admin Panel</h1>
                 <form onSubmit={this.handleSubmit}>
       
-                    <div class="form-group">
-                        <label for="username">Username:</label>
+                    <div className="form-group">
+                        <label >Username:</label>
                         <input
                             type="text"
                             name="username"
                             value={this.state.input.username}
                             onChange={this.handleChange}
-                            class="form-control"
+                            className="form-control"
                             placeholder="Enter username"
                             id="username" />
       
                         <div className="text-danger">{this.state.errors.username}</div>
                     </div>
-                    <div class="form-group">
-                        <label for="lastname">Lastname:</label>
+                    <div className="form-group">
+                        <label >Lastname:</label>
                         <input
                             type="text"
                             name="lastname"
                             value={this.state.input.lastname}
                             onChange={this.handleChange}
-                            class="form-control"
+                            className="form-control"
                             placeholder="Enter lastname"
                             id="lastname" />
       
                         <div className="text-danger">{this.state.errors.username}</div>
                     </div>
       
-                    <div class="form-group">
-                        <label for="email">Email Address:</label>
+                    <div className="form-group">
+                        <label>Email Address:</label>
                         <input
                             type="text"
                             name="email"
                             value={this.state.input.email}
                             onChange={this.handleChange}
-                            class="form-control"
+                            className="form-control"
                             placeholder="Enter email"
                             id="email" />
       
                         <div className="text-danger">{this.state.errors.email}</div>
                     </div>
       
-                    <div class="form-group">
-                        <label for="password">Password:</label>
+                    <div className="form-group">
+                        <label>Password:</label>
                         <input
                             type="password"
                             name="password"
                             value={this.state.input.password}
                             onChange={this.handleChange}
-                            class="form-control"
+                            className="form-control"
                             placeholder="Enter password"
                             id="password" />
       
                         <div className="text-danger">{this.state.errors.password}</div>
                     </div>
       
-                    <div class="form-group">
-                        <label for="password">Confirm Password:</label>
+                    <div className="form-group">
+                        <label>Confirm Password:</label>
                         <input
                             type="password"
                             name="confirm_password"
                             value={this.state.input.confirm_password}
                             onChange={this.handleChange}
-                            class="form-control"
+                            className="form-control"
                             placeholder="Enter confirm password"
                             id="confirm_password" />
       
@@ -199,7 +209,7 @@ export default class RegisterPage extends Component {
                     <input type="checkbox" name="checkbox" id="checkbox" required /> <span>I agree all statements in <a href="https://google.com" target="_blank" rel="noopener noreferrer">terms of service</a></span>.
                     </p>
                  
-                    <input type="submit" value="Submit" class="btn btn-success" />
+                    <input type="submit" value="Submit" className="btn btn-success" />
                 </form>
                 <footer>
                     <p><Link to="/">Back to Homepage</Link>.</p>
@@ -208,3 +218,5 @@ export default class RegisterPage extends Component {
         );
     }
 }
+export  default withRouter(RegisterPage)
+
