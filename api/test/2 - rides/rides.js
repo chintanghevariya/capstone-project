@@ -810,6 +810,7 @@ describe("Rides Tests", function () {
             };
             createRide(ride)
                 .end(function (err, res) {
+                    console.log(res.body);
                     res.status.should.be.equal(200);
                     res.body.should.haveOwnProperty("status")
                     res.body.should.haveOwnProperty("message")

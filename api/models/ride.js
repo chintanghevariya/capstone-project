@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const User = require('./user');
 
 const locationSchema = new mongoose.Schema({
     locationName: {
@@ -76,6 +77,10 @@ const rideSchema = new mongoose.Schema({
     occursEvery: {
         type: [String],
         default: []
+    },
+    riderIds: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
     },
     riderExceptions: {
         type: [riderExcetion],
