@@ -1,8 +1,7 @@
 const Ride = require("../models/ride");
 
 class RidesService {
-
-    async getRides(filters={}) {
+    async getRides(filters = {}) {
         if (Object.keys(filters).length === 0) {
             return [];
         }
@@ -13,15 +12,41 @@ class RidesService {
 
     async createRide(rideDetails) {
         this.validateCreateRideFields(rideDetails);
-        const ride = new Ride(rideDetails)
+        const ride = new Ride(rideDetails);
         await ride.save();
         return ride;
+    }
+
+    async addUserAsPassengerToRideOfId(user, rideId) {
+        const { _id } = user;
+        if (_id === undefined || _id === null) {
+            throw new Error("Token is invalid");
+        }
+        const ride = await this.getRideById(rideId);
+        if (ride === undefined || ride === null) {
+            throw new Error("Ride with id does not exist");
+        }
+        if (this.isUserPassengerOfRide(user, ride)) {
+            throw new Error("User is already passenger of ride.");
+        }
+        ride.passengers.push(_id);
+        await ride.save();
+        return {};
+    }
+
+    async getRideById(_id) {
+        return await Ride.findOne({ _id });
     }
 
     validateCreateRideFields(rideDetails) {
         this.validateLocationField("from", rideDetails.from);
         this.validateLocationField("to", rideDetails.to);
-        this.validateLocationsAreDifferent(rideDetails.from, rideDetails.to, "from", "to");
+        this.validateLocationsAreDifferent(
+            rideDetails.from,
+            rideDetails.to,
+            "from",
+            "to"
+        );
         this.validateStartDateAndTime(rideDetails.startDateAndTime);
         this.validateNumberOfSeats(rideDetails.numberOfSeats);
         this.validatePricePerSeat(rideDetails.pricePerSeat);
@@ -32,47 +57,60 @@ class RidesService {
 
     validateLocationField(type, value) {
         if (value === undefined || value === null) {
-            throw new Error(`${type} location is required`)
+            throw new Error(`${type} location is required`);
         }
         if (typeof value !== "object") {
-            throw new Error(`${type} location must be an object`)
+            throw new Error(`${type} location must be an object`);
         }
         if (Object.keys(value).length === 0) {
-            throw new Error(`${type} location cannot be empty`)
+            throw new Error(`${type} location cannot be empty`);
         }
-        if (value.locationName === undefined || value.locationName === null || value.locationName.trim() === "") {
-            throw new Error(`Location name of ${type} is required`)
+        if (
+            value.locationName === undefined ||
+            value.locationName === null ||
+            value.locationName.trim() === ""
+        ) {
+            throw new Error(`Location name of ${type} is required`);
         }
         if (value.latitude === undefined || value.latitude === null) {
-            throw new Error(`Latitude of ${type} is required`)
+            throw new Error(`Latitude of ${type} is required`);
         }
         if (typeof value.latitude !== "number") {
-            throw new Error(`Latitude of ${type} must be a number`)
+            throw new Error(`Latitude of ${type} must be a number`);
         }
         if (value.longitude === undefined || value.longitude === null) {
-            throw new Error(`Longitude of ${type} is required`)
+            throw new Error(`Longitude of ${type} is required`);
         }
         if (typeof value.longitude !== "number") {
-            throw new Error(`Longitude of ${type} must be a number`)
+            throw new Error(`Longitude of ${type} must be a number`);
         }
     }
 
-    validateLocationsAreDifferent(location1, location2, location1Name, location2Name) {
+    validateLocationsAreDifferent(
+        location1,
+        location2,
+        location1Name,
+        location2Name
+    ) {
         if (
             location1.latitude === location2.latitude &&
             location1.longitude === location2.longitude
         ) {
-            throw new Error(`${location1Name} and ${location2Name} must be different locations`);
+            throw new Error(
+                `${location1Name} and ${location2Name} must be different locations`
+            );
         }
     }
 
     validateStartDateAndTime(dateTime) {
         if (dateTime === undefined || dateTime === null) {
-            throw new Error("Start date and time are required")
+            throw new Error("Start date and time are required");
         }
-        const parsedDate = Date.parse(dateTime)
+        const parsedDate = Date.parse(dateTime);
         if (isNaN(parsedDate)) {
-            throw new Error("Start date and time value is not valid date time string");
+            throw new Error(
+                "Start date and time value is not valid date time string"
+            );
         }
     }
 
@@ -110,34 +148,56 @@ class RidesService {
         for (let stopIndex = 0; stopIndex < stops.length; stopIndex++) {
             const stop = stops[stopIndex];
             this.validateLocationField("Stop[" + stopIndex + "]", stop);
-            this.validateLocationsAreDifferent(stop, from, `Stop[${stopIndex}]`, `from`);
-            this.validateLocationsAreDifferent(stop, to, `Stop[${stopIndex}]`, `to`);
-            for (let repeatIndex = 0; repeatIndex < stops.length; repeatIndex++) {
+            this.validateLocationsAreDifferent(
+                stop,
+                from,
+                `Stop[${stopIndex}]`,
+                `from`
+            );
+            this.validateLocationsAreDifferent(
+                stop,
+                to,
+                `Stop[${stopIndex}]`,
+                `to`
+            );
+            for (
+                let repeatIndex = 0;
+                repeatIndex < stops.length;
+                repeatIndex++
+            ) {
                 if (repeatIndex === stopIndex) {
                     continue;
                 }
                 const checkStop = stops[repeatIndex];
                 this.validateLocationsAreDifferent(
-                    stop, checkStop, `Stop[${stopIndex}]`, `Stop[${repeatIndex}]`
-                )
+                    stop,
+                    checkStop,
+                    `Stop[${stopIndex}]`,
+                    `Stop[${repeatIndex}]`
+                );
             }
         }
     }
 
     formatFilters(filters) {
-        const { from, to, ...otherFilters } = filters
+        const { from, to, ...otherFilters } = filters;
         const formattedFilters = {
-            ...otherFilters
+            ...otherFilters,
         };
         if (from) {
-            formattedFilters["from.locationName"] = from
+            formattedFilters["from.locationName"] = from;
         }
         if (to) {
-            formattedFilters["to.locationName"] = to
+            formattedFilters["to.locationName"] = to;
         }
         return formattedFilters;
     }
 
+    isUserPassengerOfRide(user, ride) {
+        const { _id } = user;
+        const isPassenger = ride.passengers.findIndex(id => id.toString() === _id) > -1;
+        return isPassenger;
+    }
 }
 
 module.exports = new RidesService
