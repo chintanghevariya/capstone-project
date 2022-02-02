@@ -8,7 +8,7 @@ export default function SetupCustomerCard() {
 
 	const { confirmSetupIntent, loading } = useStripe();
 
-	const onSubmit = async () => {
+	const onSubmit = async ({ navigation }) => {
 		const billingDetails = {
 			email: "aarytrivedi@gmail.com"
 		}
@@ -22,7 +22,7 @@ export default function SetupCustomerCard() {
 			console.error(error);
 			return;
 		}
-		console.log("Setup Successful");
+		navigation.navigate("Dashboard",{screen:'Profile'});
 	}
 
     return (
