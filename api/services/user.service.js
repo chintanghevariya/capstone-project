@@ -5,7 +5,7 @@ const User = require("../models/user");
 class UserService {
 
     async createUser(userDetails) {
-        const { email, firstName, lastName, password } = userDetails;
+        const { email, firstName, lastName, password,role } = userDetails;
         if (email === undefined || email === null || email.trim().length === 0) {
             throw new Error("Email cannot be empty");
         }
@@ -50,9 +50,8 @@ class UserService {
             throw new Error("Password is incorrect");
         }
         const token = generateToken({ ...user._doc })
-        return { token }
+        return { token,user }
     }
-    
 }
 
 module.exports = new UserService;
