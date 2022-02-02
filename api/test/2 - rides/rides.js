@@ -943,7 +943,7 @@ describe("Rides Tests", function () {
         it ("Should add user a passenger of ride", function (done) {
             const token = generateToken({
                 email: "aarytrivedi@gmail.com",
-                _id: "61fafc784f2c14c1627e03d2",
+                _id: "61fafe0d8e5a5aae6fae4e1c",
             });
             addAsRider(
                 token,
@@ -962,7 +962,7 @@ describe("Rides Tests", function () {
         it ("Should throw error if user is already passenger of a ride", function (done) {
             const token = generateToken({
                 email: "aarytrivedi@gmail.com",
-                _id: "61fafc784f2c14c1627e03d2",
+                _id: "61fafe0d8e5a5aae6fae4e1c",
             });
             addAsRider(token, function (err, res) {
                 res.status.should.be.equal(400);
@@ -974,6 +974,59 @@ describe("Rides Tests", function () {
             });
         })
 
+    })
+
+    describe("Get rides of user tests", function () {
+
+        function getRides(token) {
+            return chai.request(app)    
+                        .get("/rides/of-user/as-passenger")
+                        .set("Content-Type", "application/json")
+                        .set("Authorization", "Bearer " + token)
+        }
+
+        it ("Route should exist", function (done) {
+            getRides("")
+                .end(function (err, res) {
+                    res.status.should.not.equal(404);
+                    done();
+                })
+        })
+
+        it ("Should throw error if id is not present in token", function (done) {
+            const token = generateToken({
+                email: "test"
+            })
+            getRides(token)
+                .end(function (err, res) {
+                    res.status.should.equal(400);
+                    res.body.should.haveOwnProperty("status");
+                    res.body.should.haveOwnProperty("error");
+                    res.body.status.should.equal("Failure");
+                    res.body.error.should.equal("Token is invalid");
+                    done();
+                });
+        })
+
+        it("Should return the rides user is passenger of", function (done) {
+            const token = generateToken({
+                email: "aarytrivedi@gmail.com",
+                _id: "61fafe0d8e5a5aae6fae4e1c",
+            });
+            getRides(token).end(function (err, res) {
+                res.status.should.equal(200);
+                res.body.should.haveOwnProperty("status");
+                res.body.should.haveOwnProperty("message");
+                res.body.should.haveOwnProperty("data");
+                res.body.status.should.equal("Success");
+                res.body.message.should.equal("Rides fetched successfully.");
+                res.body.data.should.haveOwnProperty("rides");
+                res.body.data.rides.should.be.an('array');
+                res.body.data.rides.length.should.be.greaterThan(0);
+                done();
+            });
+        });
+        
     })
 
 })
