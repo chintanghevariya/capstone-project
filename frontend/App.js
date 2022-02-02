@@ -4,10 +4,6 @@ import {
   extendTheme,
 
 } from "native-base";
-import Login from "./components/Login";
-import StripeConsent from "./components/payment/stripe-consent";
-import Signup from "./components/Signup";
-
 import Routes from './components/Routes'
 
 // Define the config

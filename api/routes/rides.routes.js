@@ -27,4 +27,28 @@ ridesRouter.post("/", verifyToken, async function (req, res, next) {
     }
 })
 
+// Add as rider route
+ridesRouter.post("/:rideId/passenger", verifyToken, async function (req, res, next) {
+    try {
+        const response = await ridesService.addUserAsPassengerToRideOfId(
+            req.user, req.params.rideId
+        );
+        httpResponse.sendSuccess(res, "User added as passenger", response);
+    } catch (e) {
+        httpResponse.sendFailure(res, e.message);
+    }
+})
+
+// Get rides of current user
+ridesRouter.get("/of-user/as-passenger", verifyToken, async function (req, res, next) {
+    try {
+        const rides = await ridesService.getRidesOfUser(
+            req.user,
+        );
+        httpResponse.sendSuccess(res, "Rides fetched successfully.", { rides });
+    } catch (e) {
+        httpResponse.sendFailure(res, e.message);
+    }
+})
+
 module.exports = ridesRouter;
