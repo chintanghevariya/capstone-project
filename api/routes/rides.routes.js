@@ -39,4 +39,16 @@ ridesRouter.post("/:rideId/passenger", verifyToken, async function (req, res, ne
     }
 })
 
+// Get rides of current user
+ridesRouter.get("/of-user/as-passenger", verifyToken, async function (req, res, next) {
+    try {
+        const rides = await ridesService.getRidesOfUser(
+            req.user,
+        );
+        httpResponse.sendSuccess(res, "Rides fetched successfully.", { rides });
+    } catch (e) {
+        httpResponse.sendFailure(res, e.message);
+    }
+})
+
 module.exports = ridesRouter;

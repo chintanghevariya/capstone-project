@@ -1,3 +1,4 @@
+const { ObjectId } = require("mongodb");
 const Ride = require("../models/ride");
 
 class RidesService {
@@ -36,6 +37,21 @@ class RidesService {
 
     async getRideById(_id) {
         return await Ride.findOne({ _id });
+    }
+
+    async getRidesOfUser(user) {
+        const { _id } = user;
+        if (_id === undefined || _id === null) {
+            throw new Error("Token is invalid");
+        }
+        const filters = {
+            passengers: [new ObjectId(_id)]
+        };
+        console.log(filters);
+        const rides = await Ride.find({ 
+            passengers: [ new ObjectId(_id) ]
+        });
+        return rides;
     }
 
     validateCreateRideFields(rideDetails) {
