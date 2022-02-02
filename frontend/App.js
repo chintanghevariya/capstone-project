@@ -5,6 +5,7 @@ import {
 
 } from "native-base";
 import Routes from './components/Routes'
+import Example from './components/IndexComponents/HomeComponent/example'
 
 // Define the config
 const config = {
@@ -18,7 +19,7 @@ export const theme = extendTheme({ config });
 export default function App() {
   return (
       <NativeBaseProvider>
-        <Routes/>
+      <Routes/>
       </NativeBaseProvider>
   );
 }
