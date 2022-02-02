@@ -78,10 +78,10 @@ const rideSchema = new mongoose.Schema({
         type: [String],
         default: []
     },
-    riderIds: {
+    passengers: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
-    },
+    }],
     riderExceptions: {
         type: [riderExcetion],
         default: []
