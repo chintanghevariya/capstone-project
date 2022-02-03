@@ -8,9 +8,9 @@ const ridesService = require('../services/rides.service');
 const ridesRouter = express.Router();
 
 // Get rides request
-ridesRouter.get("/", verifyToken, async function (req, res, next) {
+ridesRouter.post("/filter", verifyToken, async function (req, res, next) {
     try {
-        const rides = await ridesService.getRides(req.query);
+        const rides = await ridesService.getRides(req.body);
         httpResponse.sendSuccess(res, "Rides fetched successfully", rides);
     } catch (e) {
         httpResponse.sendFailure(res, e.message);

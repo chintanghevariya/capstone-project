@@ -5,8 +5,7 @@ class RidesService {
         if (Object.keys(filters).length === 0) {
             return [];
         }
-        const formattedFilters = this.formatFilters(filters);
-        const rides = await Ride.find(formattedFilters);
+        const rides = await Ride.find({ ...filters });
         return rides;
     }
 
