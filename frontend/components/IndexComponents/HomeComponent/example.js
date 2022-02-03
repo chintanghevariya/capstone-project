@@ -16,7 +16,7 @@ export default function Example() {
                     alert(error);
                     return;
                 }
-                alert(result.data.message);
+                alert(JSON.stringify(result.data.data[0]));
             });
     }
     // setUser(getUser())
