@@ -827,23 +827,22 @@ describe("Rides Tests", function () {
     describe("Get rides tests", function () {
         function getRides(filters={}) {
             const token = generateToken({ userId: 1 });
-            const queryString = Object.keys(filters).map(key => {
-                return `${key}=${filters[key]}`;
-            }).join("&")
             return chai.request(app)
-                .get('/rides?' + queryString)
+                .post('/rides/filter')
+                .send(filters)
                 .set("Content-Type", "application/json")
                 .set("Authorization", "Bearer " + token)
         }
 
-        it ("Should have endpoint to get rides", function () {
+        it ("Should have endpoint to get rides", function (done) {
             getRides()
                 .end(function (err, res) {
                     res.status.should.not.be.equal(404)
+                    done();
                 })
         })
 
-        it ("Should return empty array if no filters present", function () {
+        it ("Should return empty array if no filters present", function (done) {
             getRides()
                 .end(function(err, res) {
                     res.status.should.be.equal(200);
@@ -853,13 +852,14 @@ describe("Rides Tests", function () {
                     res.body.status.should.equal("Success");
                     res.body.message.should.equal("Rides fetched successfully")
                     res.body.data.should.have.length(0);
+                    done();
                 })
         })
 
         it ("Should return rides array if filters provided", function (done) {
             const filters = {
-                from: "Toronto",
-                to: "Ottawa"
+                "from.locationName": "Toronto",
+                "to.locationName": "Ottawa"
             }
             getRides(filters)
                 .end(function(err, res) {
@@ -879,8 +879,8 @@ describe("Rides Tests", function () {
 
         async function getRide() {
             const rides = await ridesService.getRides({
-                from: "Toronto",
-                to: "Ottawa"
+                "from.locationName": "Toronto",
+                "to.locationName": "Ottawa"
             });
             return rides;
         }
