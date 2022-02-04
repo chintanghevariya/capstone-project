@@ -1029,4 +1029,82 @@ describe("Rides Tests", function () {
         
     })
 
+    describe("Remove as passenger tests", function () {
+
+        async function getRides() {
+            const rides = await ridesService.getRides({
+                "from.locationName": "Toronto",
+                "to.locationName": "Ottawa",
+            });
+            return rides;
+        }
+
+        async function removeAsPassenger(token, options={}) {
+            const { customRideId, customUserId } = options;
+            const rides = await getRides();
+            const targetId = customRideId ? customRideId : rides[0]._id;
+            const passengerId = customUserId
+                ? customUserId
+                : "61fafe0d8e5a5aae6fae4e1c";
+            return chai.request(app)
+                        .delete(`/rides/${targetId}/passengers/${passengerId}`)
+                        .set("Content-Type", "application/json")
+                        .set("Authorization", "Bearer " + token)
+        }
+
+        it ("Route should exist", async function () {
+            const request = await removeAsPassenger();
+            request.status.should.not.be.equal(404);
+        })
+
+        it ("Should throw error if ride with id does not exist", async function () {
+            const token = generateToken({
+                email: "test@test.com",
+                _id: "61fafe0d8e5a5aae6fae4e1c",
+            });
+            const request = await removeAsPassenger(
+                token,
+                {
+                    customRideId: "61fafe0d8e5a5aae6fae4e1c"
+                }
+            );
+            request.status.should.be.equal(400);
+            request.body.should.haveOwnProperty("status");
+            request.body.should.haveOwnProperty("error");
+            request.body.status.should.equal("Failure");
+            request.body.error.should.equal("Ride with provided id does not exist");
+        })
+
+        it("Should throw error if user with id is not passenger of ride", async function () {
+            const token = generateToken({
+                email: "test@test.com",
+                _id: "61fafe0d8e5a5aae6fae4e1c",
+            });
+            const request = await removeAsPassenger(token, {
+                customUserId: "61fd5edbc4887d1f2f15de56",
+            });
+            request.status.should.be.equal(400);
+            request.body.should.haveOwnProperty("status");
+            request.body.should.haveOwnProperty("error");
+            request.body.status.should.equal("Failure");
+            request.body.error.should.equal("User is not a passenger of ride");
+        });
+
+        it("Should remove user as passenger from ride", async function () {
+            const token = generateToken({
+                email: "test@test.com",
+                _id: "61fafe0d8e5a5aae6fae4e1c",
+            });
+            const request = await removeAsPassenger(token);
+            request.status.should.be.equal(200);
+            request.body.should.haveOwnProperty("status");
+            request.body.should.haveOwnProperty("message");
+            request.body.status.should.equal("Success");
+            request.body.message.should.equal(
+                "Remove from passenger successfully."
+            );
+        })
+
+    })
+
 })

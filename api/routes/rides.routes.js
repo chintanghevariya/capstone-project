@@ -51,4 +51,20 @@ ridesRouter.get("/of-user/as-passenger", verifyToken, async function (req, res, 
     }
 })
 
+// Remove as passenger route
+ridesRouter.delete("/:rideId/passengers/:passengerId", verifyToken, async function (req, res, next) {
+    try {
+        const response = await ridesService.removeAsPassengerByUserIdAndRideId(
+            req.params
+        );
+        httpResponse.sendSuccess(
+            res,
+            "Remove from passenger successfully.",
+            {}
+        );
+    } catch (e) {
+        httpResponse.sendFailure(res, e.message);
+    }
+})
+
 module.exports = ridesRouter;
