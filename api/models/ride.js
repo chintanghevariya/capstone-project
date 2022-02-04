@@ -42,55 +42,67 @@ const riderExcetion = new mongoose.Schema({
     }
 })
 
+const passenger = new mongoose.Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    },
+    code: {
+        type: "String",
+        required: true
+    },
+    joinedAt: {
+        type: Date,
+        default: Date.now
+    }
+});
+
 const rideSchema = new mongoose.Schema({
     from: {
         type: locationSchema,
-        required: true
+        required: true,
     },
     to: {
         type: locationSchema,
-        required: true
+        required: true,
     },
     startDateAndTime: Date,
     numberOfSeats: {
         type: Number,
-        required: true
+        required: true,
     },
     pricePerSeat: {
         type: Number,
-        required: true
+        required: true,
     },
     preferences: [String],
     paymentType: {
         type: String,
         required: true,
-        default: "Cash"
+        default: "Cash",
     },
     stops: {
         type: [locationSchema],
-        default: []
+        default: [],
     },
     isRecurring: {
         type: Boolean,
-        default: false
+        default: false,
     },
     occursEvery: {
         type: [String],
-        default: []
+        default: [],
     },
-    passengers: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
-    }],
+    passengers: [passenger],
     riderExceptions: {
         type: [riderExcetion],
-        default: []
+        default: [],
     },
     rideExceptions: {
         type: [rideException],
-        default: []
-    }
-})
+        default: [],
+    },
+});
 
 const Ride = mongoose.model("ride", rideSchema)
 

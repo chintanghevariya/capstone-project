@@ -29,9 +29,27 @@ class RidesService {
         if (this.isUserPassengerOfRide(user, ride)) {
             throw new Error("User is already passenger of ride.");
         }
-        ride.passengers.push(_id);
+        const code = this.generatePassengerCodeOfLength(7);
+        const passengerProperties = {
+            userId: _id,
+            code
+        };
+        ride.passengers.push(passengerProperties);
         await ride.save();
         return {};
+    }
+
+    generatePassengerCodeOfLength(length) {
+        var result = "";
+        var characters =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        var charactersLength = characters.length;
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(
+                Math.floor(Math.random() * charactersLength)
+            );
+        }
+        return result;
     }
 
     async getRideById(_id) {
@@ -210,7 +228,9 @@ class RidesService {
 
     isUserPassengerOfRide(user, ride) {
         const { _id } = user;
-        const isPassenger = ride.passengers.findIndex(id => id.toString() === _id) > -1;
+        const isPassenger = ride.passengers.findIndex(passenger => {
+            return passenger.userId.toString() === _id
+        }) > -1;
         return isPassenger;
     }
 }
