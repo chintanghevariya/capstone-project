@@ -13,7 +13,7 @@ import { useState } from "react";
 import { ListItem, SearchBar } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TouchableOpacity } from "react-native-gesture-handler";
-
+import ChatScreen from "./ChatScreen";
 const Messages = [
   {
     id: "1",
@@ -137,7 +137,7 @@ const Chats = ({ navigation }) => {
                 <TouchableOpacity
                   style={styles.card}
                   onPress={() =>
-                    navigation.navigate("Chat", { userName: item.userName })
+                    navigation.navigate("ChatScreen", { userName: item.userName })
                   }
                 >
                   <View style={styles.userinfo}>

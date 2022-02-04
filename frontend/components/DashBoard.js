@@ -10,6 +10,10 @@ import Profile from './IndexComponents/Profile';
 
 const Tab = createBottomTabNavigator();
 export default class DashBoard extends Component {
+
+
+  
+  
   render() {
     return (
       <Tab.Navigator
@@ -45,6 +49,7 @@ export default class DashBoard extends Component {
           <Tab.Screen name="Notification" component={Notification} options={{ tabBarBadge: 1 }}/>
           <Tab.Screen name="Profile" component={Profile}/>
       </Tab.Navigator>
+      
      )
   }
 }
