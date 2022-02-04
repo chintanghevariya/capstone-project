@@ -65,6 +65,22 @@ const passenger = new mongoose.Schema({
     }
 });
 
+const requestSchema = new mongoose.Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+    },
+    accepted: {
+        type: Boolean,
+        default: false
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
+});
+
 const rideSchema = new mongoose.Schema({
     driver: {
         type: mongoose.Schema.Types.ObjectId,
@@ -106,7 +122,14 @@ const rideSchema = new mongoose.Schema({
         type: [String],
         default: [],
     },
-    passengers: [passenger],
+    request: {
+        type: [requestSchema],
+        default: []
+    },
+    passengers: {
+        type: [passenger],
+        default: []
+    },
     passengerException: {
         type: [passengerException],
         default: [],
