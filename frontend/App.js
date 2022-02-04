@@ -5,6 +5,7 @@ import {
 
 } from "native-base";
 import Routes from './components/Routes'
+import Chat from "./components/IndexComponents/Chat";
 
 // Define the config
 const config = {
@@ -19,6 +20,7 @@ export default function App() {
   return (
       <NativeBaseProvider>
         <Routes/>
+        {/* <Chat/> */}
       </NativeBaseProvider>
   );
 }
