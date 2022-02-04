@@ -32,7 +32,7 @@ class RidesService {
         const code = this.generatePassengerCodeOfLength(7);
         const passengerProperties = {
             userId: _id,
-            code
+            code,
         };
         ride.passengers.push(passengerProperties);
         await ride.save();
@@ -61,10 +61,32 @@ class RidesService {
         if (_id === undefined || _id === null) {
             throw new Error("Token is invalid");
         }
-        const rides = await Ride.find({ 
-            "passengers.userId": new ObjectId(_id)
+        const rides = await Ride.find({
+            "passengers.userId": new ObjectId(_id),
         });
         return rides;
+    }
+
+    async removeAsPassengerByUserIdAndRideId(rideAndUserDetails) {
+        const { rideId, passengerId } = rideAndUserDetails;
+        const ride = await Ride.find({ _id: new ObjectId(rideId) });
+        if (ride.length === 0) {
+            throw new Error("Ride with provided id does not exist");
+        }
+        const user = { _id: passengerId };
+        if (!this.isUserPassengerOfRide(user, ride[0])) {
+            throw new Error("User is not a passenger of ride");
+        }
+        const passengers = this.removePassengerByIdFromRide(passengerId, ride[0]);
+        ride[0].passengers = passengers;
+        await ride[0].save();
+        return {};
+    }
+
+    removePassengerByIdFromRide(passengerId, ride) {
+        return ride.passengers.filter(passenger => {
+            return passenger.userId.toString() !== passengerId
+        })
     }
 
     validateCreateRideFields(rideDetails) {
@@ -224,9 +246,10 @@ class RidesService {
 
     isUserPassengerOfRide(user, ride) {
         const { _id } = user;
-        const isPassenger = ride.passengers.findIndex(passenger => {
-            return passenger.userId.toString() === _id
-        }) > -1;
+        const isPassenger =
+            ride.passengers.findIndex((passenger) => {
+                return passenger.userId.toString() === _id;
+            }) > -1;
         return isPassenger;
     }
 }
