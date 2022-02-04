@@ -56,13 +56,24 @@ class RidesService {
         return await Ride.findOne({ _id });
     }
 
-    async getRidesOfUser(user) {
+    async getRidesOfUserAsPassenger(user) {
         const { _id } = user;
         if (_id === undefined || _id === null) {
             throw new Error("Token is invalid");
         }
         const rides = await Ride.find({
             "passengers.userId": new ObjectId(_id),
+        });
+        return rides;
+    }
+
+    async getRidesOfUserAsDriver(user) {
+        const { _id } = user;
+        if (_id === undefined || _id === null) {
+            throw new Error("Token is invalid");
+        }
+        const rides = await Ride.find({
+            "driver": new ObjectId(_id)
         });
         return rides;
     }

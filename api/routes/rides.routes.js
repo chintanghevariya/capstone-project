@@ -42,12 +42,22 @@ ridesRouter.post("/:rideId/passenger", verifyToken, async function (req, res, ne
     }
 })
 
-// Get rides of current user
+// Get rides of current user as passenger
 ridesRouter.get("/of-user/as-passenger", verifyToken, async function (req, res, next) {
     try {
-        const rides = await ridesService.getRidesOfUser(
+        const rides = await ridesService.getRidesOfUserAsPassenger(
             req.user,
         );
+        httpResponse.sendSuccess(res, "Rides fetched successfully.", { rides });
+    } catch (e) {
+        httpResponse.sendFailure(res, e.message);
+    }
+})
+
+// Get rides of current user as driver
+ridesRouter.get("/of-user/as-driver", verifyToken, async function (req, res, next) {
+    try {
+        const rides = await ridesService.getRidesOfUserAsDriver(req.user);
         httpResponse.sendSuccess(res, "Rides fetched successfully.", { rides });
     } catch (e) {
         httpResponse.sendFailure(res, e.message);

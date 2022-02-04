@@ -875,7 +875,7 @@ describe("Rides Tests", function () {
         })
     })
 
-    describe("Add as rider test", function () {
+    describe("Add as passenger test", function () {
 
         async function getRide() {
             const rides = await ridesService.getRides({
@@ -955,7 +955,7 @@ describe("Rides Tests", function () {
 
     })
 
-    describe("Get rides of user tests", function () {
+    describe("Get rides of user as passenger tests", function () {
 
         function getRides(token) {
             return chai.request(app)    
@@ -1006,6 +1006,50 @@ describe("Rides Tests", function () {
             });
         });
         
+    })
+
+    describe("Get rides of user as driver tests", function () {
+
+        function getRides(token) {
+            return chai
+                .request(app)
+                .get("/rides/of-user/as-driver")
+                .set("Content-Type", "application/json")
+                .set("Authorization", "Bearer` " + token);
+        }
+
+        it ("Route should exist", async function () {
+            const request = await getRides();
+            request.status.should.not.be.equal(404);
+        })
+
+        it ("Should throw error if token does not have userId", async function () {
+            const token = generateToken({
+                email: "test@test.com"
+            })
+            const request = await getRides(token);
+            request.status.should.be.equal(400);
+            request.body.should.haveOwnProperty("status");
+            request.body.should.haveOwnProperty("error");
+            request.body.status.should.equal("Failure");
+            request.body.error.should.equal("Token is invalid");
+        })
+
+        it ("Should return rides if everything is valid", async function () {
+            const token = generateToken({
+                _id: "61fafe0d8e5a5aae6fae4e1c",
+            });
+            const request = await getRides(token);
+            request.status.should.be.equal(200);
+            request.body.should.haveOwnProperty("status");
+            request.body.should.haveOwnProperty("message");
+            request.body.should.haveOwnProperty("data");
+            request.body.status.should.equal("Success");
+            request.body.message.should.equal("Rides fetched successfully.");
+            request.body.data.should.haveOwnProperty("rides");
+            request.body.data.rides.length.should.be.greaterThan(0);
+        })
+
     })
 
     describe("Remove as passenger tests", function () {
