@@ -122,7 +122,7 @@ const rideSchema = new mongoose.Schema({
         type: [String],
         default: [],
     },
-    request: {
+    requests: {
         type: [requestSchema],
         default: []
     },

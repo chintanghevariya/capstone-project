@@ -73,7 +73,7 @@ class RidesService {
             throw new Error("Token is invalid");
         }
         const rides = await Ride.find({
-            "driver": new ObjectId(_id)
+            driver: new ObjectId(_id),
         });
         return rides;
     }
@@ -88,16 +88,45 @@ class RidesService {
         if (!this.isUserPassengerOfRide(user, ride[0])) {
             throw new Error("User is not a passenger of ride");
         }
-        const passengers = this.removePassengerByIdFromRide(passengerId, ride[0]);
+        const passengers = this.removePassengerByIdFromRide(
+            passengerId,
+            ride[0]
+        );
         ride[0].passengers = passengers;
         await ride[0].save();
         return {};
     }
 
+    async createRequestForRide(rideId, user) {
+        const { _id: userId } = user;
+        if (userId === null || userId === undefined) {
+            throw new Error("Token is invalid");
+        }
+        const ride = await this.getRideById(rideId);
+        if (ride === null) {
+            throw new Error("Ride with provided id does not exist");
+        }
+        if (this.userHasRequestToJoin(userId, ride)) {
+            throw new Error("Request for user already exists");
+        }
+        const request = {
+            userId
+        }
+        ride.requests.push(request);
+        await ride.save();
+        return {};
+    }
+
+    userHasRequestToJoin(userId, ride) {
+        return ride.requests.findIndex(request => {
+            return request.userId.toString() === userId;
+        }) > -1;
+    }
+
     removePassengerByIdFromRide(passengerId, ride) {
-        return ride.passengers.filter(passenger => {
-            return passenger.userId.toString() !== passengerId
-        })
+        return ride.passengers.filter((passenger) => {
+            return passenger.userId.toString() !== passengerId;
+        });
     }
 
     validateCreateRideFields(rideDetails) {

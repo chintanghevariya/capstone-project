@@ -40,6 +40,18 @@ ridesRouter.post("/", verifyToken, async function (req, res, next) {
     }
 })
 
+// Create ride request route
+ridesRouter.post("/:rideId/request", verifyToken, async function (req, res, next) {
+    try {
+        const response = await ridesService.createRequestForRide(
+            req.params.rideId, req.user
+        );
+        httpResponse.sendSuccess(res, "Request created successfully", {});
+    } catch (e) {
+        httpResponse.sendFailure(res, e.message);
+    }
+})
+
 // Add as rider route
 ridesRouter.post("/:rideId/passenger", verifyToken, async function (req, res, next) {
     try {
