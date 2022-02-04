@@ -61,12 +61,8 @@ class RidesService {
         if (_id === undefined || _id === null) {
             throw new Error("Token is invalid");
         }
-        const filters = {
-            passengers: [new ObjectId(_id)]
-        };
-        console.log(filters);
         const rides = await Ride.find({ 
-            passengers: [ new ObjectId(_id) ]
+            "passengers.userId": new ObjectId(_id)
         });
         return rides;
     }
