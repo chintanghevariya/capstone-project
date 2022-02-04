@@ -66,6 +66,11 @@ const passenger = new mongoose.Schema({
 });
 
 const rideSchema = new mongoose.Schema({
+    driver: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true
+    },
     from: {
         type: locationSchema,
         required: true,
