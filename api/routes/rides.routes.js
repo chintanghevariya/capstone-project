@@ -7,6 +7,16 @@ const ridesService = require('../services/rides.service');
 // Initialize router
 const ridesRouter = express.Router();
 
+// Get ride by id route
+ridesRouter.get("/:rideId", verifyToken, async function (req, res, next) {
+    try {
+        const ride = await ridesService.getRideById(req.params.rideId);
+        httpResponse.sendSuccess(res, "Ride fetched successfully", { ride });
+    } catch (e) {
+        httpResponse.sendFailure(res, e.message);
+    }
+})
+
 // Get rides request
 ridesRouter.post("/filter", verifyToken, async function (req, res, next) {
     try {

@@ -824,7 +824,7 @@ describe("Rides Tests", function () {
 
     })
 
-    describe("Get rides tests", function () {
+    describe("Filter rides tests", function () {
         function getRides(filters={}) {
             const token = generateToken({ userId: 1 });
             return chai.request(app)
@@ -873,6 +873,37 @@ describe("Rides Tests", function () {
                     done()
                 })
         })
+    })
+
+    describe("Get ride by id test", function () {
+
+        function getRide(id) {
+            const token = generateToken({
+                email: "test@test.com"
+            })
+            return chai.request(app)
+                        .get("/rides/" + id)
+                        .set("Content-Type", "application/json")
+                        .set("Authorization", "Bearer " + token)
+        }
+
+        it("Route should exist", async function () {
+            const request = await getRide("test");
+            request.status.should.not.equal(404);
+        })
+
+        it("Should return ride with id if found", async function () {
+            const request = await getRide("61fd8ee3823e1044fa2097e0");
+            request.status.should.be.equal(200);
+            request.body.should.haveOwnProperty("status");
+            request.body.should.haveOwnProperty("message");
+            request.body.should.haveOwnProperty("data");
+            request.body.status.should.equal("Success");
+            request.body.message.should.equal("Ride fetched successfully");
+            request.body.data.should.haveOwnProperty("ride");
+            request.body.data.ride.should.haveOwnProperty("_id");
+        });
+
     })
 
     describe("Add as passenger test", function () {
