@@ -31,16 +31,24 @@ const rideException = new mongoose.Schema({
     }
 })
 
-const riderExcetion = new mongoose.Schema({
+const passengerException = new mongoose.Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+    },
     isCancelled: {
         type: Boolean,
-        default: true
+        default: true,
     },
     rideDate: {
         type: Date,
+        required: true
+    },
+    createdDate: {
+        type: Date,
         default: Date.now
     }
-})
+});
 
 const passenger = new mongoose.Schema({
     userId: {
@@ -94,8 +102,8 @@ const rideSchema = new mongoose.Schema({
         default: [],
     },
     passengers: [passenger],
-    riderExceptions: {
-        type: [riderExcetion],
+    passengerException: {
+        type: [passengerException],
         default: [],
     },
     rideExceptions: {
