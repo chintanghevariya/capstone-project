@@ -901,8 +901,90 @@ describe("Rides Tests", function () {
             request.body.status.should.equal("Success");
             request.body.message.should.equal("Ride fetched successfully");
             request.body.data.should.haveOwnProperty("ride");
-            request.body.data.ride.should.haveOwnProperty("_id");
         });
+
+    })
+
+    describe("Add ride request tests", function () {
+
+        async function getRides() {
+            const rides = await ridesService.getRides({
+                "from.locationName": "Toronto",
+                "to.locationName": "Ottawa",
+            });
+            return rides;
+        }
+
+        async function addRequest(token, customRideId) {
+            const rides = await getRides();
+            const rideId = customRideId ? customRideId : rides[0]._id;
+            return chai
+                .request(app)
+                .post("/rides/" + rideId + "/request")
+                .set("Content-Type", "application/json")
+                .set("Authorization", "Bearer " + token);
+        }
+
+        it ("Route should exist", async function () {
+            const request = await addRequest("");
+            request.status.should.not.be.equal(404);
+        })
+
+        it ("Should throw error if id is not present in token", async function () {
+            const token = generateToken({
+                email: "aarytrivedi@gmail.com"
+            });
+            const request = await addRequest(token);
+            request.status.should.be.equal(400);
+            request.body.should.haveOwnProperty("status");
+            request.body.should.haveOwnProperty("error");
+            request.body.status.should.equal("Failure");
+            request.body.error.should.equal("Token is invalid");
+        })
+
+        it ("Should throw error if ride with provided id does not exist", async function () {
+            const token = generateToken({
+                email: "aarytrivedi@gmail.com",
+                _id: "61fafe0d8e5a5aae6fae4e1c",
+            });
+            const request = await addRequest(token, "61fafe0d8e5a5aae6fae4e1c");
+            request.status.should.be.equal(400);
+            request.body.should.haveOwnProperty("status");
+            request.body.should.haveOwnProperty("error");
+            request.body.status.should.equal("Failure");
+            request.body.error.should.equal(
+                "Ride with provided id does not exist"
+            );
+        })
+
+        it("Should create request for user", async function () {
+            const token = generateToken({
+                email: "aarytrivedi@gmail.com",
+                _id: "61fafe0d8e5a5aae6fae4e1c",
+            });
+            const request = await addRequest(token);
+            request.status.should.be.equal(200);
+            request.body.should.haveOwnProperty("status");
+            request.body.should.haveOwnProperty("message");
+            request.body.should.haveOwnProperty("data");
+            request.body.status.should.equal("Success");
+            request.body.message.should.equal("Request created successfully");
+        });
+
+        it ("Should throw error if request for user already exist", async function () {
+            const token = generateToken({
+                email: "aarytrivedi@gmail.com",
+                _id: "61fafe0d8e5a5aae6fae4e1c",
+            });
+            const request = await addRequest(token);
+            request.status.should.be.equal(400);
+            request.body.should.haveOwnProperty("status");
+            request.body.should.haveOwnProperty("error");
+            request.body.status.should.equal("Failure");
+            request.body.error.should.equal(
+                "Request for user already exists"
+            );
+        })
 
     })
 
