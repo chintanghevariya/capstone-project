@@ -20,6 +20,9 @@ ridesRouter.post("/filter", verifyToken, async function (req, res, next) {
 // Create rides route
 ridesRouter.post("/", verifyToken, async function (req, res, next) {
     try {
+        // Set driver id of ride to current logged in user id
+        const { _id: driverId } = req.user;
+        req.body.driver = driverId;
         const ride = await ridesService.createRide(req.body);
         httpResponse.sendSuccess(res, "Ride created successfully", ride);
     } catch (e) {
