@@ -2,11 +2,11 @@ import React,{Component} from 'react';
 import { Text, View,Image } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Home from './HomeComponents/Home';
-import Search from './HomeComponents/Search';
-import Chat from './HomeComponents/Chat';
-import Notification from './HomeComponents/Notification';
-import Profile from './HomeComponents/Profile';
+import Home from './IndexComponents/Home';
+import Search from './IndexComponents/Search';
+import Chat from './IndexComponents/Chat';
+import Notification from './IndexComponents/Notification';
+import Profile from './IndexComponents/Profile';
 
 const Tab = createBottomTabNavigator();
 export default class DashBoard extends Component {
