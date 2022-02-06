@@ -1,7 +1,7 @@
 import React,{useEffect, useState} from 'react'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Login from './Login';
+import Login from './login';
 import Signup from '../components/Signup';
 import DashBoard from '../components/DashBoard';
 import SplashScreen from './SplashScreen';

@@ -4,7 +4,9 @@ import {
   extendTheme,
 
 } from "native-base";
+import ManageRide from './components/IndexComponents/Rides/ManageRide'
 import Routes from './components/Routes'
+import { RideContainer } from "./components/IndexComponents/Rides/RideContainer";
 
 // Define the config
 const config = {
@@ -18,7 +20,9 @@ export const theme = extendTheme({ config });
 export default function App() {
   return (
       <NativeBaseProvider>
-        <Routes/>
+        {/* <Routes/> */}
+        <ManageRide/>
+        {/* <RideContainer/> */}
       </NativeBaseProvider>
   );
 }
