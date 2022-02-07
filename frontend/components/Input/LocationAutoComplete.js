@@ -33,21 +33,12 @@ export const LocationAutoComplete = () => {
             })
     }
 
-    const handleChange = (item) => {
-        const value = {
-            locationName: item.display_name,
-            latitude: Number(item.lat),
-            longitude: Number(item.lon)
-        }
-    }
-
   return (
       <DropDownPicker
           searchable={true}
           disableLocalSearch={true}
           onChangeSearchText={handleSearchTextChange}
           loading={loading}
-          onSelectItem={handleChange}
           open={open}
           value={value}
           items={items}
