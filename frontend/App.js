@@ -4,7 +4,9 @@ import {
   extendTheme,
 
 } from "native-base";
+import ManageRide from './components/IndexComponents/Rides/ManageRide'
 import Routes from './components/Routes'
+import { RideContainer } from "./components/IndexComponents/Rides/RideContainer";
 import Chat from "./components/IndexComponents/Chat";
 
 // Define the config
@@ -19,6 +21,7 @@ export const theme = extendTheme({ config });
 export default function App() {
   return (
       <NativeBaseProvider>
+        {/* <ManageRide/> */}
         <Routes/>
         {/* <Chat/> */}
       </NativeBaseProvider>
