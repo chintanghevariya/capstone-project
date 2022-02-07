@@ -9,7 +9,6 @@ const env = process.env.NODE_ENV || "development";
 
 // Get config for current environment
 const config = require('./config/config.json')[env];
-
 // Initialize express app
 const app = express();
 
@@ -25,7 +24,9 @@ app.listen(config.PORT, async function () {
     console.log(`Connecting to mongo`);
     const { MONGO_PORT, MONGO_DB_NAME, MONGO_HOST } = config
     try {
-        await mongoose.connect(`mongodb://${MONGO_HOST}:${MONGO_PORT}/${MONGO_DB_NAME}`);
+        // await mongoose.connect(`mongodb://${MONGO_HOST}:${MONGO_PORT}/${MONGO_DB_NAME}`);
+        await mongoose.connect(`mongodb+srv://rutikpatel:Rutik123@com3123.4rasi.mongodb.net/test`)
+        
         console.log("Connected to mongo");
     } catch (e) {
         console.error(e);
