@@ -30,7 +30,7 @@ class UserService {
         }
         const user = new User(userDetails);
         await user.save();
-        const token = generateToken({ ...user });
+        const token = generateToken({ ...user._doc });
         return { token };
     }
 
@@ -42,15 +42,19 @@ class UserService {
         if (password === undefined || password === null) {
             throw new Error("Password is required");
         }
-        const user = await User.findOne({ email });
+        const user = await this.getUserByEmail(email);
         if (user === null) {
             throw new Error("This email is not associated to any account");
         }
         if (user.password !== password) {
             throw new Error("Password is incorrect");
         }
-        const token = generateToken({ ...user })
+        const token = generateToken({ ...user._doc })
         return { token }
+    }
+
+    async getUserByEmail(email) {
+        return User.findOne({ email });
     }
     
 }

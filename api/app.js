@@ -20,8 +20,8 @@ app.use(cors())
 
 // Start app on environment port
 app.listen(config.PORT, async function () {
-    console.log(`Listening on port ${config.port}`);
-    console.log(`Connecting to mongo`);
+    console.log(`Listening on port ${config.PORT}`);
+    console.log(`Connecting to mongo...`);
     const { MONGO_PORT, MONGO_DB_NAME, MONGO_HOST } = config
     try {
         // await mongoose.connect(`mongodb://${MONGO_HOST}:${MONGO_PORT}/${MONGO_DB_NAME}`);
