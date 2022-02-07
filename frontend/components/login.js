@@ -18,9 +18,9 @@ export default function Login({navigation})  {
     const [submitBtn,setSubmitBtn] = useState(true);
     const [isLoading,setIsLoading] = useState(false);
     
-    useEffect(()=>{
-        delete_Token_user(navigation);
-    },[navigation])
+    // useEffect(()=>{
+    //     delete_Token_user(navigation);
+    // },[navigation])
 
     React.useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
