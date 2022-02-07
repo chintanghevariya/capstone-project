@@ -2,27 +2,16 @@ import React, { useState, useEffect } from 'react';
 import {Text,View,StyleSheet,TouchableOpacity,SafeAreaView, ScrollView} from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Icon } from 'react-native-elements';
-import {Location} from './Location';
 import { getRides } from '../../../api/rides';
 import { RideContainer } from './RideContainer';
+import { renderNode } from 'react-native-elements/dist/helpers';
 
 export default function ManageRide() {
-    const[location,setLocation] =useState({})
-    const[user,setRide] = useState({})
-     useEffect(() => {     
-        Location().then((value) => setLocation(value))   
-        getRides().then((value)=>setRide(value))
-        
-    }, [location,user]) 
-
-    // const getRides = async () => {
-    //     const response = await axios.get(value);
-    //     setUserData(response.data);
-    //   };
-
-
 
   return(
+      
+    
+  
     <SafeAreaView style={Styles.container}>
     <ScrollView>
     <View>
@@ -41,13 +30,24 @@ export default function ManageRide() {
                 <View style={Styles.box}>
                     <Text>Upcoming Rides</Text>
                     <TouchableOpacity onPress={()=>{this.props.navigation.navigate('AllRides')}} ><Text style={{color: '#0D92DD',}}>View All</Text></TouchableOpacity>
-                    {/* <TouchableOpacity onPress={()=>this.props.navigation.navigate('AllRides')}><Text style={{color: '#0D92DD', textDecorationLine: 'underline'}}>View All</Text></TouchableOpacity>  */}
-                    {/* <TouchableOpacity onPress={()=>this.props.navigation.navigate('AllRides')}><Text style={{color: '#0D92DD', textDecorationLine: 'underline'}}>View All</Text></TouchableOpacity> */}
-                </View>
-                <View style={{borderBottomColor: '#CCCCCC',borderBottomWidth: 1,}} />
-                <RideContainer />
-                <RideContainer />
-                <RideContainer />
+                        </View>
+                        <View style={{borderBottomColor: '#CCCCCC',borderBottomWidth: 1,}} />
+                        <RideContainer
+                        fromLocationName = 'Toronto'
+                        toLocationName = 'Vancouver'
+                        ridePrice = '20.00'
+                        time ='10:00 AM'
+                        numberOfSeats = '5'
+                        ratings ='5'
+                        numberOfStops = '6' />
+                        <RideContainer 
+                        fromLocationName = 'Toronto'
+                        toLocationName = 'Vancouver'
+                        ridePrice = '20.00'
+                        time ='10:00 AM'
+                        numberOfSeats = '5'
+                        ratings ='5'
+                        numberOfStops = '6'/>
         </View>    
 
 
@@ -59,16 +59,37 @@ export default function ManageRide() {
                     {/* <TouchableOpacity onPress={()=>this.props.navigation.navigate('CompletedRides')}><Text style={{color: '#0D92DD', textDecorationLine: 'underline'}}>View All</Text></TouchableOpacity> */}
                 </View>
                 <View style={{ borderBottomColor: '#CCCCCC',borderBottomWidth: 1, }}/>
-                <RideContainer />
-                <RideContainer />
-                <RideContainer />
+                <RideContainer 
+                fromLocationName = 'Toronto'
+                toLocationName = 'Vancouver'
+                ridePrice = '20.00'
+                time ='10:00 AM'
+                numberOfSeats = '5'
+                ratings ='5'
+                numberOfStops = '6'/>
+                <RideContainer 
+                fromLocationName = 'Toronto'
+                toLocationName = 'Vancouver'
+                ridePrice = '20.00'
+                time ='10:00 AM'
+                numberOfSeats = '5'
+                ratings ='5'
+                numberOfStops = '6'/>
+                <RideContainer fromLocationName = 'Toronto'
+                toLocationName = 'Vancouver'
+                ridePrice = '20.00'
+                time ='10:00 AM'
+                numberOfSeats = '5'
+                ratings ='5'
+                numberOfStops = '6' />
             </View>
 
     </View>
     </ScrollView>
     </SafeAreaView>
 );
-}
+    }
+
 
 const Styles = StyleSheet.create({
 

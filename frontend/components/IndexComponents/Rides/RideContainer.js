@@ -1,22 +1,7 @@
 import React, {Component} from 'react';
 import {Text,View,StyleSheet, TouchableOpacity, Alert} from 'react-native'
-import { Icon } from 'react-native-elements';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-
-
-
-// const Container = [
-//     {
-//         fromLocationName : 'Toronto',
-//         toLocationName : 'Vancouver',
-//         ridePrice : '$20.00',
-//         time : '10:00 AM',
-//         numberOfSeats : 5,
-//         ratings : 5,
-//         numberOfStops : 6,
-//     }
-// ]
-
+import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 export class RideContainer extends Component {
@@ -28,16 +13,29 @@ export class RideContainer extends Component {
         super(props);
         this.state = {
          
-            fromLocationName : 'Toronto',
-            toLocationName : 'Vancouver',
-            ridePrice : '$20.00',
-            time : '10:00 AM',
-            numberOfSeats : 5,
-            ratings : 5,
-            numberOfStops : 6,
+            fromLocationName : '',
+            toLocationName : '',
+            ridePrice : '',
+            time : '',
+            numberOfSeats :'',
+            ratings : '',
+            numberOfStops : '',
+
           
         };
     }
+
+     myCar = <Icon name="car" size={20} />;
+     myArrow = <Ionicons name="ray-start-arrow" size={20} />;
+     map = <Icon name="map-marker" size={18}/>;
+     arrow = <Ionicons name="ray-start-arrow" size={25}/>
+     clock = <Icon name="clock-o" color={'orange'} size={16}/>;
+     seat = <Ionicons name="seat" size={16}/>
+     star = <Icon name="star" size={16}/>
+     flag = <Icon name="flag" size={16}/>
+     dollar =<Icon name ="dollar" size={16}/>
+    check = <Icon  name = "Check" size ={16} color = {'green'}/>
+    
     
    
         render() {
@@ -46,25 +44,21 @@ export class RideContainer extends Component {
                 <View style={Styles.container}>
                     <View style={Styles.parentContainer}>
                                         <View style={Styles.childContainer}>
-                                        {/* <EvilIcons name={'location'} size={15}/> */}
-                                            <Icon name="arrow-right"  />
-                                            <Text style={{fontSize : 18, fontWeight: "bold"}}>{this.state.fromLocationName}</Text>
-                                            <Icon name="arrow-right"  />
-                                            <Text style={{fontSize : 18, fontWeight: "bold"}}>{this.state.fromLocationName}</Text>
-                                            <Text style={{fontSize : 20}}>{this.state.ridePrice}</Text>
+
+                                            <Text style={{fontSize : 18, fontWeight: "bold"}}>{this.map} {this.props.fromLocationName}</Text>
+                                            <Text>{this.myArrow}</Text>
+                                            <Text style={{fontSize : 18, fontWeight: "bold"}}>{this.map} {this.props.toLocationName}</Text>
+                                            <Text style={{fontSize : 20}}>{this.dollar} {this.props.ridePrice}</Text>
                                         </View>
                                             
                                         <View style={{borderBottomColor: '#F5F5F5',borderBottomWidth: 1,}} />
                                         
                                         <View style={Styles.childContainer}>
-                                            <Icon name="arrow-right"  />
-                                            <Text style={{fontSize : 15}}>{this.state.time}</Text>
-                                            <Icon name="arrow-right"  />
-                                            <Text style={{fontSize : 15}}>{this.state.numberOfSeats}</Text>
-                                            <Icon name="arrow-right"  />
-                                            <Text style={{fontSize : 15}}>{this.state.ratings}</Text>
-                                            <Icon name="arrow-right"  />
-                                            <Text style={{fontSize : 15}}>{this.state.numberOfStops}</Text>
+                                       
+                                            <Text style={{fontSize : 15}}>{this.clock} {this.props.time}</Text>
+                                            <Text style={{fontSize : 15}}>{this.seat} {this.props.numberOfSeats}</Text>
+                                            <Text style={{fontSize : 15}}>{this.star} {this.props.ratings}</Text>
+                                            <Text style={{fontSize : 15}}>{this.flag} {this.props.numberOfStops}</Text>
                                             <TouchableOpacity onPress={()=>{this.props.navigation.navigate('RideDetails')}} ><Text style={{color: '#0D92DD',}}>Details</Text></TouchableOpacity>
                                         </View>
                      </View>
