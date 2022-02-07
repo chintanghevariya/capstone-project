@@ -6,6 +6,7 @@ import LoginPage from './components/LoginPage'
 import RegisterPage from './components/RegisterPage'
 import ForgetPasswordPage from './components/ForgetPasswordPage'
 import HomePage from './components/HomePage'
+import data from './components/users'
 
 import './App.css'
 

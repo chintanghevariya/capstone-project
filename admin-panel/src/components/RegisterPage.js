@@ -11,10 +11,10 @@ class RegisterPage extends Component {
     super(props);
     this.state = {
       firstName: "",
-      lastName:"",
+      lastName: "",
       email: "",
       password: "",
-      confirm_password:"",
+      confirm_password: "",
       errors: {},
 
     };
@@ -32,7 +32,7 @@ class RegisterPage extends Component {
       try {
         const config = {
           headers: {
-            "Content-type" : "application/json"
+            "Content-type": "application/json"
           }
         };
 
@@ -48,7 +48,7 @@ class RegisterPage extends Component {
             if (response.status === 200) {
               alert('User has been created successfully');
             }
-        });
+          });
         alert(data)
       } catch (e) {
         alert(e.response.data.error)
@@ -67,7 +67,7 @@ class RegisterPage extends Component {
     let confirm_password = this.state.confirm_password;
 
     console.log('errors', this.state.errors);
-  debugger;
+    debugger;
     let errors = {};
     let isValid = true;
 
@@ -80,7 +80,7 @@ class RegisterPage extends Component {
       const re = /^\S*$/;
       if (lastname.length < 4 || !re.test(lastname)) {
         this.setState({ isValid: false });
-        errors["lastname"]= "Please enter valid lastName.";
+        errors["lastname"] = "Please enter valid lastName.";
       }
     }
 
@@ -113,7 +113,7 @@ class RegisterPage extends Component {
     if (password && confirm_password) {
       if (password !== confirm_password) {
         isValid = false;
-        errors["confirm_password"]= "Passwords don't match.";
+        errors["confirm_password"] = "Passwords don't match.";
       }
     }
 
@@ -125,84 +125,84 @@ class RegisterPage extends Component {
   }
   render() {
     return (
-      <div className= "text-center m-5-auto"  >
-      <h1>Register for Admin Panel</h1>
-    <form onSubmit={this.handleSubmit} >
-      <div className="form-group">
-      <label >Firstname:</label>
-    <input
-    type="text"
-    name="firstName"
-    onChange={this.handleChange}
-    className="form-control"
-    placeholder="Enter first name"
-    id="firstName" required/>
+      <div className="text-center m-5-auto"  >
+        <h1>Register for Admin Panel</h1>
+        <form onSubmit={this.handleSubmit} >
+          <div className="form-group">
+            <label >Firstname:</label>
+            <input
+              type="text"
+              name="firstName"
+              onChange={this.handleChange}
+              className="form-control"
+              placeholder="Enter first name"
+              id="firstName" required />
 
-    <div className="text-danger">{this.state.errors.firstName}</div>
-      </div>
-      <div className="form-group">
-      <label >lastName:</label>
-    <input
-    type="text"
-    name="lastName"
-    onChange={this.handleChange}
-    className="form-control"
-    placeholder="Enter lastName"
-    id="lastName" required/>
+            <div className="text-danger">{this.state.errors.firstName}</div>
+          </div>
+          <div className="form-group">
+            <label >lastName:</label>
+            <input
+              type="text"
+              name="lastName"
+              onChange={this.handleChange}
+              className="form-control"
+              placeholder="Enter lastName"
+              id="lastName" required />
 
-    <div className="text-danger">{this.state.errors.lastName}</div>
-      </div>
+            <div className="text-danger">{this.state.errors.lastName}</div>
+          </div>
 
-      <div className="form-group">
-      <label>Email Address:</label>
-    <input
-    type="text"
-    name="email"
-    onChange={this.handleChange}
-    className="form-control"
-    placeholder="Enter email"
-    id="email" required/>
+          <div className="form-group">
+            <label>Email Address:</label>
+            <input
+              type="text"
+              name="email"
+              onChange={this.handleChange}
+              className="form-control"
+              placeholder="Enter email"
+              id="email" required />
 
-    <div className="text-danger">{this.state.errors.email}</div>
-      </div>
+            <div className="text-danger">{this.state.errors.email}</div>
+          </div>
 
-      <div className="form-group">
-      <label>Password:</label>
-    <input
-    type="password"
-    name="password"
-    onChange={this.handleChange}
-    className="form-control"
-    placeholder="Enter password"
-    id="password" required/>
+          <div className="form-group">
+            <label>Password:</label>
+            <input
+              type="password"
+              name="password"
+              onChange={this.handleChange}
+              className="form-control"
+              placeholder="Enter password"
+              id="password" required />
 
-    <div className="text-danger">{this.state.errors.password}</div>
-      </div>
+            <div className="text-danger">{this.state.errors.password}</div>
+          </div>
 
-      <div className="form-group">
-      <label>Confirm Password:</label>
-    <input
-    type="password"
-    name="confirm_password"
-    onChange={this.handleChange}
-    className="form-control"
-    placeholder="Enter confirm password"
-    id="confirm_password" required />
+          <div className="form-group">
+            <label>Confirm Password:</label>
+            <input
+              type="password"
+              name="confirm_password"
+              onChange={this.handleChange}
+              className="form-control"
+              placeholder="Enter confirm password"
+              id="confirm_password" required />
 
-    <div className="text-danger">{this.state.errors.confirm_password}</div>
-      </div>
-      <p>
-      <input type="checkbox" name="checkbox" id="checkbox" required /> <span>I agree all statements in <a href="https://google.com" target="_blank" rel="noopener noreferrer">terms of service</a></span>.
+            <div className="text-danger">{this.state.errors.confirm_password}</div>
+          </div>
+          <p>
+            <input type="checkbox" name="checkbox" id="checkbox" required /> <span>I agree all statements in <a href="https://google.com" target="_blank" rel="noopener noreferrer">terms of service</a></span>.
   </p>
 
-    <button id='sub_btn'  >Submit</button>
-    {/* <input type="submit" value="Submit"  /> */}
-  </form>
-    <footer>
-    <p><Link to="/">Back to Homepage</Link>.</p>
-    </footer>
-    </div>
-  );
+          <button id='sub_btn'  >Submit</button>
+          {/* <input type="submit" value="Submit"  /> */}
+        </form>
+        <footer>
+          <p><Link to="/">Back to Homepage</Link>.</p>
+        </footer>
+      </div>
+    );
   }
 }
 export default RegisterPage
