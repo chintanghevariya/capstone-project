@@ -141,61 +141,63 @@ export default function PostRide() {
   }
 
   const checkPet = () => {
-      if(pet == false)
-        setPet(true)
-      else if(pet ==true)
-        setPet(false)
+    setPet(!pet) 
   }
 
   const checkSmoke = () => {
-      if(smokeFree == false)
-        setSmokeFree(true)
-      else if(smokeFree ==true)
-        setSmokeFree(false)
+    setSmokeFree(!smokeFree)
   }
 
   const checkFemale = () =>{
-      if(female == false)
-        setFemale(true)
-      else if(female ==true)
-        setFemale(false)
+    setFemale(!female)
   }
 
   const checkLuggage = () =>{
-      if(luggage == false){
-        setLuggage(true)
-        
-      }
-      else if(luggage ==true)
-      {
-        setLuggage(false)
-      
-      }
+    setLuggage(!luggage)
   }
 
   const handlePreferences=()=>{
     
-    alert("\n pet : " + pet+
-    "\n smokeFree : " + smokeFree+
-    "\n Female   : "  + female+
-    "\n Luggage : "+ luggage)
+    console.warn(pet)
+    // alert("\n pet : " + pet+
+    // "\n smokeFree : " + smokeFree+
+    // "\n Female   : "  + female+
+    // "\n Luggage : "+ luggage)
 
     
   }
 
 
-  const handlePost =()=>{
-    handlePreferences()
-    alert(paymentMethod 
-    + "\n from : " +  from 
-    + "\n  To  : " + to
-    + "\n date : " + date 
-    + "\n  Error : " + error
-    + "\n Stops : " + JSON.stringify(fields)
-    + "\n  Amount : " + amount
-    + "\n  Seats : " + seatsAvailable
-    )
+  const handlePost = async ()=>{
 
+    handlePreferences()
+    // alert(paymentMethod 
+    // + "\n from : " +  from 
+    // + "\n  To  : " + to
+    // + "\n date : " + date 
+    // + "\n  Error : " + error
+    // + "\n Stops : " + JSON.stringify(fields)
+    // + "\n  Amount : " + amount
+    // + "\n  Seats : " + seatsAvailable
+    // )
+
+    // try {
+    //   const config={
+    //       headers:{
+    //           "Content-type":"application/json"
+    //       }
+    //   }
+    //   const {data} = await axios.post(
+    //       `http://localhost:4000/rides`,
+    //       {
+              
+    //       },
+    //       config
+    //       );  
+      
+    //   } catch (e) {
+    //   Alert.alert(e)
+  
     
  
    }
@@ -318,7 +320,7 @@ export default function PostRide() {
             <View>{
                 fields.map((field, idx) => {
                     return (
-                      <View style={Styles.stopContainer}>
+                      <View style={Styles.stopContainer}key={idx}>
                         <Input style={Styles.stopInput}
                           placeholder="Enter Your Stop"
                           onChangeText={(value) => handleChange(idx, value)}
@@ -388,7 +390,8 @@ const Styles = StyleSheet.create({
   },
 
   iconSelected :{
-    backgroundColor: 'lightblue'
+    borderWidth : 2,
+    width : 30
   },
 
   addBtn:{width : '100%',
