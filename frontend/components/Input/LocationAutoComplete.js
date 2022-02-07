@@ -12,18 +12,17 @@ export const LocationAutoComplete = () => {
     ]);
     const [loading, setLoading] = useState(false);
 
-    const handleChange = (text) => {
+    const handleSearchTextChange = (text) => {
         setLoading(true);
-        debugger;
         getLocationsByName(text)
             .then(result => {
                 const [response, error] = result;
-                debugger;
                 if (response && response.data) {
-                    debugger;
                     const data = response.data.map((element, idx) => ({
                         ...element,
                         label: idx + 1 + " " + element.display_name,
+                        latitude: element.latitude,
+                        longitude: element.longitude,
                         value: idx,
                         id: idx,
                         key: idx,
@@ -34,18 +33,27 @@ export const LocationAutoComplete = () => {
             })
     }
 
+    const handleChange = (item) => {
+        const value = {
+            locationName: item.display_name,
+            latitude: Number(item.lat),
+            longitude: Number(item.lon)
+        }
+    }
+
   return (
-        <DropDownPicker
-            searchable={true}
-            disableLocalSearch={true}
-            onChangeSearchText={handleChange}
-            loading={loading}
-            open={open}
-            value={value}
-            items={items}
-            setOpen={setOpen}
-            setValue={setValue}
-            setItems={setItems}
-        />
+      <DropDownPicker
+          searchable={true}
+          disableLocalSearch={true}
+          onChangeSearchText={handleSearchTextChange}
+          loading={loading}
+          onSelectItem={handleChange}
+          open={open}
+          value={value}
+          items={items}
+          setOpen={setOpen}
+          setValue={setValue}
+          setItems={setItems}
+      />
   );
 };
