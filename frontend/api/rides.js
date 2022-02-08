@@ -9,7 +9,6 @@ export async function getRides() {
         const request = await axios.post(
             "http://localhost:4000/rides/filter",
             {
-                "From":"Toronto",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`

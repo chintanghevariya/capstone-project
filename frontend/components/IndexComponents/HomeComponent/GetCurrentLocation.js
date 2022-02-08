@@ -1,6 +1,6 @@
 import * as Loc from 'expo-location';
 
-export async function Location() {
+export async function GetCurrentLocation() {
     try{
     let location = await Loc.getCurrentPositionAsync({ enableHighAccuracy: true });
     let lat = location.coords.latitude

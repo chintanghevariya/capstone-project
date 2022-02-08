@@ -42,11 +42,10 @@ export default function DashBoard({navigation}) {
                                 <Text style={{ fontSize: 18, fontWeight: "bold" }}> {map} {element.from['locationName']}</Text>
                                 <Text> {arrow} </Text>
                                 <Text style={{ fontSize: 18, fontWeight: "bold" }}> {map} {element.to['locationName']}</Text>
-                                <Text style={{ fontSize: 20 }}>${element.pricePerSeat}</Text>
+                                <Text style={{ fontSize: 20,marginRight:5 }}>${element.pricePerSeat}</Text>
                             </View>
                             <View style={{ borderBottomColor: '#F5F5F5', borderBottomWidth: 1, }} />
                             <View style={Styles.childContainer}>
-                                
                                 <Text style={{ fontSize: 16 }}> {clock} {element.startDateAndTime}</Text>
                                 <Text style={{ fontSize: 16 }}> {seat} {element.numberOfSeats}</Text>
                                 <Text style={{ fontSize: 16 }}> {star} 2</Text>
