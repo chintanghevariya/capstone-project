@@ -1,17 +1,36 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-
+import { getToken } from '../helpers/Token';
+import {getUser} from '../helpers/user'
 
 export async function getRides() {
-    
+    const token = await getToken()
     try {
-        const request = await axios.get(
-            "http://localhost:4000/rides/?from=Toronto",
-            {},
+        const request = await axios.post(
+            "http://localhost:4000/rides/filter",
             {
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWYxODNiNWI5ZTdiZjE0YTY5NWI4ZjIiLCJlbWFpbCI6ImFhcnl0cml2ZWRpQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6IkFhcnkiLCJsYXN0TmFtZSI6IlRyaXZlZGkiLCJwYXNzd29yZCI6IjEyMzQ1NiIsInJvbGUiOiJwYXNzZW5nZXIiLCJkcml2ZXJEZXRhaWxzVmFsaWQiOmZhbHNlLCJfX3YiOjAsImlhdCI6MTY0MzIxODExMX0.NVTWMZjj3B9yi8Pl2VCvCZf9YySrO16gyFu4kPqSu7o"
+                    "Authorization": `Bearer ${token}`
+                }
+            }
+        );
+        return [request, null];
+    } catch (e) {
+        return [null, e.message];
+    }
+}
+
+export async function getRideOfCurrentUser(){
+    const user = getUser()
+    const token = await getToken()
+    try {
+        const request = await axios.get(
+            "http://localhost:4000/rides/of-user/as-passenger",
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
                 }
             }
         );

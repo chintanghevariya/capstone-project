@@ -23,9 +23,7 @@ export const theme = extendTheme({ config });
 export default function App() {
   return (
       <NativeBaseProvider>
-        {/* <ManageRide/> */}
-        <Routes/>
-        {/* <Chat/> */}
+      <Routes/>
       </NativeBaseProvider>
   );
 }

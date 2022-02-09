@@ -17,7 +17,7 @@ export default class DashBoard extends Component {
   render() {
     return (
       <Tab.Navigator
-      screenOptions={({ route }) => ({
+        screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 

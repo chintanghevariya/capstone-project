@@ -14,7 +14,15 @@ const app = express();
 
 // Enable accepting json body
 app.use(bodyParser.json())
+app.use(bodyParser.json({
+    limit: '50mb'
+}));
 
+app.use(bodyParser.urlencoded({
+    limit: '50mb',
+    parameterLimit: 100000,
+    extended: true
+}));
 // Enable cors
 app.use(cors())
 
@@ -22,11 +30,10 @@ app.use(cors())
 app.listen(config.PORT, async function () {
     console.log(`Listening on port ${config.PORT}`);
     console.log(`Connecting to mongo...`);
-    const { MONGO_PORT, MONGO_DB_NAME, MONGO_HOST } = config
+    // const { MONGO_PORT, MONGO_DB_NAME, MONGO_HOST } = config
     try {
         // await mongoose.connect(`mongodb://${MONGO_HOST}:${MONGO_PORT}/${MONGO_DB_NAME}`);
         await mongoose.connect(`mongodb+srv://rutikpatel:Rutik123@com3123.4rasi.mongodb.net/test`)
-        
         console.log("Connected to mongo");
     } catch (e) {
         console.error(e);
