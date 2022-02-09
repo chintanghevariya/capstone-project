@@ -18,8 +18,9 @@ export const LocationAutoComplete = ({ onChange }) => {
                     const data = response.data.map((element, idx) => ({
                         ...element,
                         label: idx + 1 + " " + element.display_name,
-                        latitude: element.latitude,
-                        longitude: element.longitude,
+                        locationName: element.display_name,
+                        latitude: Number(element.lat),
+                        longitude: Number(element.lon),
                         value: idx,
                         id: idx,
                         key: idx

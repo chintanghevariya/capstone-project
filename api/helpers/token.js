@@ -20,8 +20,6 @@ function verifyToken(req, res, next) {
     const token = authHeader && authHeader.split(' ')[1]
     const tokenSecret = config["JWT_SECRET"];
 
-    console.log(req.headers);
-
     if (token == null) {
         httpResponse.sendUnauthorized(res, "Token missing");
         return;
