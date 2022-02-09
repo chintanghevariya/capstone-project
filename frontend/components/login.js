@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Button } from 'native-base'
 import axios from 'axios';
 import {Alert,View, Text, ImageBackground ,TouchableOpacity, Dimensions, StyleSheet, TextInput } from 'react-native'
@@ -8,6 +8,7 @@ import { setUser } from "../helpers/user"
 import { getToken } from "../helpers/Token";
 import { getUser } from "../helpers/user"
 import { delete_Token_user } from './IndexComponents/Profile';
+import { AuthContext } from '../context/AuthContext';
 
 export default function Login({navigation})  {
     const [email,setEmail] = useState("");
@@ -17,6 +18,8 @@ export default function Login({navigation})  {
     const [error,setError] = useState();
     const [submitBtn,setSubmitBtn] = useState(true);
     const [isLoading,setIsLoading] = useState(false);
+
+    const authContext = useContext(AuthContext);
     
     // useEffect(()=>{
     //     delete_Token_user(navigation);
@@ -72,28 +75,24 @@ export default function Login({navigation})  {
     const handleSubmit = async (e) => {
         if(emailValidate && passValidate){
             try {
-                const config={
-                    headers:{
-                        "Content-type":"application/json"
-                    }
-                }
-                setIsLoading(true)
-                const {data} = await axios.post(
-                    `http://localhost:4000/users/login`,
+                const config = {
+                    headers: {
+                        "Content-type": "application/json",
+                    },
+                };
+                setIsLoading(true);
+                const { data } = await axios.post(
+                    `http://192.168.0.158:4000/users/login`,
                     {
-                        email, // R@P.com   
-                        password,// Rutik123
+                        email, // R@P.com
+                        password, // Rutik123
                     },
                     config
-                );  
-                
-                setToken(data.data.token)
-                setUser(data.data.user).then(
-                    navigation.navigate('DashBoard')                    
-                
                 );
-                setIsLoading(false)
-                
+                setToken(data.data.token);
+                setUser(data.data.user)
+                authContext.signInUser();
+                setIsLoading(false);
             } catch (e) {
                 Alert.alert(e.response.data.error)
                 setIsLoading(false)

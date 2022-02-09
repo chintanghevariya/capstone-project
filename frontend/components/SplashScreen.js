@@ -47,7 +47,6 @@ export default function SplashScreen({navigation}) {
                             style={Styles.img} />
 
                         <TouchableOpacity onPress={() => { navigation.navigate('Signup') }} style={Styles.btn}><Text style={Styles.text}>Get Started</Text></TouchableOpacity>
-                        <LocationAutoComplete />
                         <View style={Styles.signupTextCont}>
                             <Text style={Styles.signupText}>Already have account?</Text>
                             <TouchableOpacity onPress={() => navigation.navigate('Login')}><Text style={Styles.signupButton}> Login</Text></TouchableOpacity>

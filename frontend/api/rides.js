@@ -7,12 +7,13 @@ export async function getRides() {
     const token = await getToken()
     try {
         const request = await axios.post(
-            "http://localhost:4000/rides/filter",
+            "http://192.168.0.158:4000/rides/filter",
+            {},
             {
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                }
+                    Authorization: `Bearer ${token}`,
+                },
             }
         );
         return [request, null];

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "./login";
@@ -8,14 +8,21 @@ import SplashScreen from "./SplashScreen";
 // import ErrorScreen from "./ErrorScreen";
 import { getToken } from "../helpers/Token";
 import ChatScreen from "./IndexComponents/ChatScreen";
+import { AuthContext } from "../context/AuthContext";
 
 const Stack = createNativeStackNavigator();
 
 export default function Routes() {
+    const authContext = useContext(AuthContext);
   const [token, setToken] = useState(null);
   useEffect(() => {
-    getToken().then((value) => setToken(value));
-  }, []);
+    getToken().then((value) => {
+        setToken(value)
+        if (value && value.trim() !== "") {
+            // authContext.signInUser()
+        }
+    });
+  }, [authContext]);
   return (
       <NavigationContainer navigationOptions={{ gesturesEnabled: false }}>
           <Stack.Navigator
@@ -23,40 +30,36 @@ export default function Routes() {
                   headerShown: false,
               }}
           >
-              <Stack.Screen
-                  name="SplashScreen"
-                  component={SplashScreen}
-                  options={{ gestureEnabled: false }}
-              />
-              <Stack.Screen
-                  name="Login"
-                  component={Login}
-                  options={{ gestureEnabled: false }}
-              />
-              <Stack.Screen
-                  name="Signup"
-                  component={Signup}
-                  options={{ gestureEnabled: false }}
-              />
-              <Stack.Screen
-                  name="ChatScreen"
-                  component={ChatScreen}
-                  options={({ route }) => ({
-                      title: route.params.userName,
-                      headerBackTitleVisible: false,
-                  })}
-              />
-
-              {token !== null ? (
+              {authContext.signedIn ? (
                   <>
                       <Stack.Screen name="DashBoard" component={DashBoard} />
                   </>
               ) : (
-                  <Stack.Screen
-                      name="ErrorScreen"
-                      component={SplashScreen}
-                      options={{ gestureEnabled: false }}
-                  />
+                  <>
+                      <Stack.Screen
+                          name="SplashScreen"
+                          component={SplashScreen}
+                          options={{ gestureEnabled: false }}
+                      />
+                      <Stack.Screen
+                          name="Login"
+                          component={Login}
+                          options={{ gestureEnabled: false }}
+                      />
+                      <Stack.Screen
+                          name="Signup"
+                          component={Signup}
+                          options={{ gestureEnabled: false }}
+                      />
+                      <Stack.Screen
+                          name="ChatScreen"
+                          component={ChatScreen}
+                          options={({ route }) => ({
+                              title: route.params.userName,
+                              headerBackTitleVisible: false,
+                          })}
+                      />
+                  </>
               )}
           </Stack.Navigator>
       </NavigationContainer>
