@@ -3,13 +3,10 @@ import React, { useState } from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { getLocationsByName } from '../../api/map';
 
-export const LocationAutoComplete = () => {
+export const LocationAutoComplete = ({ onChange }) => {
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(null);
-    const [items, setItems] = useState([
-        { label: "Apple", value: "apple" },
-        { label: "Banana", value: "banana" },
-    ]);
+    const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(false);
 
     const handleSearchTextChange = (text) => {
@@ -25,7 +22,7 @@ export const LocationAutoComplete = () => {
                         longitude: element.longitude,
                         value: idx,
                         id: idx,
-                        key: idx,
+                        key: idx
                     }));
                     setItems(data);
                 }
@@ -38,6 +35,7 @@ export const LocationAutoComplete = () => {
           searchable={true}
           disableLocalSearch={true}
           onChangeSearchText={handleSearchTextChange}
+          onSelectItem={onChange}
           loading={loading}
           open={open}
           value={value}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {View,Text, StyleSheet, Touchable, TouchableOpacity} from 'react-native'
 import { Button, ScrollView } from 'native-base';
-import {Location} from './Location';
+import {Location} from './GetCurrentLocation';
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { getUser } from "../../../helpers/user"
