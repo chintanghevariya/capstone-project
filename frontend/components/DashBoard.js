@@ -17,13 +17,15 @@ export default class DashBoard extends Component {
   render() {
     return (
       <Tab.Navigator
-      screenOptions={({ route }) => ({
+        screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
           if (route.name === 'Home') {
             iconName = focused ? 'ios-home': 'ios-home-outline';
-          } else if (route.name === 'Search') {
+          } 
+         
+          else if (route.name === 'Search') {
             iconName = focused ? 'ios-search' : 'ios-search-outline';
           }
           else if (route.name === 'Chat') {

@@ -18,7 +18,7 @@ ridesRouter.get("/:rideId", verifyToken, async function (req, res, next) {
 })
 
 // Get rides request
-ridesRouter.post("/filter", verifyToken, async function (req, res, next) {
+ridesRouter.post("/filter", verifyToken,async function (req, res, next) {
     try {
         const rides = await ridesService.getRides(req.body);
         httpResponse.sendSuccess(res, "Rides fetched successfully", rides);
