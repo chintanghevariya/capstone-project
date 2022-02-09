@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {View,Text, StyleSheet, Touchable, TouchableOpacity} from 'react-native'
 import { Button, ScrollView } from 'native-base';
-import {Location} from './GetCurrentLocation';
+import {GetCurrentLocation} from './GetCurrentLocation';
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { getUser } from "../../../helpers/user"
@@ -20,16 +20,6 @@ export default function DashBoard({navigation}) {
     const seat = <Ionicons name="seat" size={16}/>
     const star = <Icon name="star" size={16}/>
     const flag = <Icon name="flag" size={16}/>
-
-    getRides()
-            .then(response => {
-                const [result, error] = response;
-                if (error) {
-                    alert(error);
-                    return;
-                }
-                setRides(result.data.data);
-           });
 
     const list = () => {
         try{
@@ -65,8 +55,16 @@ export default function DashBoard({navigation}) {
     };
     // setUser(getUser())
     // to access the lattitude and longitude the use location.lat and location.long 
-    useEffect(() => {     
-        // Location().then((value) => setLocation(value))   
+    useEffect(() => { 
+        getRides().then((response) => {
+            const [result, error] = response;
+            if (error) {
+                alert(error);
+                return;
+            }
+            setRides(result.data.data);
+        });    
+        GetCurrentLocation().then((value) => setLocation(value));   
         getUser().then((value)=>setUser(value))
     }, []) 
   return(
