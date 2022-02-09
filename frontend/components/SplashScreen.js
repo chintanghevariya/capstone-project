@@ -3,6 +3,7 @@ import { Alert,ImageBackground,View,Image,Linking, StyleSheet,TouchableOpacity,T
 import * as Location from 'expo-location';
 import Constants from 'expo-constants'
 import * as IntentLauncher from 'expo-intent-launcher'
+import { LocationAutoComplete } from './Input/LocationAutoComplete';
 
 export default function SplashScreen({navigation}) {
     const pkg = Constants.manifest.releaseChannel
@@ -46,6 +47,7 @@ export default function SplashScreen({navigation}) {
                             style={Styles.img} />
 
                         <TouchableOpacity onPress={() => { navigation.navigate('Signup') }} style={Styles.btn}><Text style={Styles.text}>Get Started</Text></TouchableOpacity>
+                        <LocationAutoComplete />
                         <View style={Styles.signupTextCont}>
                             <Text style={Styles.signupText}>Already have account?</Text>
                             <TouchableOpacity onPress={() => navigation.navigate('Login')}><Text style={Styles.signupButton}> Login</Text></TouchableOpacity>
