@@ -8,10 +8,6 @@ import DashBoard from './HomeComponent/Home.DashBoard';
 export default function Home() {
     return (
         <View style={Styles.container}>
-            {/* <Text>Home screen</Text> */}
-            {/* <Text>{JSON.stringlify(getUser().then(Value))}</Text> */}
-            {/* <Button onPress={() => getUser().then((value) => alert(value))}>click me</Button>
-            <Button onPress={() => getToken().then((value) => alert(value))}>click me</Button> */}
             <DashBoard/>
         </View>
     );

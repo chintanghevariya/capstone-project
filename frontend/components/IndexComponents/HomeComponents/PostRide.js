@@ -3,6 +3,7 @@ import {View,Text,StyleSheet,SafeAreaView,Image,Dimensions,ScrollView,TouchableO
 import {Button,Input} from 'native-base'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import  RadioForm from 'react-native-simple-radio-button';
+import { LocationAutoComplete } from '../../Input/LocationAutoComplete';
 // import { Autocomplete, verify } from '@lob/react-address-autocomplete'
 const { width } = Dimensions.get("window");
 
@@ -17,6 +18,7 @@ export default function PostRide() {
   const [amount, setAmount] = useState(false);
   const [seatsAvailable, setSeatsAvailable] = useState(false);
   const [fields, setFields] = useState([{ value: null, key : 1}]);
+  const [showDateTimePicker, setShowDateTimePicker] = useState(false);
 
   const [pet,setPet] = useState(false);
   const [smokeFree, setSmokeFree] = useState(false);
@@ -36,6 +38,7 @@ export default function PostRide() {
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setDate(currentDate);
+    setShowDateTimePicker(false)
   };
 
   const handleChange = (i, value) =>{
@@ -170,6 +173,13 @@ export default function PostRide() {
 
   const handlePost = async ()=>{
 
+    debugger;
+    debugger;
+
+    const abc = from;
+    const abcdef = to;
+    const lag = fields;
+
     handlePreferences()
     // alert(paymentMethod 
     // + "\n from : " +  from 
@@ -230,124 +240,150 @@ export default function PostRide() {
   //     );
   //   });
   // };
-
  
-  return(
+  return (
+      <View style={{ flex: 1 }} showsVerticalScrollIndicator={true}>
+          <SafeAreaView style={Styles.container}>
+              <ScrollView style={Styles.scrollView}>
+                  <Text style={Styles.header}>Post a Ride</Text>
+                  <Text style={Styles.secondaryHeader}>Ride Details</Text>
 
-    <View style={{flex:1}} showsVerticalScrollIndicator={true}>
-      <SafeAreaView style = {Styles.container}>
-        <ScrollView style={Styles.scrollView}>
-            <Text style={Styles.header}>Post a Ride</Text>
-            <Text style={Styles.secondaryHeader}>Ride Details</Text>
-           
-            <Text style={Styles.textLable}>From</Text>
-            <Input style={Styles.input} placeholder={"Toronto"}
-                   
-                    autoCapitalize='none'
-                    onChangeText = {(text) => handleFrom(text)}/>
-             <Text style={Styles.textLable}>To</Text>
-             <Input style={Styles.input} placeholder={"Windsor"}
-                   
-                    autoCapitalize='none'
-                    onChangeText = {(text) => handleTo(text)}/>
-            <Text style={Styles.textLable}>Date and Time</Text>  
+                  <Text style={Styles.textLable}>From</Text>
+                  <LocationAutoComplete value={from} onChange={setFrom} />
+                  <Text style={Styles.textLable}>To</Text>
+                  <LocationAutoComplete value={to} onChange={setTo} />
 
-            <View style={Styles.dateTime}>
+                  <TouchableOpacity
+                      onPress={() => {
+                          setShowDateTimePicker(!showDateTimePicker);
+                      }}
+                  >
+                      <Text style={Styles.textLable}>Date and Time</Text>
+                  </TouchableOpacity>
 
-            <DateTimePicker
-                value={date}
-                mode={'datetime'}
-                is24Hour={true}
-                onChange={(e,value)=>onChange(e,value)}
-              />
-            </View>
+                  <View style={Styles.dateTime}>
+                      {showDateTimePicker && (
+                          <DateTimePicker
+                              value={date}
+                              mode={"datetime"}
+                              is24Hour={true}
+                              onChange={(e, value) => onChange(e, value)}
+                          />
+                      )}
+                  </View>
 
-            <Text style={Styles.textLable}>Amount</Text> 
-            <Input style={Styles.input} placeholder={" $35"}
-                    keyboardType="decimal-pad"
-                   
-                    maxLength={6}
-                    autoCapitalize='none'
-                    onChangeText={(text) => handleAmount(text)}  />
+                  <Text style={Styles.textLable}>Amount</Text>
+                  <Input
+                      style={Styles.input}
+                      placeholder={" $35"}
+                      keyboardType="decimal-pad"
+                      maxLength={6}
+                      autoCapitalize="none"
+                      onChangeText={(text) => handleAmount(text)}
+                  />
 
-            <Text style={Styles.textLable}>Seats Available</Text> 
-            <Input style={Styles.input} placeholder={" 4 "}
-                   
-                    autoCapitalize='none'
-                    onChangeText={(text) => handleSeat(text)} />
+                  <Text style={Styles.textLable}>Seats Available</Text>
+                  <Input
+                      style={Styles.input}
+                      placeholder={" 4 "}
+                      autoCapitalize="none"
+                      onChangeText={(text) => handleSeat(text)}
+                  />
 
-            <Text style={Styles.textLable}>Preferences</Text>  
-          
-            <View  style={Styles.img}>
-            <TouchableOpacity
-              onPress={() =>  checkPet()}
-              style={ pet ? Styles.iconSelected : Styles.icon}>
-                <Image source={require('../../../assets/pet.png')} style={Styles.icons}></Image>
-            </TouchableOpacity>  
-            <TouchableOpacity
-              onPress={() => checkSmoke()}
-              style={ smokeFree ? Styles.iconSelected : Styles.icon}>
-                <Image source={require('../../../assets/smokeFree.png')} style={Styles.icons}></Image>
-            </TouchableOpacity>  
-            <TouchableOpacity
-              onPress={() => checkFemale()}
-              style={ female ? Styles.iconSelected : Styles.icon}>
-                <Image source={require('../../../assets/female.png')} style={Styles.icons}></Image>
-            </TouchableOpacity>  
-            <TouchableOpacity
-              onPress={() => checkLuggage()}
-              style={luggage ? Styles.iconSelected : Styles.icon}>
-                <Image source={require('../../../assets/luggage.png')} style={Styles.icons}></Image>
-            </TouchableOpacity>  
-            </View>
+                  <Text style={Styles.textLable}>Preferences</Text>
 
-            <Text style={Styles.textLable}>Payment Type</Text>  
-            <View style={{paddingTop:'5%'}, {marginLeft:'5%'}}>
-            <RadioForm
-                    style={Styles.radio}
-                    radio_props={radio_props}
-                    itemShowKey="label"
-                    itemRealKey="value"
-                    formHorizontal={true}
-                    initial={0}
-                    value={0}
-                    onPress={(value) =>handleRole(value)}
-            />
-            </View> 
-            
-            <Text style={Styles.secondaryHeader}>Stops</Text> 
+                  <View style={Styles.img}>
+                      <TouchableOpacity
+                          onPress={() => checkPet()}
+                          style={pet ? Styles.iconSelected : Styles.icon}
+                      >
+                          <Image
+                              source={require("../../../assets/pet.png")}
+                              style={Styles.icons}
+                          ></Image>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                          onPress={() => checkSmoke()}
+                          style={smokeFree ? Styles.iconSelected : Styles.icon}
+                      >
+                          <Image
+                              source={require("../../../assets/smokeFree.png")}
+                              style={Styles.icons}
+                          ></Image>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                          onPress={() => checkFemale()}
+                          style={female ? Styles.iconSelected : Styles.icon}
+                      >
+                          <Image
+                              source={require("../../../assets/female.png")}
+                              style={Styles.icons}
+                          ></Image>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                          onPress={() => checkLuggage()}
+                          style={luggage ? Styles.iconSelected : Styles.icon}
+                      >
+                          <Image
+                              source={require("../../../assets/luggage.png")}
+                              style={Styles.icons}
+                          ></Image>
+                      </TouchableOpacity>
+                  </View>
 
-            <View>{
-                fields.map((field, idx) => {
-                    return (
-                      <View style={Styles.stopContainer}key={idx}>
-                        <Input style={Styles.stopInput}
-                          placeholder="Enter Your Stop"
-                          onChangeText={(value) => handleChange(idx, value)}
-                        />
-                        <TouchableOpacity  disabled={fields.length === 1}
-                        style={Styles.stopButton}onPress={() => handleRemove(idx)} Remove>
-                          <Text style={Styles.innerText}>X</Text>
-                        </TouchableOpacity>
-                      </View>
-                    );
-                  })}
-            </View>
+                  <Text style={Styles.textLable}>Payment Type</Text>
+                  <View style={({ paddingTop: "5%" }, { marginLeft: "5%" })}>
+                      <RadioForm
+                          style={Styles.radio}
+                          radio_props={radio_props}
+                          itemShowKey="label"
+                          itemRealKey="value"
+                          formHorizontal={true}
+                          initial={0}
+                          value={0}
+                          onPress={(value) => handleRole(value)}
+                      />
+                  </View>
 
-            <View style={Styles.addBtnText}>
-              {/* <>{fields.length === 1?
+                  <Text style={Styles.secondaryHeader}>Stops</Text>
+
+                  <View>
+                      {fields.map((field, idx) => {
+                          return (
+                              <View style={Styles.stopContainer} key={idx}>
+                                  <LocationAutoComplete
+                                      value={field.value}
+                                      onChange={(value) => handleChange(idx, value)}
+                                  />
+                                  <TouchableOpacity
+                                      disabled={fields.length === 1}
+                                      style={Styles.stopButton}
+                                      onPress={() => handleRemove(idx)}
+                                      Remove
+                                  >
+                                      <Text style={Styles.innerText}>X</Text>
+                                  </TouchableOpacity>
+                              </View>
+                          );
+                      })}
+                  </View>
+
+                  <View style={Styles.addBtnText}>
+                      {/* <>{fields.length === 1?
               <Button onPress={()=> handleAdd()}><Text> + Add Stop</Text></Button>
               : */}
-              <TouchableOpacity 
-                  disabled={
-                  fields[fields.length-1].value === null}
-                  onPress={()=> handleAdd()}><Text> + Add Stop</Text>
-              </TouchableOpacity>
-             
-            </View>
-            <Button style={Styles.enabled} onPress={()=>handlePost()}>Post Ride</Button>
-          </ScrollView>
-        </SafeAreaView>
+                      <TouchableOpacity
+                          disabled={fields[fields.length - 1].value === null}
+                          onPress={() => handleAdd()}
+                      >
+                          <Text> + Add Stop</Text>
+                      </TouchableOpacity>
+                  </View>
+                  <Button style={Styles.enabled} onPress={() => handlePost()}>
+                      Post Ride
+                  </Button>
+              </ScrollView>
+          </SafeAreaView>
       </View>
   );
 }
