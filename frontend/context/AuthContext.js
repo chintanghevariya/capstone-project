@@ -28,11 +28,18 @@ export const AuthProvider = ({ children }) => {
         dispatch({ type: "SIGNED_IN" });
     }
 
+    function logoutUser() {
+        dispatch({ type: "SIGNED_OUT" });
+    }
+
     return (
-        <AuthContext.Provider value={{
-            ...state,
-            signInUser
-        }}>
+        <AuthContext.Provider
+            value={{
+                ...state,
+                signInUser,
+                logoutUser,
+            }}
+        >
             {children}
         </AuthContext.Provider>
     );

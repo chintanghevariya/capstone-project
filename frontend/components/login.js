@@ -90,8 +90,8 @@ export default function Login({navigation})  {
                     config
                 );
                 setToken(data.data.token);
+                setUser(data.data.user)
                 authContext.signInUser();
-                // setUser(data.data.user).then(navigation.navigate("DashBoard"));
                 setIsLoading(false);
             } catch (e) {
                 Alert.alert(e.response.data.error)

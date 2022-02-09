@@ -15,9 +15,13 @@ const Stack = createNativeStackNavigator();
 export default function Routes() {
     const authContext = useContext(AuthContext);
   const [token, setToken] = useState(null);
-  debugger;
   useEffect(() => {
-    getToken().then((value) => setToken(value));
+    getToken().then((value) => {
+        setToken(value)
+        if (value && value.trim() !== "") {
+            // authContext.signInUser()
+        }
+    });
   }, [authContext]);
   return (
       <NavigationContainer navigationOptions={{ gesturesEnabled: false }}>
