@@ -4,6 +4,8 @@ import {Button,Input} from 'native-base'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import  RadioForm from 'react-native-simple-radio-button';
 import { LocationAutoComplete } from '../../Input/LocationAutoComplete';
+import { getToken } from '../../../helpers/Token';
+import axios from 'axios';
 // import { Autocomplete, verify } from '@lob/react-address-autocomplete'
 const { width } = Dimensions.get("window");
 
@@ -119,7 +121,7 @@ export default function PostRide() {
       return false;
     }else{
       setError("")
-      setAmount(true);
+      setAmount(value);
       return true
     };
 
@@ -137,7 +139,7 @@ export default function PostRide() {
       return false;
     }else {
       setError("")
-      setSeatsAvailable(true);
+      setSeatsAvailable(value);
       return true;
     }
   
@@ -160,53 +162,51 @@ export default function PostRide() {
   }
 
   const handlePreferences=()=>{
-    
-    console.warn(pet)
-    // alert("\n pet : " + pet+
-    // "\n smokeFree : " + smokeFree+
-    // "\n Female   : "  + female+
-    // "\n Luggage : "+ luggage)
-
-    
+    const preferences = [];
+    if (pet) { preferences.push("pet") }
+    if (smokeFree) { preferences.push("somefree") }
+    if (female) { preferences.push("female") }
+    if (luggage) { preferences.push("luggage") }
+    return preferences;    
   }
 
 
   const handlePost = async ()=>{
 
+    const preferences = handlePreferences()
     debugger;
-    debugger;
+    const details = {
+        from,
+        to,
+        preferences,
+        startDateAndTime: date,
+        numberOfSeats: Number(seatsAvailable),
+        pricePerSeat: Number(amount),
+        paymentType: paymentMethod.toLowerCase(),
+        stops: []
+    };
 
-    const abc = from;
-    const abcdef = to;
-    const lag = fields;
-
-    handlePreferences()
-    // alert(paymentMethod 
-    // + "\n from : " +  from 
-    // + "\n  To  : " + to
-    // + "\n date : " + date 
-    // + "\n  Error : " + error
-    // + "\n Stops : " + JSON.stringify(fields)
-    // + "\n  Amount : " + amount
-    // + "\n  Seats : " + seatsAvailable
-    // )
-
-    // try {
-    //   const config={
-    //       headers:{
-    //           "Content-type":"application/json"
-    //       }
-    //   }
-    //   const {data} = await axios.post(
-    //       `http://localhost:4000/rides`,
-    //       {
-              
-    //       },
-    //       config
-    //       );  
+    try {
+      const token = await getToken();
+      const config={
+          headers:{
+              "Content-type":"application/json",
+              Authorization: `Bearer ${token}`
+          }
+      }
+      debugger;
+      const {data} = await axios.post(
+          `http://192.168.2.37:4000/rides`,
+          details,
+          config
+          ); 
+      console.log(data);
       
-    //   } catch (e) {
-    //   Alert.alert(e)
+      } catch (e) {
+        debugger;
+        console.error(e);
+        Alert.alert(e)
+      }
   
     
  

@@ -31,11 +31,12 @@ ridesRouter.post("/filter", verifyToken,async function (req, res, next) {
 ridesRouter.post("/", verifyToken, async function (req, res, next) {
     try {
         // Set driver id of ride to current logged in user id
-        const { userId: driverId } = req.user;
+        const { _id: driverId } = req.user;
         req.body.driver = driverId;
         const ride = await ridesService.createRide(req.body);
         httpResponse.sendSuccess(res, "Ride created successfully", ride);
     } catch (e) {
+        console.log(e);
         httpResponse.sendFailure(res, e.message);
     }
 })
