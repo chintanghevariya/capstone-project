@@ -42,7 +42,7 @@ class UserService {
         if (password === undefined || password === null) {
             throw new Error("Password is required");
         }
-        const user = await User.findOne({ email });
+        const user = await this.getUserByEmail(email);
         if (user === null) {
             throw new Error("This email is not associated to any account");
         }
@@ -52,6 +52,11 @@ class UserService {
         const token = generateToken({ ...user._doc })
         return { token,user }
     }
+
+    async getUserByEmail(email) {
+        return User.findOne({ email });
+    }
+    
 }
 
 module.exports = new UserService;

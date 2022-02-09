@@ -20,8 +20,8 @@ describe("Rides Tests", function () {
 
         function createRide(ride) {
             const token = generateToken({
-                userId: "61df6e45bd6fe4e712e20dac"
-            })
+                userId: "61fafe0d8e5a5aae6fae4e1c",
+            });
             return chai.request(app)
                 .post('/rides')
                 .set("Content-Type", "application/json")
@@ -824,7 +824,7 @@ describe("Rides Tests", function () {
 
     })
 
-    describe("Get rides tests", function () {
+    describe("Filter rides tests", function () {
         function getRides(filters={}) {
             const token = generateToken({ userId: 1 });
             return chai.request(app)
@@ -875,7 +875,120 @@ describe("Rides Tests", function () {
         })
     })
 
-    describe("Add as rider test", function () {
+    describe("Get ride by id test", function () {
+
+        function getRide(id) {
+            const token = generateToken({
+                email: "test@test.com"
+            })
+            return chai.request(app)
+                        .get("/rides/" + id)
+                        .set("Content-Type", "application/json")
+                        .set("Authorization", "Bearer " + token)
+        }
+
+        it("Route should exist", async function () {
+            const request = await getRide("test");
+            request.status.should.not.equal(404);
+        })
+
+        it("Should return ride with id if found", async function () {
+            const request = await getRide("61fd8ee3823e1044fa2097e0");
+            request.status.should.be.equal(200);
+            request.body.should.haveOwnProperty("status");
+            request.body.should.haveOwnProperty("message");
+            request.body.should.haveOwnProperty("data");
+            request.body.status.should.equal("Success");
+            request.body.message.should.equal("Ride fetched successfully");
+            request.body.data.should.haveOwnProperty("ride");
+        });
+
+    })
+
+    describe("Add ride request tests", function () {
+
+        async function getRides() {
+            const rides = await ridesService.getRides({
+                "from.locationName": "Toronto",
+                "to.locationName": "Ottawa",
+            });
+            return rides;
+        }
+
+        async function addRequest(token, customRideId) {
+            const rides = await getRides();
+            const rideId = customRideId ? customRideId : rides[0]._id;
+            return chai
+                .request(app)
+                .post("/rides/" + rideId + "/request")
+                .set("Content-Type", "application/json")
+                .set("Authorization", "Bearer " + token);
+        }
+
+        it ("Route should exist", async function () {
+            const request = await addRequest("");
+            request.status.should.not.be.equal(404);
+        })
+
+        it ("Should throw error if id is not present in token", async function () {
+            const token = generateToken({
+                email: "aarytrivedi@gmail.com"
+            });
+            const request = await addRequest(token);
+            request.status.should.be.equal(400);
+            request.body.should.haveOwnProperty("status");
+            request.body.should.haveOwnProperty("error");
+            request.body.status.should.equal("Failure");
+            request.body.error.should.equal("Token is invalid");
+        })
+
+        it ("Should throw error if ride with provided id does not exist", async function () {
+            const token = generateToken({
+                email: "aarytrivedi@gmail.com",
+                _id: "61fafe0d8e5a5aae6fae4e1c",
+            });
+            const request = await addRequest(token, "61fafe0d8e5a5aae6fae4e1c");
+            request.status.should.be.equal(400);
+            request.body.should.haveOwnProperty("status");
+            request.body.should.haveOwnProperty("error");
+            request.body.status.should.equal("Failure");
+            request.body.error.should.equal(
+                "Ride with provided id does not exist"
+            );
+        })
+
+        it("Should create request for user", async function () {
+            const token = generateToken({
+                email: "aarytrivedi@gmail.com",
+                _id: "61fafe0d8e5a5aae6fae4e1c",
+            });
+            const request = await addRequest(token);
+            request.status.should.be.equal(200);
+            request.body.should.haveOwnProperty("status");
+            request.body.should.haveOwnProperty("message");
+            request.body.should.haveOwnProperty("data");
+            request.body.status.should.equal("Success");
+            request.body.message.should.equal("Request created successfully");
+        });
+
+        it ("Should throw error if request for user already exist", async function () {
+            const token = generateToken({
+                email: "aarytrivedi@gmail.com",
+                _id: "61fafe0d8e5a5aae6fae4e1c",
+            });
+            const request = await addRequest(token);
+            request.status.should.be.equal(400);
+            request.body.should.haveOwnProperty("status");
+            request.body.should.haveOwnProperty("error");
+            request.body.status.should.equal("Failure");
+            request.body.error.should.equal(
+                "Request for user already exists"
+            );
+        })
+
+    })
+
+    describe("Add as passenger test", function () {
 
         async function getRide() {
             const rides = await ridesService.getRides({
@@ -922,6 +1035,33 @@ describe("Rides Tests", function () {
         })
 
         it ("Should throw error if ride with id does not exist", function (done) {
+        async function addAsRider(token, customRideId) {
+            const rides = await getRide();
+            const rideId = customRideId ? customRideId : rides[0]._id;
+            return chai.request(app)
+                        .post("/rides/" + rideId + "/passenger")
+                        .set("Content-Type", "application/json")
+                        .set("Authorization", "Bearer " + token)
+        }
+
+        it ("Route should exist", async function () {
+            const request = await addAsRider("test");
+            request.status.should.not.be.equal(404);
+        })
+
+        it ("Should throw user if token does not have user id", async function () {
+            const token = generateToken({
+                email: "aarytrivedi@gmail.com",
+            });
+            const request = await addAsRider(token)
+            request.status.should.be.equal(400);
+            request.body.should.haveOwnProperty("status");
+            request.body.should.haveOwnProperty("error");
+            request.body.status.should.equal("Failure");
+            request.body.error.should.equal("Token is invalid");
+        })
+
+        it ("Should throw error if ride with id does not exist", async function () {
             const token = generateToken({
                 email: "aarytrivedi@gmail.com",
                 _id: "61faf3a4d5c29ac07e7e041d",
@@ -943,7 +1083,7 @@ describe("Rides Tests", function () {
         it ("Should add user a passenger of ride", function (done) {
             const token = generateToken({
                 email: "aarytrivedi@gmail.com",
-                _id: "61fafe0d8e5a5aae6fae4e1c",
+                _id: "61fafc784f2c14c1627e03d2",
             });
             addAsRider(
                 token,
@@ -962,7 +1102,7 @@ describe("Rides Tests", function () {
         it ("Should throw error if user is already passenger of a ride", function (done) {
             const token = generateToken({
                 email: "aarytrivedi@gmail.com",
-                _id: "61fafe0d8e5a5aae6fae4e1c",
+                _id: "61fafc784f2c14c1627e03d2",
             });
             addAsRider(token, function (err, res) {
                 res.status.should.be.equal(400);
@@ -972,11 +1112,46 @@ describe("Rides Tests", function () {
                 res.body.error.should.equal("User is already passenger of ride.");
                 done();
             });
+            const request = await addAsRider(
+                token, "61faf3a4d5c29ac07e7e041d"
+            );
+            request.status.should.be.equal(400);
+            request.body.should.haveOwnProperty("status");
+            request.body.should.haveOwnProperty("error");
+            request.body.status.should.equal("Failure");
+            request.body.error.should.equal("Ride with id does not exist");
+        })
+
+        it ("Should add user a passenger of ride", async function () {
+            const token = generateToken({
+                email: "aarytrivedi@gmail.com",
+                _id: "61fafe0d8e5a5aae6fae4e1c",
+            });
+            const request = await addAsRider(token)
+            request.status.should.be.equal(200);
+            request.body.should.haveOwnProperty("status");
+            request.body.should.haveOwnProperty("message");
+            request.body.should.haveOwnProperty("data");
+            request.body.status.should.equal("Success");
+            request.body.message.should.equal("User added as passenger");
+        })
+
+        it ("Should throw error if user is already passenger of a ride", async function () {
+            const token = generateToken({
+                email: "aarytrivedi@gmail.com",
+                _id: "61fafe0d8e5a5aae6fae4e1c",
+            });
+            const request = await addAsRider(token);
+            request.status.should.be.equal(400);
+            request.body.should.haveOwnProperty("status");
+            request.body.should.haveOwnProperty("error");
+            request.body.status.should.equal("Failure");
+            request.body.error.should.equal("User is already passenger of ride.");
         })
 
     })
 
-    describe("Get rides of user tests", function () {
+    describe("Get rides of user as passenger tests", function () {
 
         function getRides(token) {
             return chai.request(app)    
@@ -1027,6 +1202,128 @@ describe("Rides Tests", function () {
             });
         });
         
+    })
+
+    describe("Get rides of user as driver tests", function () {
+
+        function getRides(token) {
+            return chai
+                .request(app)
+                .get("/rides/of-user/as-driver")
+                .set("Content-Type", "application/json")
+                .set("Authorization", "Bearer` " + token);
+        }
+
+        it ("Route should exist", async function () {
+            const request = await getRides();
+            request.status.should.not.be.equal(404);
+        })
+
+        it ("Should throw error if token does not have userId", async function () {
+            const token = generateToken({
+                email: "test@test.com"
+            })
+            const request = await getRides(token);
+            request.status.should.be.equal(400);
+            request.body.should.haveOwnProperty("status");
+            request.body.should.haveOwnProperty("error");
+            request.body.status.should.equal("Failure");
+            request.body.error.should.equal("Token is invalid");
+        })
+
+        it ("Should return rides if everything is valid", async function () {
+            const token = generateToken({
+                _id: "61fafe0d8e5a5aae6fae4e1c",
+            });
+            const request = await getRides(token);
+            request.status.should.be.equal(200);
+            request.body.should.haveOwnProperty("status");
+            request.body.should.haveOwnProperty("message");
+            request.body.should.haveOwnProperty("data");
+            request.body.status.should.equal("Success");
+            request.body.message.should.equal("Rides fetched successfully.");
+            request.body.data.should.haveOwnProperty("rides");
+            request.body.data.rides.length.should.be.greaterThan(0);
+        })
+
+    })
+
+    describe("Remove as passenger tests", function () {
+
+        async function getRides() {
+            const rides = await ridesService.getRides({
+                "from.locationName": "Toronto",
+                "to.locationName": "Ottawa",
+            });
+            return rides;
+        }
+
+        async function removeAsPassenger(token, options={}) {
+            const { customRideId, customUserId } = options;
+            const rides = await getRides();
+            const targetId = customRideId ? customRideId : rides[0]._id;
+            const passengerId = customUserId
+                ? customUserId
+                : "61fafe0d8e5a5aae6fae4e1c";
+            return chai.request(app)
+                        .delete(`/rides/${targetId}/passengers/${passengerId}`)
+                        .set("Content-Type", "application/json")
+                        .set("Authorization", "Bearer " + token)
+        }
+
+        it ("Route should exist", async function () {
+            const request = await removeAsPassenger();
+            request.status.should.not.be.equal(404);
+        })
+
+        it ("Should throw error if ride with id does not exist", async function () {
+            const token = generateToken({
+                email: "test@test.com",
+                _id: "61fafe0d8e5a5aae6fae4e1c",
+            });
+            const request = await removeAsPassenger(
+                token,
+                {
+                    customRideId: "61fafe0d8e5a5aae6fae4e1c"
+                }
+            );
+            request.status.should.be.equal(400);
+            request.body.should.haveOwnProperty("status");
+            request.body.should.haveOwnProperty("error");
+            request.body.status.should.equal("Failure");
+            request.body.error.should.equal("Ride with provided id does not exist");
+        })
+
+        it("Should throw error if user with id is not passenger of ride", async function () {
+            const token = generateToken({
+                email: "test@test.com",
+                _id: "61fafe0d8e5a5aae6fae4e1c",
+            });
+            const request = await removeAsPassenger(token, {
+                customUserId: "61fd5edbc4887d1f2f15de56",
+            });
+            request.status.should.be.equal(400);
+            request.body.should.haveOwnProperty("status");
+            request.body.should.haveOwnProperty("error");
+            request.body.status.should.equal("Failure");
+            request.body.error.should.equal("User is not a passenger of ride");
+        });
+
+        it("Should remove user as passenger from ride", async function () {
+            const token = generateToken({
+                email: "test@test.com",
+                _id: "61fafe0d8e5a5aae6fae4e1c",
+            });
+            const request = await removeAsPassenger(token);
+            request.status.should.be.equal(200);
+            request.body.should.haveOwnProperty("status");
+            request.body.should.haveOwnProperty("message");
+            request.body.status.should.equal("Success");
+            request.body.message.should.equal(
+                "Remove from passenger successfully."
+            );
+        })
+
     })
 
 })

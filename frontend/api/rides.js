@@ -35,7 +35,8 @@ export async function getRideOfCurrentUser(){
             }
         );
         return [request, null];
-    } catch (e) {
+    }
+    catch (e) {
         return [null, e.message];
     }
 }

@@ -9,7 +9,6 @@ const env = process.env.NODE_ENV || "development";
 
 // Get config for current environment
 const config = require('./config/config.json')[env];
-
 // Initialize express app
 const app = express();
 
