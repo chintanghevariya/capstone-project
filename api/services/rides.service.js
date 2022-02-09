@@ -11,7 +11,6 @@ class RidesService {
     }
 
     async createRide(rideDetails) {
-        console.log(rideDetails.stops);
         this.validateCreateRideFields(rideDetails);
         const ride = new Ride(rideDetails);
         await ride.save();
