@@ -7,6 +7,7 @@ import Search from './IndexComponents/Search';
 import Chat from './IndexComponents/Chat';
 import Notification from './IndexComponents/Notification';
 import Profile from './IndexComponents/Profile';
+import Main from './IndexComponents/HomeComponent/Home.DashBoard';
 
 const Tab = createBottomTabNavigator();
 export default class DashBoard extends Component {
@@ -45,7 +46,7 @@ export default class DashBoard extends Component {
         tabBarInactiveTintColor: 'gray',
       })}
     >
-          <Tab.Screen name="Home" component={Home}/>
+          <Tab.Screen name="Home" component={Main}/>
           <Tab.Screen name="Search" component={Search}/>
           <Tab.Screen name= "Chat" component={Chat} options={{ headerShown:false,tabBarBadge: 1 }}/>
           <Tab.Screen name="Notification" component={Notification} options={{ tabBarBadge: 1 }}/>
