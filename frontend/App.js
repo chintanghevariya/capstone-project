@@ -5,6 +5,8 @@ import {
 
 } from "native-base";
 
+import { AuthProvider, AuthStateValue } from "./context/AuthContext";
+
 import PostRide from "./components/IndexComponents/HomeComponents/PostRide";
 import ManageRide from './components/IndexComponents/Rides/ManageRide'
 import Routes from './components/Routes'
@@ -23,7 +25,9 @@ export const theme = extendTheme({ config });
 export default function App() {
   return (
       <NativeBaseProvider>
-      <Routes/>
+          <AuthProvider>
+              <Routes />
+          </AuthProvider>
       </NativeBaseProvider>
   );
 }

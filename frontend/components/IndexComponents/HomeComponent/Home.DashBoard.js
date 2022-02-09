@@ -66,9 +66,9 @@ export default function DashBoard({navigation}) {
     // setUser(getUser())
     // to access the lattitude and longitude the use location.lat and location.long 
     useEffect(() => {     
-        Location().then((value) => setLocation(value))   
+        // Location().then((value) => setLocation(value))   
         getUser().then((value)=>setUser(value))
-    }, [location]) 
+    }, []) 
   return(
       <ScrollView style={Styles.container}>
           

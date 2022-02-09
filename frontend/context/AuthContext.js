@@ -1,10 +1,10 @@
-import { createContext } from 'react';
+import React, { createContext } from 'react';
 
 const initialState = {
     signedIn: false
 };
 
-const AuthReducer = (state, action) => {
+export const AuthReducer = (state=initialState, action) => {
     switch (action.type) {
         case "SIGNED_IN":
             return {
@@ -19,11 +19,21 @@ const AuthReducer = (state, action) => {
     }
 }
 
-const AuthContext = createContext(initialState);
+export const AuthContext = createContext();
 
-const AuthProvider = AuthContext.Provider;
+export const AuthProvider = ({ children }) => {
+    const [state, dispatch] = React.useReducer(AuthReducer, initialState);
 
-modul.exports = {
-    AuthProvider,
-    AuthReducer,
+    function signInUser() {
+        dispatch({ type: "SIGNED_IN" });
+    }
+
+    return (
+        <AuthContext.Provider value={{
+            ...state,
+            signInUser
+        }}>
+            {children}
+        </AuthContext.Provider>
+    );
 };
