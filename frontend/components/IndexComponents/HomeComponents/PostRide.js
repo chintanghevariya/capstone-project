@@ -178,6 +178,7 @@ export default function PostRide() {
 
     const abc = from;
     const abcdef = to;
+    const lag = fields;
 
     handlePreferences()
     // alert(paymentMethod 
