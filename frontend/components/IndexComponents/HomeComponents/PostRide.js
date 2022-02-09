@@ -43,9 +43,9 @@ export default function PostRide() {
     setShowDateTimePicker(false)
   };
 
-  const handleChange = (i, value) =>{
+  const handleChange = (i, loc) =>{
     const values = [...fields];
-    values[i].value = value;
+    values[i].value = loc;
     setFields(values);
   }
 
@@ -174,7 +174,7 @@ export default function PostRide() {
   const handlePost = async ()=>{
 
     const preferences = handlePreferences()
-    debugger;
+    const stops = fields.map(field => field.value).filter(value => value !== undefined || value !== null);
     const details = {
         from,
         to,
@@ -183,7 +183,7 @@ export default function PostRide() {
         numberOfSeats: Number(seatsAvailable),
         pricePerSeat: Number(amount),
         paymentType: paymentMethod.toLowerCase(),
-        stops: []
+        stops
     };
 
     try {
@@ -353,7 +353,7 @@ export default function PostRide() {
                               <View style={Styles.stopContainer} key={idx}>
                                   <LocationAutoComplete
                                       value={field.value}
-                                      onChange={(value) => handleChange(idx, value)}
+                                      onChange={(loc) => handleChange(idx, loc)}
                                   />
                                   <TouchableOpacity
                                       disabled={fields.length === 1}
