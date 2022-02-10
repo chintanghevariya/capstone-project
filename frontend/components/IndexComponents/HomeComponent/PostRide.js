@@ -250,7 +250,7 @@ export default function PostRide() {
                   <View style={Styles.img}>
                       <TouchableOpacity
                           onPress={() => checkPet()}
-                          style={pet ? Styles.iconSelected : Styles.icon}
+                          style={pet ? Styles.iconSelected : Styles.icons}
                       >
                           <Image
                               source={require("../../../assets/pet.png")}
@@ -259,7 +259,7 @@ export default function PostRide() {
                       </TouchableOpacity>
                       <TouchableOpacity
                           onPress={() => checkSmoke()}
-                          style={smokeFree ? Styles.iconSelected : Styles.icon}
+                          style={smokeFree ? Styles.iconSelected : Styles.icons}
                       >
                           <Image
                               source={require("../../../assets/smokeFree.png")}
@@ -268,7 +268,7 @@ export default function PostRide() {
                       </TouchableOpacity>
                       <TouchableOpacity
                           onPress={() => checkFemale()}
-                          style={female ? Styles.iconSelected : Styles.icon}
+                          style={female ? Styles.iconSelected : Styles.icons}
                       >
                           <Image
                               source={require("../../../assets/female.png")}
@@ -277,7 +277,7 @@ export default function PostRide() {
                       </TouchableOpacity>
                       <TouchableOpacity
                           onPress={() => checkLuggage()}
-                          style={luggage ? Styles.iconSelected : Styles.icon}
+                          style={luggage ? Styles.iconSelected : Styles.icons}
                       >
                           <Image
                               source={require("../../../assets/luggage.png")}
