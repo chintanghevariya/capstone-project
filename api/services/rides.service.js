@@ -1,4 +1,8 @@
 const { ObjectId } = require("mongodb");
+const {
+    getLongitudeDifference,
+    getLatitudeDifference,
+} = require("../helpers/location");
 const Ride = require("../models/ride");
 
 class RidesService {
@@ -115,6 +119,39 @@ class RidesService {
         ride.requests.push(request);
         await ride.save();
         return {};
+    }
+
+    async getRidesAroundUser({ latitude, longitude }) {
+        const numLatitude = Number(latitude);
+        const numLongitude = Number(longitude);
+
+        const longitudeDistance = getLongitudeDifference(numLatitude);
+        const latitudeDistance = getLatitudeDifference();
+        
+        const longFiveKMPlus = (longitudeDistance) + numLongitude;
+        const latFiveKMPlus = (latitudeDistance) + numLatitude;
+
+        const longFiveKMMinus = numLongitude - (longitudeDistance);
+        const latFiveKMMinus = numLatitude - (latitudeDistance);
+
+        const rides = await Ride.find({
+            "from.latitude": {
+                $gt: latFiveKMMinus,
+                $lt: latFiveKMPlus
+            },
+            "from.longitude": {
+                $gt: longFiveKMMinus,
+                $lt: longFiveKMPlus
+            }
+        });
+        
+        return {
+            longFiveKMPlus,
+            latFiveKMPlus,
+            longFiveKMMinus,
+            latFiveKMMinus,
+            rides
+        }
     }
 
     userHasRequestToJoin(userId, ride) {

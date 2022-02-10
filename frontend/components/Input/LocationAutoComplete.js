@@ -13,6 +13,8 @@ export const LocationAutoComplete = ({ onChange }) => {
         setLoading(true);
         getLocationsByName(text)
             .then(result => {
+                debugger;
+                debugger;
                 const [response, error] = result;
                 if (response && response.data) {
                     const data = response.data.map((element, idx) => ({
