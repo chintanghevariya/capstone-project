@@ -13,7 +13,7 @@ export class RideContainer extends Component {
     }
 
      myCar = <Icon name="car" size={20} />;
-     myArrow = <Ionicons name="ray-start-arrow" size={20} />;
+     myArrow = <Ionicons name="arrow-down" size={20} />;
      map = <Icon name="map-marker" size={18}/>;
      arrow = <Ionicons name="ray-start-arrow" size={25}/>
      clock = <Icon name="clock-o" color={'orange'} size={16}/>;
@@ -31,17 +31,58 @@ export class RideContainer extends Component {
             <View style={Styles.container}>
                 <View style={Styles.parentContainer}>
                     <View style={Styles.childContainer}>
-                        <Text style={{fontSize : 18, fontWeight: "bold"}}>{this.map} {this.props.ride.from.locationName}</Text>
-                        <Text>{this.myArrow}</Text>
-                        <Text style={{fontSize : 18, fontWeight: "bold"}}>{this.map} {this.props.ride.to.locationName}</Text>
-                        <Text style={{fontSize : 20}}>{this.dollar} {this.props.ride.pricePerSeat}</Text>
-                    </View>    
-                    <View style={{borderBottomColor: '#F5F5F5',borderBottomWidth: 1,}} />
+                        <View>
+                            <View>
+                                <Text
+                                    style={{ fontSize: 12, fontWeight: "bold" }}
+                                >
+                                    {this.map}{" "}
+                                    {this.props.ride.from.locationName.substring(
+                                        0,
+                                        40
+                                    )}
+                                </Text>
+                            </View>
+                            <Text>{this.myArrow}</Text>
+                            <View>
+                                <Text
+                                    style={{ fontSize: 12, fontWeight: "bold" }}
+                                >
+                                    {this.map}{" "}
+                                    {this.props.ride.to.locationName.substring(
+                                        0,
+                                        40
+                                    )}
+                                </Text>
+                            </View>
+                        </View>
+                        <Text style={{ fontSize: 20 }}>
+                            {this.dollar} {this.props.ride.pricePerSeat}
+                        </Text>
+                    </View>
+                    <View
+                        style={{
+                            borderBottomColor: "#F5F5F5",
+                            borderBottomWidth: 1,
+                        }}
+                    />
                     <View style={Styles.childContainer}>
-                        <Text style={{fontSize : 15}}>{this.clock} {this.props.ride.startDateAndTime}</Text>
-                        <Text style={{fontSize : 15}}>{this.seat} {this.props.ride.numberOfSeats}</Text>
-                        <Text style={{fontSize : 15}}>{this.flag} {this.props.ride.stops.length}</Text>
-                        <TouchableOpacity onPress={()=>{this.props.navigation.navigate('RideDetails')}} ><Text style={{color: '#0D92DD',}}>Details</Text></TouchableOpacity>
+                        <Text style={{ fontSize: 15 }}>
+                            {this.clock} {this.props.ride.startDateAndTime}
+                        </Text>
+                        <Text style={{ fontSize: 15 }}>
+                            {this.seat} {this.props.ride.numberOfSeats}
+                        </Text>
+                        <Text style={{ fontSize: 15 }}>
+                            {this.flag} {this.props.ride.stops.length}
+                        </Text>
+                        <TouchableOpacity
+                            onPress={() => {
+                                this.props.navigation.navigate("RideDetails");
+                            }}
+                        >
+                            <Text style={{ color: "#0D92DD" }}>Details</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </View>
@@ -65,7 +106,6 @@ const Styles = StyleSheet.create({
             },
         parentContainer:{
             backgroundColor:'#fff',
-            height:100,
             borderWidth: 1,
             borderRadius: 1,
             borderColor: '#fff',
