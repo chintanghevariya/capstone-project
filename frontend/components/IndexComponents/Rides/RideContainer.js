@@ -34,7 +34,7 @@ export class RideContainer extends Component {
                         <View>
                             <View>
                                 <Text
-                                    style={{ fontSize: 12, fontWeight: "bold" }}
+                                    style={{ fontSize: 13, fontWeight: "bold" }}
                                 >
                                     {this.map}{" "}
                                     {this.props.ride.from.locationName.substring(
@@ -46,7 +46,7 @@ export class RideContainer extends Component {
                             <Text>{this.myArrow}</Text>
                             <View>
                                 <Text
-                                    style={{ fontSize: 12, fontWeight: "bold" }}
+                                    style={{ fontSize: 13, fontWeight: "bold" }}
                                 >
                                     {this.map}{" "}
                                     {this.props.ride.to.locationName.substring(
@@ -98,12 +98,11 @@ const Styles = StyleSheet.create({
             
         },
         childContainer:{
-            height:"50%",
             padding:10,
-            justifyContent: 'center',
             flexDirection: 'row',
-            justifyContent: 'space-between'
-            },
+            justifyContent: 'space-between',
+            alignItems: "center"
+        },
         parentContainer:{
             backgroundColor:'#fff',
             borderWidth: 1,

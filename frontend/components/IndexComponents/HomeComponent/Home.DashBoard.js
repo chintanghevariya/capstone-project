@@ -64,7 +64,13 @@ export default function Main({navigation}) {
             }
             setRides(result.data.data);
         });    
-        GetCurrentLocation().then((value) => setLocation(value));   
+        GetCurrentLocation().then((value) => {
+            debugger;
+            debugger;
+            debugger;
+            debugger;
+            setLocation(value)
+        });   
         getUser().then((value)=>setUser(value))
     }, []) 
 

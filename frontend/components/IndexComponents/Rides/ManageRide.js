@@ -4,11 +4,13 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Icon } from 'react-native-elements';
 import { getRideOfCurrentUserAsDriver, getRideOfCurrentUserAsPassenger } from '../../../api/rides';
 import { RideContainer } from './RideContainer';
+import { getUser } from '../../../helpers/user';
 
 export default function ManageRide({ navigation }) {
 
     const [completedRides, setCompletedRides ] = useState([]);
     const [upcompingRides, setUpcomingRides] = useState([]);
+    const [user, setUser] = useState({});
 
     const getRides = async () => {
         const upcompingRides = [];
@@ -45,6 +47,8 @@ export default function ManageRide({ navigation }) {
                 setUpcomingRides(upcompingRides);
                 setCompletedRides(completedRides);
             })
+        getUser()
+            .then(setUser)
         }, []);
 
         const navigateToPostRide = () => {
@@ -55,14 +59,18 @@ export default function ManageRide({ navigation }) {
       <SafeAreaView style={Styles.container}>
           <ScrollView>
               <View>
-                  <TouchableOpacity
-                      style={Styles.button}
-                      onPress={navigateToPostRide}
-                      // onPress={()=>this.props.navigation.navigate('PostRide')}
-                      underlayColor="#fff"
-                  >
-                      <Text style={Styles.buttonText}> + Post New Ride </Text>
-                  </TouchableOpacity>
+                    {
+                        (user.role === "admin" ||
+                        (user.role === "driver" && user.driverDetailsValid)) &&
+                        <TouchableOpacity
+                            style={Styles.button}
+                            onPress={navigateToPostRide}
+                            // onPress={()=>this.props.navigation.navigate('PostRide')}
+                            underlayColor="#fff"
+                        >
+                            <Text style={Styles.buttonText}> + Post New Ride </Text>
+                        </TouchableOpacity>
+                    }
 
                   <View></View>
                   <View style={Styles.containerViewAll}>
@@ -83,9 +91,7 @@ export default function ManageRide({ navigation }) {
                           }}
                       />
                       {upcompingRides.slice(0, 3).map((ride, index) => (
-                          <RideContainer
-                              ride={ride}
-                          />
+                          <RideContainer ride={ride} />
                       ))}
                   </View>
 
