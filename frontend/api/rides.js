@@ -1,14 +1,16 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { getToken } from '../helpers/Token';
-import {getUser} from '../helpers/user'
+import { getUser } from '../helpers/user'
 
 export async function getRides() {
     const token = await getToken()
     try {
         const request = await axios.post(
-            "http://192.168.0.158:4000/rides/filter",
-            {},
+            "http://localhost:4000/rides/filter",
+            {
+                "from.latitude": 20
+            },
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -22,7 +24,7 @@ export async function getRides() {
     }
 }
 
-export async function getRideOfCurrentUser(){
+export async function getRideOfCurrentUser() {
     const user = getUser()
     const token = await getToken()
     try {

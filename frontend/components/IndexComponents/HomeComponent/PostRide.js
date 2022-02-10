@@ -191,55 +191,10 @@ export default function PostRide() {
     // + "\n  Seats : " + seatsAvailable
     // )
 
-    // try {
-    //   const config={
-    //       headers:{
-    //           "Content-type":"application/json"
-    //       }
-    //   }
-    //   const {data} = await axios.post(
-    //       `http://localhost:4000/rides`,
-    //       {
-              
-    //       },
-    //       config
-    //       );  
-      
-    //   } catch (e) {
-    //   Alert.alert(e)
   
     
  
    }
- 
-
-  // const verifyAddress = (text) =>{
-
-  // verify("AIzaSyDsFlMXdgdEA-dRRmrUFU3j-cGKjguKrKM", text)
-  //   .then((result) => {
-  //     // Simplify response into something readable to the user
-  //     const summary = `This address is ${result.deliverability}`
-  //     setVerificationResult(summary)
-  //   })
-  //   .catch((errorData) => setVerificationResult(errorData.message))
-  // }
-
- 
-
-  // const list = () =>{
-  //   return stops.map((element) => {
-  //     return(
-  //       <View style={{ margin : "5%"}}> 
-  //         <Text># Stop {element.key}</Text>
-  //       <View key = {element.key} placeholder="Enter your stops" style={{borderWidth : '1'}}> 
-  //         <Text >{element.city}
-  //         </Text>
-  //       </View>
-  //       </View>
-
-  //     );
-  //   });
-  // };
  
   return (
       <View style={{ flex: 1 }} showsVerticalScrollIndicator={true}>
