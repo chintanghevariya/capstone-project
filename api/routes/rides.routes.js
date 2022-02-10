@@ -104,4 +104,20 @@ ridesRouter.delete("/:rideId/passengers/:passengerId", verifyToken, async functi
     }
 })
 
+ridesRouter.get("/around/user", verifyToken, async function (req, res, next) {
+    try {
+        const response = await ridesService.getRidesAroundUser(
+            req.query
+        );
+        httpResponse.sendSuccess(
+            res,
+            "Remove from passenger successfully.",
+            response
+        );
+    } catch (e) {
+        console.log(e.message);
+        httpResponse.sendFailure(res, e.message);
+    }
+});
+
 module.exports = ridesRouter;

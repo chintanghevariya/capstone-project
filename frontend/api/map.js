@@ -43,7 +43,8 @@ export async function getLocationDetails(locationId) {
             PLACE_DETAIL_API_URL + `?place_id=${locationId}&key=${token}`
         );
         return [request, null];
-    } catch (e) {
-        return [null, e.message];
+    } catch (err) {
+        console.error(err);
+        return [null, JSON.stringify(err, Object.getOwnPropertyNames(err))];
     }
 }
