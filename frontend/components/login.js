@@ -81,9 +81,8 @@ export default function Login({navigation})  {
                     },
                 };
                 setIsLoading(true);
-                debugger;
                 const { data } = await axios.post(
-                    `http://192.168.2.37:4000/users/login`,
+                    `http://192.168.0.158:4000/users/login`,
                     {
                         email, // R@P.com
                         password, // Rutik123

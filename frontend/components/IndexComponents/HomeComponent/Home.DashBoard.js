@@ -10,7 +10,7 @@ import { getRides } from '../../../api/rides';
 export default function Main({navigation}) {
     const[location,setLocation] =useState({})
     const[user,setUser] = useState({})
-    const[rides,setRides] = useState([{}])
+    const[rides,setRides] = useState([])
 
     const myCar = <Icon name="car" size={20} />;
     const myArrow = <Icon name="arrow-right" size={20} />;
@@ -68,8 +68,8 @@ export default function Main({navigation}) {
         getUser().then((value)=>setUser(value))
     }, []) 
 
-    const navigateToRideForm = () => {
-        navigation.navigate("RideForm")
+    const navigateToManageRide = () => {
+        navigation.navigate("ManageRide")
     }
   return (
       <ScrollView style={Styles.container}>
@@ -96,7 +96,7 @@ export default function Main({navigation}) {
               </View>
           </View>
           <TouchableOpacity
-              onPress={navigateToRideForm}
+              onPress={navigateToManageRide}
               style={Styles.manageRide}
           >
               <Text style={Styles.manageRideText}> {myCar} Manage Rides</Text>
