@@ -34,6 +34,7 @@ ridesRouter.post("/", verifyToken, async function (req, res, next) {
         const { _id: driverId } = req.user;
         req.body.driver = driverId;
         const ride = await ridesService.createRide(req.body);
+        console.log("DONE");
         httpResponse.sendSuccess(res, "Ride created successfully", ride);
     } catch (e) {
         console.log(e);

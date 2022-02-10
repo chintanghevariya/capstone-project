@@ -10,6 +10,7 @@ import { getToken } from "../helpers/Token";
 import ChatScreen from "./IndexComponents/ChatScreen";
 import { AuthContext } from "../context/AuthContext";
 import PostRide from "./IndexComponents/HomeComponents/PostRide";
+import ManageRide from "./IndexComponents/Rides/ManageRide";
 
 const Stack = createNativeStackNavigator();
 
@@ -34,6 +35,7 @@ export default function Routes() {
               {authContext.signedIn ? (
                   <>
                       <Stack.Screen name="DashBoard" component={DashBoard} />
+                      <Stack.Screen name="ManageRide" component={ManageRide} />
                       <Stack.Screen name="RideForm" component={PostRide} />
                   </>
               ) : (

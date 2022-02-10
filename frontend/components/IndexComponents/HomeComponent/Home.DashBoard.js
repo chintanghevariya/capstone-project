@@ -10,7 +10,7 @@ import { getRidesAroundUser } from "../../../api/rides";
 export default function Main({navigation}) {
     const[location,setLocation] =useState({})
     const[user,setUser] = useState({})
-    const[rides,setRides] = useState([{}])
+    const[rides,setRides] = useState([])
 
     const myCar = <Icon name="car" size={20} />;
     const myArrow = <Icon name="arrow-right" size={20} />;
@@ -62,16 +62,20 @@ export default function Main({navigation}) {
                 alert(error);
                 return;
             }
-            setRides(result.data.data.rides);
-        }); 
-        // GetCurrentLocation().then((value) => {
-        //     setLocation(value)
-        // });   
+            setRides(result.data.data);
+        });    
+        GetCurrentLocation().then((value) => {
+            debugger;
+            debugger;
+            debugger;
+            debugger;
+            setLocation(value)
+        });   
         getUser().then((value)=>setUser(value))
     }, []) 
 
-    const navigateToRideForm = () => {
-        navigation.navigate("RideForm")
+    const navigateToManageRide = () => {
+        navigation.navigate("ManageRide")
     }
   return (
       <ScrollView style={Styles.container}>
@@ -98,7 +102,7 @@ export default function Main({navigation}) {
               </View>
           </View>
           <TouchableOpacity
-              onPress={navigateToRideForm}
+              onPress={navigateToManageRide}
               style={Styles.manageRide}
           >
               <Text style={Styles.manageRideText}> {myCar} Manage Rides</Text>
