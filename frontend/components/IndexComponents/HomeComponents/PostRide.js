@@ -6,6 +6,7 @@ import  RadioForm from 'react-native-simple-radio-button';
 import { LocationAutoComplete } from '../../Input/LocationAutoComplete';
 import { getToken } from '../../../helpers/Token';
 import axios from 'axios';
+import { getLocationDetails } from '../../../api/map';
 // import { Autocomplete, verify } from '@lob/react-address-autocomplete'
 const { width } = Dimensions.get("window");
 
@@ -76,20 +77,6 @@ export default function PostRide() {
           ) 
         return true 
         }  
-  }
-
-  const handleFrom=(text) => {
-      if(text.trim() === ""){
-        setFrom(false),
-        setError("From : can't be empty")
-        return false;
-      }
-      else 
-      {
-        setFrom(true);
-        setError("")
-        return true
-      }
   }
 
   const handleTo = (text)=> {
@@ -173,11 +160,34 @@ export default function PostRide() {
 
   const handlePost = async ()=>{
 
+    const [fromLocationDetailsResponse, fromLocationDetailsError] =
+        await getLocationDetails(from.place_id);
+    const [toLocationDetailsResponse, toLocationDetailsError] =
+        await getLocationDetails(to.place_id);
+    
+    const { result: fromLocationDetails } = fromLocationDetailsResponse.data;
+    const { result: toLocationDetails } =
+        toLocationDetailsResponse.data;
+
+    debugger;
+    const fromDetails = {
+        locationName: from.structured_formatting.main_text,
+        latitude: fromLocationDetails.geometry.location.lat,
+        longitude: fromLocationDetails.geometry.location.lng,
+    };
+
+    const toDetails = {
+        locationName: to.structured_formatting.main_text,
+        latitude: toLocationDetails.geometry.location.lat,
+        longitude: toLocationDetails.geometry.location.lng,
+    };
+
     const preferences = handlePreferences()
-    const stops = fields.map(field => field.value).filter(value => value !== undefined || value !== null);
+    const stops = fields.map(field => field.value).filter(value => value !== undefined && value !== null);
+    debugger;
     const details = {
-        from,
-        to,
+        from: fromDetails,
+        to: toDetails,
         preferences,
         startDateAndTime: date,
         numberOfSeats: Number(seatsAvailable),
@@ -185,6 +195,7 @@ export default function PostRide() {
         paymentType: paymentMethod.toLowerCase(),
         stops
     };
+    debugger;
 
     try {
       const token = await getToken();
@@ -196,50 +207,16 @@ export default function PostRide() {
       }
       debugger;
       const {data} = await axios.post(
-          `http://192.168.2.37:4000/rides`,
+          `http://192.168.0.158:4000/rides`,
           details,
           config
-          ); 
-      console.log(data);
-      
+          );
       } catch (e) {
-        debugger;
         console.error(e);
         Alert.alert(e)
       }
-  
-    
  
    }
- 
-
-  // const verifyAddress = (text) =>{
-
-  // verify("AIzaSyDsFlMXdgdEA-dRRmrUFU3j-cGKjguKrKM", text)
-  //   .then((result) => {
-  //     // Simplify response into something readable to the user
-  //     const summary = `This address is ${result.deliverability}`
-  //     setVerificationResult(summary)
-  //   })
-  //   .catch((errorData) => setVerificationResult(errorData.message))
-  // }
-
- 
-
-  // const list = () =>{
-  //   return stops.map((element) => {
-  //     return(
-  //       <View style={{ margin : "5%"}}> 
-  //         <Text># Stop {element.key}</Text>
-  //       <View key = {element.key} placeholder="Enter your stops" style={{borderWidth : '1'}}> 
-  //         <Text >{element.city}
-  //         </Text>
-  //       </View>
-  //       </View>
-
-  //     );
-  //   });
-  // };
  
   return (
       <View style={{ flex: 1 }} showsVerticalScrollIndicator={true}>

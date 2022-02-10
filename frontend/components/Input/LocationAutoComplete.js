@@ -14,17 +14,22 @@ export const LocationAutoComplete = ({ onChange }) => {
         getLocationsByName(text)
             .then(result => {
                 const [response, error] = result;
-                if (response && response.data) {
-                    const data = response.data.map((element, idx) => ({
-                        ...element,
-                        label: idx + 1 + " " + element.display_name,
-                        locationName: element.display_name,
-                        latitude: Number(element.lat),
-                        longitude: Number(element.lon),
-                        value: idx,
-                        id: idx,
-                        key: idx
-                    }));
+                if (response && response.data && response.data.predictions) {
+                    const data = response.data.predictions.map(
+                        (element, idx) => ({
+                            ...element,
+                            label:
+                                idx +
+                                1 +
+                                " " +
+                                element.description,
+                            locationName:
+                                element.structured_formatting.main_text,
+                            value: idx,
+                            id: idx,
+                            key: idx,
+                        })
+                    );
                     setItems(data);
                 }
                 setLoading(false);

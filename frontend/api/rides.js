@@ -22,22 +22,39 @@ export async function getRides() {
     }
 }
 
-export async function getRideOfCurrentUser(){
-    const user = getUser()
+export async function getRideOfCurrentUserAsPassenger(){
     const token = await getToken()
     try {
         const request = await axios.get(
-            "http://localhost:4000/rides/of-user/as-passenger",
+            "http://192.168.0.158:4000/rides/of-user/as-passenger",
             {
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                }
+                    Authorization: `Bearer ${token}`,
+                },
             }
         );
-        return [request, null];
+        return [request.data, null];
     }
     catch (e) {
+        return [null, e.message];
+    }
+}
+
+export async function getRideOfCurrentUserAsDriver() {
+    const token = await getToken();
+    try {
+        const request = await axios.get(
+            "http://192.168.0.158:4000/rides/of-user/as-driver",
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return [request.data, null];
+    } catch (e) {
         return [null, e.message];
     }
 }
