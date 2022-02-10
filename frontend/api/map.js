@@ -17,7 +17,6 @@ export async function getLocationsByName(name) {
         if (name.length < 4) {
             return [null, null];
         }
-        debugger;
         const request = await axios.get(API_URL + `/autocomplete.php?key=${token}&q=${name}`);
         return [request, null];
     } catch (err) {
