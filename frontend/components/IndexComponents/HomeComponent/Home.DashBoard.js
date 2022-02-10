@@ -5,7 +5,7 @@ import {GetCurrentLocation} from './GetCurrentLocation';
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { getUser } from "../../../helpers/user"
-import { getRides } from '../../../api/rides';
+import { getRidesAroundUser } from "../../../api/rides";
 
 export default function Main({navigation}) {
     const[location,setLocation] =useState({})
@@ -55,16 +55,18 @@ export default function Main({navigation}) {
     };
     // setUser(getUser())
     // to access the lattitude and longitude the use location.lat and location.long 
-    useEffect(() => { 
-        getRides().then((response) => {
+    useEffect(() => {    
+        getRidesAroundUser().then((response) => {
             const [result, error] = response;
             if (error) {
                 alert(error);
                 return;
             }
-            setRides(result.data.data);
-        });    
-        GetCurrentLocation().then((value) => setLocation(value));   
+            setRides(result.data.data.rides);
+        }); 
+        // GetCurrentLocation().then((value) => {
+        //     setLocation(value)
+        // });   
         getUser().then((value)=>setUser(value))
     }, []) 
 
