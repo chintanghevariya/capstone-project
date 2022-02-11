@@ -1,13 +1,11 @@
 import React,{Component} from 'react';
-import { Text, View,Image } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Home from './IndexComponents/Home';
 import Search from './IndexComponents/Search';
 import Chat from './IndexComponents/Chat';
-import Notification from './IndexComponents/Notifications/Notification';
 import Profile from './IndexComponents/Profile';
 import Main from './IndexComponents/HomeComponent/Home.DashBoard';
+import NotificationScreen from './IndexComponents/NotificationComponents/NotificationScreen';
 
 const Tab = createBottomTabNavigator();
 export default class DashBoard extends Component {
@@ -49,7 +47,7 @@ export default class DashBoard extends Component {
           <Tab.Screen name="Home" component={Main}/>
           <Tab.Screen name="Search" component={Search}/>
           <Tab.Screen name= "Chat" component={Chat} options={{ headerShown:false,tabBarBadge: 1 }}/>
-          <Tab.Screen name="Notification" component={Notification} options={{ tabBarBadge: 1 }}/>
+          <Tab.Screen name="Notification" component={NotificationScreen} options={{ tabBarBadge: 1 }}/>
           <Tab.Screen name="Profile" component={Profile}/>
       </Tab.Navigator>
       
