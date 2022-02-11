@@ -30,3 +30,7 @@ const schema = mongoose.Schema({
         default: false
     }
 });
+
+const notificationModel = mongoose.model("Notification", schema);
+
+module.exports = notificationModel;
