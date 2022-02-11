@@ -3,6 +3,7 @@ const {
     getLongitudeDifference,
     getLatitudeDifference,
 } = require("../helpers/location");
+const notificationModel = require("../models/notification");
 const Ride = require("../models/ride");
 
 class RidesService {
@@ -116,7 +117,14 @@ class RidesService {
         const request = {
             userId
         }
+        const notification = new notificationModel({
+            fromUser: userId,
+            forUser: ride.driver,
+            ride: ride._id,
+            type: "join-request"
+        })
         ride.requests.push(request);
+        await notification.save();
         await ride.save();
         return {};
     }
