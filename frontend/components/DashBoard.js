@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from './IndexComponents/Home';
 import Search from './IndexComponents/Search';
 import Chat from './IndexComponents/Chat';
-import Notification from './IndexComponents/Notification';
+import Notification from './IndexComponents/Notifications/Notification';
 import Profile from './IndexComponents/Profile';
 import Main from './IndexComponents/HomeComponent/Home.DashBoard';
 
