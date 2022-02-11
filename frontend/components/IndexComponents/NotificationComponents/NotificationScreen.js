@@ -1,7 +1,7 @@
 import { View, Heading } from "native-base";
 import React from 'react';
 import { StyleSheet,Text } from 'react-native';
-import NotificationList from './NotificationList';
+import NotificationList from './NotificationListComponent';
 
 const dummyData = [
     {
@@ -33,7 +33,7 @@ const dummyData = [
     },
 ];
 
-export default function Notification() {
+export default function NotificationScreen() {
     return (
         <View backgroundColor="white" style={styles.container}>
             <View style={styles.headingContainer}>

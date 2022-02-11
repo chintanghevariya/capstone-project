@@ -1,6 +1,6 @@
 import { ScrollView } from 'native-base';
 import React from 'react'
-import NotificationItem from './NotificationItem';
+import NotificationItem from './NotificationItemComponent';
 
 export default function NotificationList({ notifications }) {
 
