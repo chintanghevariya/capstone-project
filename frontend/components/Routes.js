@@ -13,6 +13,7 @@ import PostRide from "./IndexComponents/HomeComponents/PostRide";
 import ManageRide from "./IndexComponents/Rides/ManageRide";
 import Wallet from "./payment/wallet";
 import AddCard from "./payment/AddCard";
+import { StripeProvider } from "@stripe/stripe-react-native";
 
 const Stack = createNativeStackNavigator();
 
@@ -26,50 +27,59 @@ export default function Routes() {
             // authContext.signInUser()
         }
     });
-  }, [authContext]);
+  }, []);
   return (
-      <NavigationContainer navigationOptions={{ gesturesEnabled: false }}>
-          <Stack.Navigator
-              screenOptions={{
-                  headerShown: false,
-              }}
-          >
-              {authContext.signedIn ? (
-                  <>
-                      <Stack.Screen name="DashBoard" component={DashBoard} />
-                      <Stack.Screen name="ManageRide" component={ManageRide} />
-                      <Stack.Screen name="RideForm" component={PostRide} />
-                      <Stack.Screen name="Wallet" component={Wallet} />
-                      <Stack.Screen name="AddCard" component={AddCard} />
-                  </>
-              ) : (
-                  <>
-                      <Stack.Screen
-                          name="SplashScreen"
-                          component={SplashScreen}
-                          options={{ gestureEnabled: false }}
-                      />
-                      <Stack.Screen
-                          name="Login"
-                          component={Login}
-                          options={{ gestureEnabled: false }}
-                      />
-                      <Stack.Screen
-                          name="Signup"
-                          component={Signup}
-                          options={{ gestureEnabled: false }}
-                      />
-                      <Stack.Screen
-                          name="ChatScreen"
-                          component={ChatScreen}
-                          options={({ route }) => ({
-                              title: route.params.userName,
-                              headerBackTitleVisible: false,
-                          })}
-                      />
-                  </>
-              )}
-          </Stack.Navigator>
-      </NavigationContainer>
+      <StripeProvider publishableKey="pk_test_51JipKvJSijMdla1x0pJ2EjkQpvgsfESI7zbqPwExNQ9nHlGTy2XUXk0kZc2Tq9J6XiYmzGm5umC3U9gP2zetDD6K00TOImtlbb">
+          <NavigationContainer navigationOptions={{ gesturesEnabled: false }}>
+              <Stack.Navigator
+                  screenOptions={{
+                      headerShown: authContext.isSignedIn,
+                  }}
+              >
+                  {authContext.signedIn ? (
+                      <>
+                          <Stack.Screen
+                              name="DashBoard"
+                              component={DashBoard}
+                              options={{ headerShown: false }}
+                          />
+                          <Stack.Screen
+                              name="ManageRide"
+                              component={ManageRide}
+                          />
+                          <Stack.Screen name="RideForm" component={PostRide} />
+                          <Stack.Screen name="Wallet" component={Wallet} />
+                          <Stack.Screen name="AddCard" component={AddCard} />
+                      </>
+                  ) : (
+                      <>
+                          <Stack.Screen
+                              name="SplashScreen"
+                              component={SplashScreen}
+                              options={{ gestureEnabled: false }}
+                          />
+                          <Stack.Screen
+                              name="Login"
+                              component={Login}
+                              options={{ gestureEnabled: false }}
+                          />
+                          <Stack.Screen
+                              name="Signup"
+                              component={Signup}
+                              options={{ gestureEnabled: false }}
+                          />
+                          <Stack.Screen
+                              name="ChatScreen"
+                              component={ChatScreen}
+                              options={({ route }) => ({
+                                  title: route.params.userName,
+                                  headerBackTitleVisible: false,
+                              })}
+                          />
+                      </>
+                  )}
+              </Stack.Navigator>
+          </NavigationContainer>
+      </StripeProvider>
   );
 }
