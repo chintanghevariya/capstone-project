@@ -1,6 +1,6 @@
 import axios from 'axios';
 import * as Loc from "expo-location";
-import { getToken } from '../helpers/Token';
+// import { getToken } from '../helpers/Token';
 import {getUser} from '../helpers/user'
 
 export async function getRides() {
