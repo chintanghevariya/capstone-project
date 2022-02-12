@@ -13,7 +13,7 @@ const schema = mongoose.Schema({
     },
     ride: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Ride",
+        ref: "ride",
         required: true
     },
     type: {
