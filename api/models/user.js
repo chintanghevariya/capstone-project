@@ -24,6 +24,10 @@ const userSchema = new mongoose.Schema({
     driverDetailsValid: {
         type: Boolean,
         default: false
+    },
+    numberOfRides: {
+        type: Number,
+        default: 0
     }
 });
 
