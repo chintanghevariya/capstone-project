@@ -82,6 +82,10 @@ const requestSchema = new mongoose.Schema({
 });
 
 const rideSchema = new mongoose.Schema({
+    rideIdentifier: {
+        type: String,
+        required: true
+    },
     driver: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
