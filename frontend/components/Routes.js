@@ -11,6 +11,8 @@ import ChatScreen from "./IndexComponents/ChatScreen";
 import { AuthContext } from "../context/AuthContext";
 import PostRide from "./IndexComponents/HomeComponents/PostRide";
 import ManageRide from "./IndexComponents/Rides/ManageRide";
+import Wallet from "./payment/wallet";
+import AddCard from "./payment/AddCard";
 
 const Stack = createNativeStackNavigator();
 
@@ -37,6 +39,8 @@ export default function Routes() {
                       <Stack.Screen name="DashBoard" component={DashBoard} />
                       <Stack.Screen name="ManageRide" component={ManageRide} />
                       <Stack.Screen name="RideForm" component={PostRide} />
+                      <Stack.Screen name="Wallet" component={Wallet} />
+                      <Stack.Screen name="AddCard" component={AddCard} />
                   </>
               ) : (
                   <>
