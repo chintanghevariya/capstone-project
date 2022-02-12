@@ -3,7 +3,7 @@ import { Button } from 'native-base'
 import axios from 'axios';
 import {Alert,View, Text, ImageBackground ,TouchableOpacity, Dimensions, StyleSheet, TextInput } from 'react-native'
 import Loading from './Loading';
-// import { setToken } from "../helpers/Token";
+import { setToken } from "../helpers/Token";
 import { setUser } from "../helpers/user"
 import { getToken } from "../helpers/Token";
 import { getUser } from "../helpers/user"
@@ -89,6 +89,7 @@ export default function Login({navigation})  {
                     },
                     config
                 );
+                console.log(data);
                 setToken(data.data.token);
                 setUser(data.data.user)
                 authContext.signInUser();
