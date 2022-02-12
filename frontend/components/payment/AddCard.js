@@ -4,7 +4,7 @@ import { ScrollView, View, Button, Input } from "native-base";
 import { CardField, useStripe } from '@stripe/stripe-react-native';
 import { getSetupIntentId } from '../../api/stripe';
 
-export default function AddCard() {
+export default function AddCard({ navigation }) {
 
     const { confirmSetupIntent, loading } = useStripe();
 
@@ -12,34 +12,36 @@ export default function AddCard() {
     const [fullNameValidate,setFullNameValidate] = useState(false);
 
     const handleFullName = (text)=>{
-        if(text.trim() === ""){
-            setError("Please Enter Full Name!"),
-            setFullNameValidate(false)
-        return false
-        }
-        else{
+        // if(text.trim() === ""){
+        //     setError("Please Enter Full Name!"),
+        //     setFullNameValidate(false)
+        // return false
+        // }
+        // else{
             setFullName(text)
-            setFullNameValidate(true)
-            setError('')
-        return true
-        }
+        //     setFullNameValidate(true)
+        //     setError('')
+        // return true
+        // }
     }
 
-    const handleSubmit = async ({ navigation }) => {
+    const handleSubmit = async () => {
         const billingDetails = {
             email: "aarytrivedi@gmail.com",
         };
         const [result, setupIntentError] = await getSetupIntentId();
         const { secret } = result.data;
+        console.log("HERE");
         const { setupIntent, error } = await confirmSetupIntent(secret, {
             type: "Card",
             billingDetails,
         });
+        console.log("HERE");
         if (error) {
             console.error(error);
             return;
         }
-        navigation.navigate("Dashboard", { screen: "Profile" });
+        navigation.navigate("DashBoard", { screen: "Profile" });
     };
 
   return (

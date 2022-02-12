@@ -71,7 +71,12 @@ export default function Main({navigation}) {
             debugger;
             setLocation(value)
         });   
-        getUser().then((value)=>setUser(value))
+        getUser().then((user)=>{
+            setUser(user);
+            if (user.isNew) {
+                navigation.navigate("StripeConsent")
+            }
+        })
     }, []) 
 
     const navigateToManageRide = () => {

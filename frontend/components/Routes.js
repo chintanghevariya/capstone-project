@@ -14,6 +14,7 @@ import ManageRide from "./IndexComponents/Rides/ManageRide";
 import Wallet from "./payment/wallet";
 import AddCard from "./payment/AddCard";
 import { StripeProvider } from "@stripe/stripe-react-native";
+import StripeConsent from "./payment/stripe-consent";
 
 const Stack = createNativeStackNavigator();
 
@@ -46,6 +47,10 @@ export default function Routes() {
                           <Stack.Screen
                               name="ManageRide"
                               component={ManageRide}
+                          />
+                          <Stack.Screen
+                              name="StripeConsent"
+                              component={StripeConsent}
                           />
                           <Stack.Screen name="RideForm" component={PostRide} />
                           <Stack.Screen name="Wallet" component={Wallet} />
