@@ -19,34 +19,18 @@ export default function NotificationItem({
     return (
         <View backgroundColor="#F5F5F5" marginTop={3} padding={3}>
             <View style={styles.header}>
-                <View width={"90%"} style={styles.headerText}>
+                <View width={"80%"} style={styles.headerText}>
                     <Text>
-                        {notification.user.name} Wants to join your ride
+                        {notification.forUser.firstName + " " +
+                            notification.forUser.lastName }{" "}
+                        Wants to join your ride
                     </Text>
                 </View>
                 <View style={styles.headerTime}>
-                    <Text>{notification.createdAt.getHours()}</Text>
+                    <Text>{
+                        new Date(notification.createdDate).getHours()
+                    }</Text>
                 </View>
-            </View>
-            <View marginTop={3} style={styles.footer}>
-                <Button
-                    marginX={"1"}
-                    size="sm"
-                    variant={"link"}
-                    colorScheme="danger"
-                    onPress={rejectRequest}
-                >
-                    Cancel
-                </Button>
-                <Button
-                    marginX={"1"}
-                    size="md"
-                    variant={"solid"}
-                    colorScheme="tertiary"
-                    onPress={onAccept}
-                >
-                    Accept
-                </Button>
             </View>
         </View>
     );

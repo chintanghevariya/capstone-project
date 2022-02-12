@@ -1,6 +1,7 @@
 import { View, Heading } from "native-base";
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet,Text } from 'react-native';
+import { getCurrentUserNotifications } from "../../../api/notification";
 import NotificationList from './NotificationListComponent';
 
 const dummyData = [
@@ -34,6 +35,24 @@ const dummyData = [
 ];
 
 export default function NotificationScreen() {
+
+    const [notifications, setNotifications] = useState([]);
+    
+    useEffect(() => {
+        getCurrentUserNotifications()
+            .then(response => {
+                const [result, error] = response;
+                debugger;
+                debugger;
+                debugger;
+                if (error) {
+                    console.error(error);
+                    return;
+                }
+                setNotifications(result.data.notifications);
+            })
+    }, [])
+
     return (
         <View backgroundColor="white" style={styles.container}>
             <View style={styles.headingContainer}>
@@ -43,7 +62,7 @@ export default function NotificationScreen() {
             </View>
             <View>
                 <NotificationList
-                    notifications={dummyData} />
+                    notifications={notifications} />
             </View>
         </View>
     );
