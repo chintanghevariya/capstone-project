@@ -3,10 +3,12 @@ const notificationModel = require("../models/notification");
 
 class NotificationService {
     async getUserNotifications(user) {
-        console.log(user._id);
         const notifications = await notificationModel.find({
             forUser: new ObjectId(user._id),
-        });
+        })
+        .populate("forUser")
+        .populate("fromUser")
+        .populate("ride", "ride._id");
         return notifications;
     }
 }
