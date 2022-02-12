@@ -5,6 +5,7 @@ const {
 } = require("../helpers/location");
 const notificationModel = require("../models/notification");
 const Ride = require("../models/ride");
+const User = require("../models/user");
 
 class RidesService {
     async getRides(filters = {}) {
@@ -17,9 +18,25 @@ class RidesService {
 
     async createRide(rideDetails) {
         this.validateCreateRideFields(rideDetails);
+        const rideIdentifier = await this.getRideIdentifier(rideDetails);
+        rideDetails.rideIdentifier = rideIdentifier;
+        console.log(rideIdentifier);
         const ride = new Ride(rideDetails);
         await ride.save();
+        console.log(ride);
         return ride;
+    }
+
+    async getRideIdentifier(rideDetails) {
+        const user = await User.findOneAndUpdate(
+            { _id: rideDetails.driver },
+            {
+                $inc: { "numberOfRides": 1 }
+            }
+        );
+        const { numberOfRides } = user;
+        const rideIdentifier = `Ride ${numberOfRides + 1}`;
+        return rideIdentifier;
     }
 
     async addUserAsPassengerToRideOfId(user, rideId) {

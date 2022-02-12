@@ -6,7 +6,7 @@ import Signup from "../components/Signup";
 import DashBoard from "../components/DashBoard";
 import SplashScreen from "./SplashScreen";
 // import ErrorScreen from "./ErrorScreen";
-// import { getToken } from "../helpers/Token";
+import { getToken } from "../helpers/Token";
 import ChatScreen from "./IndexComponents/ChatScreen";
 import { AuthContext } from "../context/AuthContext";
 import PostRide from "./IndexComponents/HomeComponents/PostRide";

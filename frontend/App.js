@@ -7,13 +7,7 @@ import {
 
 import { AuthProvider, AuthStateValue } from "./context/AuthContext";
 
-// import PostRide from "./components/IndexComponents/HomeComponents/PostRide";
-// import ManageRide from './components/IndexComponents/Rides/ManageRide'
-// import Routes from './components/Routes'
-// import { RideContainer } from "./components/IndexComponents/Rides/RideContainer";
-// import Chat from "./components/IndexComponents/Chat";
-import AddCard from "./components/payment/AddCard";
-import Wallet from "./components/payment/wallet"
+import Routes from './components/Routes'
 
 // Define the config
 const config = {
@@ -27,11 +21,9 @@ export const theme = extendTheme({ config });
 export default function App() {
   return (
       <NativeBaseProvider>
-          {/* <AuthProvider> */}
-              {/* <Routes /> */}
-              <Wallet/>
-              {/* <AddCard/> */}
-          {/* </AuthProvider> */}
+          <AuthProvider>
+              <Routes />
+          </AuthProvider>
       </NativeBaseProvider>
   );
 }
