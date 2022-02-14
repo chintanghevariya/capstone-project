@@ -5,9 +5,6 @@ import { Alert, View, Text, ImageBackground, TouchableOpacity, Dimensions, Style
 import Loading from './Loading';
 import { setToken } from "../helpers/Token";
 import { setUser } from "../helpers/user"
-import { getToken } from "../helpers/Token";
-import { getUser } from "../helpers/user"
-import { delete_Token_user } from './IndexComponents/Profile';
 import { AuthContext } from '../context/AuthContext';
 
 export default function Login({ navigation }) {
@@ -137,9 +134,7 @@ export default function Login({ navigation }) {
                         <Text></Text>
 
                         <Button style={styles.btn2}>forgot password </Button>
-                        <Button onPress={() => getUser().then((value) => alert(value))}>user</Button>
-                        <Button onPress={() => getToken().then((value) => alert(value))}>token</Button>
-
+                        
                         <View style={styles.signupTextCont}>
                             <Text style={styles.signupText}>Don't have account yet?</Text>
                             <TouchableOpacity onPress={() => navigation.navigate('Signup')}><Text style={styles.signupButton}> Sign Up</Text></TouchableOpacity>

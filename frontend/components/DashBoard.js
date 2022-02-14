@@ -13,8 +13,6 @@ const Tab = createBottomTabNavigator();
 export default class DashBoard extends Component {
 
 
-
-
   render() {
     return (
       <Tab.Navigator

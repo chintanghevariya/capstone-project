@@ -84,10 +84,53 @@ export default function ManageRide() {
                 numberOfStops = '6' />
             </View>
 
-    </View>
-    </ScrollView>
-    </SafeAreaView>
-);
+                  <View></View>
+                  <View style={Styles.containerViewAll}>
+                      <View style={Styles.box}>
+                          <Text>Upcoming Rides</Text>
+                          <TouchableOpacity
+                              onPress={() => {
+                                  alert('this.props.navigation.navigate("AllRides")');
+                              }}
+                          >
+                              <Text style={{ color: "#0D92DD" }}>View All</Text>
+                          </TouchableOpacity>
+                      </View>
+                      <View
+                          style={{
+                              borderBottomColor: "#CCCCCC",
+                              borderBottomWidth: 1,
+                          }}
+                      />
+                      {upcompingRides.slice(0, 3).map((ride, index) => (
+                          <RideContainer ride={ride} />
+                      ))}
+                  </View>
+
+                  <View></View>
+                  <View style={Styles.containerCompleted}>
+                      <View style={Styles.box}>
+                          <Text>Completed Rides</Text>
+                          <TouchableOpacity
+                              onPress={() => {
+                                  alert("View All");
+                              }}
+                          >
+                              <Text style={{ color: "#0D92DD" }}>View All</Text>
+                          </TouchableOpacity>
+                          {/* <TouchableOpacity onPress={()=>this.props.navigation.navigate('CompletedRides')}><Text style={{color: '#0D92DD', textDecorationLine: 'underline'}}>View All</Text></TouchableOpacity> */}
+                      </View>
+                      <View
+                          style={{
+                              borderBottomColor: "#CCCCCC",
+                              borderBottomWidth: 1,
+                          }}
+                      />
+                  </View>
+              </View>
+          </ScrollView>
+      </SafeAreaView>
+  );
     }
 
 
