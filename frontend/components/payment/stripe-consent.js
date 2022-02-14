@@ -13,7 +13,7 @@ export default function StripeConsent({ navigation }) {
                     alert(error);
                     return;
                 }
-                navigation.navigate("SetupCard");
+                navigation.navigate("AddCard");
             });
     }
 

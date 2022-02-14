@@ -1,11 +1,16 @@
 import axios from "axios";
 import { getToken } from "../helpers/Token";
 
+const API_URL =
+    Platform.OS === "android"
+        ? "http://192.168.0.158:4000"
+        : "http://localhost:4000";
+
 export async function getCurrentUserNotifications() {
     const token = await getToken();
     try {
         const request = await axios.get(
-            "http://192.168.0.158:4000/notifications",
+            `${API_URL}/notifications`,
             {
                 headers: {
                     "Content-Type": "application/json",

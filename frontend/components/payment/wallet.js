@@ -6,7 +6,7 @@ import { RecentTransaction } from './RecentTransaction';
 
 
 
-export default function Wallet() {
+export default function Wallet({ navigation }) {
     wall = <Ionicons name="wallet" size={40} />;
    
 
@@ -19,7 +19,7 @@ export default function Wallet() {
                         My Balance
                     </Text>
                     <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-                        {this.wall}{"             "}
+                        {wall}{"             "}
                         $ 120.00
                         {"                        "}
                     </Text>
@@ -35,7 +35,7 @@ export default function Wallet() {
                 <TouchableOpacity
                     style={Styles.button}
                 //  onPress={navigateToAddCard}
-                    onPress={()=>this.props.navigation.navigate('')}
+                    onPress={()=>navigation.navigate('AddCard')}
                     underlayColor="#fff"
                 >
                         
