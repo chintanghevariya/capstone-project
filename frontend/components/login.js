@@ -134,7 +134,7 @@ export default function Login({ navigation }) {
                         <Text></Text>
 
                         <Button style={styles.btn2}>forgot password </Button>
-
+                        
                         <View style={styles.signupTextCont}>
                             <Text style={styles.signupText}>Don't have account yet?</Text>
                             <TouchableOpacity onPress={() => navigation.navigate('Signup')}><Text style={styles.signupButton}> Sign Up</Text></TouchableOpacity>

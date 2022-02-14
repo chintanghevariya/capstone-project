@@ -6,7 +6,7 @@ import {
     ImageBackground,
     TouchableOpacity
 } from "react-native";
-import { Button, Heading, View, Text, Radio, Stack, Input } from 'native-base';
+import { Button, Heading, View, Text, Radio, Stack,Input } from 'native-base';
 import axios from 'axios';
 import RadioForm from 'react-native-simple-radio-button';
 import { setToken } from "../helpers/Token";
@@ -58,19 +58,19 @@ export default function Signup({ navigation }) {
 
     useEffect(() => {
         let pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
-
+       
         if (email.trim() === "") {
             setErrors({
                 ...errors,
                 emailError: "Email cannot be empty",
             });
-        } else if (!pattern.test(email)) {
+        } else if (!pattern.test(email)) { 
             setErrors({
                 ...errors,
                 emailError: "Email is not valid",
             });
         }
-        else {
+        else{
             setErrors({
                 ...errors,
                 emailError: "",
@@ -151,7 +151,7 @@ export default function Signup({ navigation }) {
     }
 
     return (
-
+       
         <ImageBackground
             source={require("../assets/login.png")}
             style={{ height: Dimensions.get("screen") }.height}
@@ -239,7 +239,7 @@ export default function Signup({ navigation }) {
                         onChangeText={setConfirmPassword}
                         isInvalid={errors.confirmPasswordError.length > 0}
                     />
-                    <Text></Text>
+                    <Text></Text> 
                 </View>
                 <View paddingY={"1"}>
                     <Text>Register As</Text>
@@ -255,7 +255,7 @@ export default function Signup({ navigation }) {
                             <Radio value="passenger">Passenger</Radio>
                         </Stack>
                     </Radio.Group>
-                    <Text></Text>
+                 <Text></Text> 
                 </View>
                 <View paddingY={"1"}>
                     <Button
@@ -267,22 +267,22 @@ export default function Signup({ navigation }) {
                     >
                         Register
                     </Button>
-
+                        
                 </View>
-                <View style={styles.signupTextCont}>
-                    <Text style={styles.signupText}>Already have account?</Text>
-                    <TouchableOpacity onPress={() => navigation.navigate('Login')}><Text style={styles.signupButton}> Login</Text></TouchableOpacity>
-                </View>
-            </View>
+                    <View style={styles.signupTextCont}>
+                        <Text style={styles.signupText}>Already have account?</Text>
+                        <TouchableOpacity onPress={() => navigation.navigate('Login')}><Text style={styles.signupButton}> Login</Text></TouchableOpacity>
+                    </View>    
+            </View>            
         </ImageBackground>
-
+  
     );
 
 }
 
 const styles = StyleSheet.create({
     container: {
-        margin: '3%'
+        margin:'3%'        
     },
     signupTextCont: {
         flexGrow: 1,

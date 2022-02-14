@@ -147,6 +147,9 @@ const Styles = StyleSheet.create({
     wallet: {
         alignSelf: 'center'
     },
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     backgroundContainer: {
