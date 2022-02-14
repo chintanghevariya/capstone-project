@@ -12,6 +12,7 @@ import ManageRide from './components/IndexComponents/Rides/ManageRide'
 import Routes from './components/Routes'
 import { RideContainer } from "./components/IndexComponents/Rides/RideContainer";
 import Chat from "./components/IndexComponents/Chat";
+import Profile from "./components/IndexComponents/ProfileComponent/Profile";
 
 // Define the config
 const config = {
@@ -26,7 +27,10 @@ export default function App() {
   return (
       <NativeBaseProvider>
           <AuthProvider>
-              <Routes />
+              {/* <Routes /> */}
+              <Profile/>
+              {/* <ManageRide/> */}
+              
           </AuthProvider>
       </NativeBaseProvider>
   );
