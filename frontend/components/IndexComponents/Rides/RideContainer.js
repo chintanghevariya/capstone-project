@@ -98,6 +98,7 @@ export class RideContainer extends Component {
                         </TouchableOpacity>
                     </View>
                 </View>
+                </View>
             );
         }
     }

@@ -48,39 +48,6 @@ export default function Main({ navigation }) {
     }
     return (
         <ScrollView style={Styles.container}>
-            <View style={Styles.header}>
-                <View style={Styles.welcome}>
-                    <Text>Welcome</Text>
-                    <Text style={Styles.userName}>
-                        {user.firstName} {user.lastName}
-                    </Text>
-                </View>
-                <View style={Styles.wallet}>
-                    <Text>Wallet</Text>
-                </View>
-            </View>
-            <View style={Styles.background}>
-                <Text style={[Styles.containerText, { marginTop: "2%" }]}>
-                    Next ride
-                </Text>
-                <Text style={Styles.containerText}>in 0000 hours</Text>
-                <View style={Styles.backgroundContainer}>
-                    <TouchableOpacity>
-                        <Text>Details</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-            <TouchableOpacity
-                onPress={navigateToRideForm}
-                style={Styles.manageRide}
-            >
-                <Text style={Styles.manageRideText}> {myCar} Manage Rides</Text>
-                <Text style={Styles.manageRideText}> {myArrow} </Text>
-            </TouchableOpacity>
-            <Text style={{ marginLeft: 20, fontSize: 20 }}>Rides around you</Text>
-
-    return (
-        <ScrollView style={Styles.container}>
             <View
                 flex={1}
                 flexDirection={"row"}
@@ -171,6 +138,9 @@ const Styles = StyleSheet.create({
         backgroundColor: '#21A656',
         height: 100,
         borderRadius: 4,
+    },
+    wallet: {
+        alignSelf: 'center'
     },
     backgroundContainer: {
         margin: 10,
