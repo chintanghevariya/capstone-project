@@ -8,6 +8,7 @@ import { getUser } from "../../../helpers/user"
 import { getRidesAroundUser } from "../../../api/rides";
 import { RideContainer } from '../Rides/RideContainer';
 
+
 export default function Main({ navigation }) {
     const [location, setLocation] = useState({})
     const [user, setUser] = useState({})
@@ -21,6 +22,39 @@ export default function Main({ navigation }) {
     const seat = <Ionicons name="seat" size={16} />
     const star = <Icon name="star" size={16} />
     const flag = <Icon name="flag" size={16} />
+
+    const list = () => {
+        try {
+            return [].map((element) => {
+                return (
+                    <View key={element._id}>
+                        <View>
+                            <View style={Styles.backgroundContainer}>
+                                <View style={Styles.childContainer}>
+                                    <Text style={{ fontSize: 18, fontWeight: "bold" }}> {map} {element.from['locationName']}</Text>
+                                    <Text> {arrow} </Text>
+                                    <Text style={{ fontSize: 18, fontWeight: "bold" }}> {map} {element.to['locationName']}</Text>
+                                    <Text style={{ fontSize: 20, marginRight: 5 }}>${element.pricePerSeat}</Text>
+                                </View>
+                                <View style={{ borderBottomColor: '#F5F5F5', borderBottomWidth: 1, }} />
+                                <View style={Styles.childContainer}>
+                                    <Text style={{ fontSize: 16 }}> {clock} {element.startDateAndTime}</Text>
+                                    <Text style={{ fontSize: 16 }}> {seat} {element.numberOfSeats}</Text>
+                                    <Text style={{ fontSize: 16 }}> {star} 2</Text>
+                                    <Text style={{ fontSize: 16 }}> {flag} {element.stops.length}</Text>
+                                    <TouchableOpacity onPress={() => { navigation.navigate('RideDetails') }} ><Text style={{ color: '#0D92DD', }}>Details</Text></TouchableOpacity>
+                                </View>
+                            </View>
+                        </View>
+                    </View>
+                );
+            });
+        }
+        catch (e) {
+            alert(JSON.stringify(e.message))
+        }
+
+    };
     // setUser(getUser())
     // to access the lattitude and longitude the use location.lat and location.long 
     useEffect(() => {
@@ -47,9 +81,10 @@ export default function Main({ navigation }) {
         navigation.navigate("ManageRide")
     }
 
-    const navigateToRideForm = () => {
-        navigation.navigate("RideForm")
+    const navigateToWallet = () => {
+        navigation.navigate("Wallet")
     }
+
     return (
         <ScrollView style={Styles.container}>
             <View
@@ -152,7 +187,7 @@ const Styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
         height: 100,
         shadowColor: '#000000',
-        borderRadius: 3,
+        borderRadius: 2,
         shadowColor: '#171717',
         shadowOffset: { width: -2, height: 4 },
         shadowOpacity: 0.5,

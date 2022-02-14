@@ -368,9 +368,9 @@ export default function PostRide() {
           <Button style={Styles.enabled} onPress={() => handlePost()}>
             Post Ride
           </Button>
-        </ScrollView>
-      </SafeAreaView>
-    </View>
+        </ScrollView >
+      </SafeAreaView >
+    </View >
   );
 }
 

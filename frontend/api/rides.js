@@ -10,31 +10,18 @@ const API_URL =
         : "http://localhost:4000";
 
 
+const API_URL =
+    Platform.OS === "android"
+        ? "http://192.168.0.158:4000"
+        : "http://localhost:4000";
+
+
 export async function getRides() {
     const token = await getToken()
     try {
         const request = await axios.post(
-            "http://localhost:4000/rides/filter",
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
-        return [request, null];
-    } catch (e) {
-        return [null, e.message];
-    }
-}
-
-export async function getRidesAroundUser() {
-    try {
-        const token = await getToken();
-        const location = await GetCurrentLocation();
-        const { lat, long } = location;
-        const request = await axios.get(
-            `${API_URL}/rides/around/user?latitude=${lat}&longitude=${long}`,
+            `${API_URL}/rides/filter`,
+            {},
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -49,22 +36,60 @@ export async function getRidesAroundUser() {
     }
 }
 
+export async function getRidesAroundUser() {
+    try {
+        const token = await getToken();
+        const location = await Loc.getCurrentPositionAsync({ enableHighAccuracy: true });
+        const { latitude, longitude } = location.coords;
+        const request = await axios.get(
+            `${API_URL}/rides/around/user?latitude=latitude&longitude=longitude`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
+            }
+        );
+        return [request, null];
+    } catch (e) {
+        return [null, e.message];
+    }
+}
+
 export async function getRideOfCurrentUserAsPassenger() {
     const user = getUser()
     const token = await getToken()
     try {
         const request = await axios.get(
-            "http://localhost:4000/rides/of-user/as-passenger",
+            `${API_URL}/rides/of-user/as-passenger`,
             {
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                }
+                    Authorization: `Bearer ${token}`,
+                },
             }
         );
-        return [request, null];
+        return [request.data, null];
     }
     catch (e) {
+        return [null, e.message];
+    }
+}
+
+export async function getRideOfCurrentUserAsDriver() {
+    const token = await getToken();
+    try {
+        const request = await axios.get(
+            `${API_URL}/rides/of-user/as-driver`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return [request.data, null];
+    } catch (e) {
         return [null, e.message];
     }
 }

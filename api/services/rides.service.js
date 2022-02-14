@@ -1,5 +1,11 @@
 const { ObjectId } = require("mongodb");
+const {
+    getLongitudeDifference,
+    getLatitudeDifference,
+} = require("../helpers/location");
+const notificationModel = require("../models/notification");
 const Ride = require("../models/ride");
+const User = require("../models/user");
 
 class RidesService {
     async getRides(filters = {}) {
@@ -12,9 +18,25 @@ class RidesService {
 
     async createRide(rideDetails) {
         this.validateCreateRideFields(rideDetails);
+        const rideIdentifier = await this.getRideIdentifier(rideDetails);
+        rideDetails.rideIdentifier = rideIdentifier;
+        console.log(rideIdentifier);
         const ride = new Ride(rideDetails);
         await ride.save();
+        console.log(ride);
         return ride;
+    }
+
+    async getRideIdentifier(rideDetails) {
+        const user = await User.findOneAndUpdate(
+            { _id: rideDetails.driver },
+            {
+                $inc: { "numberOfRides": 1 }
+            }
+        );
+        const { numberOfRides } = user;
+        const rideIdentifier = `Ride ${numberOfRides + 1}`;
+        return rideIdentifier;
     }
 
     async addUserAsPassengerToRideOfId(user, rideId) {
@@ -112,9 +134,49 @@ class RidesService {
         const request = {
             userId
         }
+        const notification = new notificationModel({
+            fromUser: userId,
+            forUser: ride.driver,
+            ride: ride._id,
+            type: "join-request"
+        })
         ride.requests.push(request);
+        await notification.save();
         await ride.save();
         return {};
+    }
+
+    async getRidesAroundUser({ latitude, longitude }) {
+        const numLatitude = Number(latitude);
+        const numLongitude = Number(longitude);
+
+        const longitudeDistance = getLongitudeDifference(numLatitude);
+        const latitudeDistance = getLatitudeDifference();
+        
+        const longFiveKMPlus = (longitudeDistance) + numLongitude;
+        const latFiveKMPlus = (latitudeDistance) + numLatitude;
+
+        const longFiveKMMinus = numLongitude - (longitudeDistance);
+        const latFiveKMMinus = numLatitude - (latitudeDistance);
+
+        const rides = await Ride.find({
+            "from.latitude": {
+                $gt: latFiveKMMinus,
+                $lt: latFiveKMPlus
+            },
+            "from.longitude": {
+                $gt: longFiveKMMinus,
+                $lt: longFiveKMPlus
+            }
+        });
+        
+        return {
+            longFiveKMPlus,
+            latFiveKMPlus,
+            longFiveKMMinus,
+            latFiveKMMinus,
+            rides
+        }
     }
 
     userHasRequestToJoin(userId, ride) {
@@ -138,6 +200,7 @@ class RidesService {
             "from",
             "to"
         );
+        console.log(rideDetails.stops);
         this.validateStartDateAndTime(rideDetails.startDateAndTime);
         this.validateNumberOfSeats(rideDetails.numberOfSeats);
         this.validatePricePerSeat(rideDetails.pricePerSeat);

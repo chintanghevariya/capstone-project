@@ -55,5 +55,8 @@ app.use('/rides', ridesRouter)
 const paymentRouter = require('./routes/payment.routes');
 app.use('/payments', paymentRouter);
 
+const notificationRouter = require('./routes/notification.routes');
+app.use("/notifications", notificationRouter);
+
 // Export app for testing
 module.exports = app

@@ -7,11 +7,7 @@ import {
 
 import { AuthProvider, AuthStateValue } from "./context/AuthContext";
 
-import PostRide from "./components/IndexComponents/HomeComponent/PostRide";
-import ManageRide from './components/IndexComponents/Rides/ManageRide'
 import Routes from './components/Routes'
-import { RideContainer } from "./components/IndexComponents/Rides/RideContainer";
-import Chat from "./components/IndexComponents/Chat";
 
 // Define the config
 const config = {

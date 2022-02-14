@@ -1,19 +1,21 @@
-import React from "react";
-import { Button, Input } from 'native-base'
+import React, { useState, useEffect, useContext } from "react";
 import {
     StyleSheet,
     Dimensions,
     ImageBackground,
     TouchableOpacity
 } from "react-native";
-import { Button, Heading, View, Text, Radio, Stack,Input } from 'native-base';
+import { Button, Heading, Input, View, Text, Radio, Stack } from 'native-base';
 import axios from 'axios';
-import RadioForm from 'react-native-simple-radio-button';
+import { AuthContext } from "../context/AuthContext";
 import { setToken } from "../helpers/Token";
+import { setUser } from "../helpers/user";
+import { registerUser } from "../api/auth";
 
 export default function Signup({ navigation }) {
 
     const authContext = useContext(AuthContext);
+
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
@@ -57,20 +59,12 @@ export default function Signup({ navigation }) {
     }, [lastName])
 
     useEffect(() => {
-        let pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
-       
         if (email.trim() === "") {
             setErrors({
                 ...errors,
                 emailError: "Email cannot be empty",
             });
-        } else if (!pattern.test(email)) { 
-            setErrors({
-                ...errors,
-                emailError: "Email is not valid",
-            });
-        }
-        else{
+        } else {
             setErrors({
                 ...errors,
                 emailError: "",
@@ -151,15 +145,13 @@ export default function Signup({ navigation }) {
     }
 
     return (
-       
         <ImageBackground
             source={require("../assets/login.png")}
             style={{ height: Dimensions.get("screen") }.height}
         >
-            <View style={styles.container}>
-                <Heading size={"2xl"}>Create</Heading>
-                <Heading size={"2xl"}>an account</Heading>
-                <View>
+            <View padding={"3"}>
+                <Heading size={"lg"}>Create an account</Heading>
+                <View paddingY={"1"}>
                     <Text>
                         First name{" "}
                         <Text fontSize={"sm"} color={"red.600"}>
@@ -173,7 +165,6 @@ export default function Signup({ navigation }) {
                         onChangeText={setFirstName}
                         isInvalid={errors.firstNameError.length > 0}
                     />
-                    <Text></Text>
                 </View>
                 <View paddingY={"1"}>
                     <Text>
@@ -189,7 +180,6 @@ export default function Signup({ navigation }) {
                         onChangeText={setLastName}
                         isInvalid={errors.lastNameError.length > 0}
                     />
-                    <Text></Text>
                 </View>
                 <View paddingY={"1"}>
                     <Text>
@@ -205,7 +195,6 @@ export default function Signup({ navigation }) {
                         onChangeText={setEmail}
                         isInvalid={errors.emailError.length > 0}
                     />
-                    <Text></Text>
                 </View>
                 <View paddingY={"1"}>
                     <Text>
@@ -215,14 +204,12 @@ export default function Signup({ navigation }) {
                         </Text>
                     </Text>
                     <Input
-                        type='password'
                         background={"white"}
-                        placeholder="password"
+                        placeholder="Email"
                         value={password}
                         onChangeText={setPassword}
                         isInvalid={errors.passwordError.length > 0}
                     />
-                    <Text></Text>
                 </View>
                 <View paddingY={"1"}>
                     <Text>
@@ -232,14 +219,12 @@ export default function Signup({ navigation }) {
                         </Text>
                     </Text>
                     <Input
-                        type='password'
                         background={"white"}
-                        placeholder="confirm password"
+                        placeholder="Email"
                         value={confirmPassword}
                         onChangeText={setConfirmPassword}
                         isInvalid={errors.confirmPasswordError.length > 0}
                     />
-                    <Text></Text> 
                 </View>
                 <View paddingY={"1"}>
                     <Text>Register As</Text>
@@ -255,64 +240,19 @@ export default function Signup({ navigation }) {
                             <Radio value="passenger">Passenger</Radio>
                         </Stack>
                     </Radio.Group>
-                 <Text></Text> 
                 </View>
                 <View paddingY={"1"}>
                     <Button
                         width={"full"}
-                        backgroundColor='#21A656'
                         colorScheme="tertiary"
                         isDisabled={isDisabled()}
                         onPress={onSubmit}
                     >
                         Register
                     </Button>
-                        
                 </View>
-                    <View style={styles.signupTextCont}>
-                        <Text style={styles.signupText}>Already have account?</Text>
-                        <TouchableOpacity onPress={() => navigation.navigate('Login')}><Text style={styles.signupButton}> Login</Text></TouchableOpacity>
-                    </View>    
-            </View>            
+            </View>
         </ImageBackground>
-  
     );
 
 }
-
-const styles = StyleSheet.create({
-    container: {
-        margin:'3%'        
-    },
-    signupTextCont: {
-        flexGrow: 1,
-        alignItems: "center",
-        alignSelf: "center",
-        justifyContent: "flex-end",
-        flexDirection: "row"
-    },
-    signupButton: {
-        fontSize: 20,
-        justifyContent: "center",
-        alignSelf: "center",
-        fontWeight: '500',
-    },
-    error: {
-        borderColor: 'red',
-        height: 42,
-        width: "80%",
-        borderBottomWidth: 1,
-        marginTop: "5%"
-    },
-    success: {
-        borderColor: '#006400',
-        height: 42,
-        width: "80%",
-        borderBottomWidth: 1,
-        marginTop: "5%"
-    },
-    errMsg: {
-        fontWeight: 'bold',
-        color: 'red'
-    }
-})

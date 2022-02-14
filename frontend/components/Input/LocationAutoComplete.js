@@ -13,17 +13,25 @@ export const LocationAutoComplete = ({ onChange }) => {
         setLoading(true);
         getLocationsByName(text)
             .then(result => {
+                debugger;
+                debugger;
                 const [response, error] = result;
-                if (response && response.data) {
-                    const data = response.data.map((element, idx) => ({
-                        ...element,
-                        label: idx + 1 + " " + element.display_name,
-                        latitude: element.latitude,
-                        longitude: element.longitude,
-                        value: idx,
-                        id: idx,
-                        key: idx
-                    }));
+                if (response && response.data && response.data.predictions) {
+                    const data = response.data.predictions.map(
+                        (element, idx) => ({
+                            ...element,
+                            label:
+                                idx +
+                                1 +
+                                " " +
+                                element.description,
+                            locationName:
+                                element.structured_formatting.main_text,
+                            value: idx,
+                            id: idx,
+                            key: idx,
+                        })
+                    );
                     setItems(data);
                 }
                 setLoading(false);
