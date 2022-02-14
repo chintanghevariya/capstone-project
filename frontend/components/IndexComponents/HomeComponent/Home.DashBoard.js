@@ -43,6 +43,10 @@ export default function Main({ navigation }) {
         })
     }, [])
 
+    const navigateToManageRide = () => {
+        navigation.navigate("ManageRide")
+    }
+
     const navigateToRideForm = () => {
         navigation.navigate("RideForm")
     }
@@ -139,9 +143,12 @@ const Styles = StyleSheet.create({
         height: 100,
         borderRadius: 4,
     },
+<<<<<<< Updated upstream
     wallet: {
         alignSelf: 'center'
     },
+=======
+>>>>>>> Stashed changes
     backgroundContainer: {
         margin: 10,
         borderWidth: 0.4,
