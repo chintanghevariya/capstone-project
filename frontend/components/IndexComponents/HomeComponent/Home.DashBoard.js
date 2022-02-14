@@ -65,10 +65,6 @@ export default function Main({navigation}) {
             setRides([]);
         });    
         GetCurrentLocation().then((value) => {
-            debugger;
-            debugger;
-            debugger;
-            debugger;
             setLocation(value)
         });   
         getUser().then((user)=>{

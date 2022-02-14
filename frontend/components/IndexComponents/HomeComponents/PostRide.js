@@ -157,6 +157,23 @@ export default function PostRide() {
     return preferences;    
   }
 
+  const getStopsValue = async () => {
+    const stops = [];
+    for (const field of fields) {
+      if (field !== undefined && field !== null && field.value !== undefined && field.value !== null) {
+        const [locationDetailsResponse, locationDetailsError] = await getLocationDetails(field.value.place_id);
+        const { result: locationDetails } = locationDetailsResponse.data;
+        const details = {
+            locationName: field.value.structured_formatting.main_text,
+            latitude: locationDetails.geometry.location.lat,
+            longitude: locationDetails.geometry.location.lng,
+        };
+        stops.push(details);
+      }
+    }
+    return stops;
+  }
+
 
   const handlePost = async ()=>{
 
@@ -169,7 +186,6 @@ export default function PostRide() {
     const { result: toLocationDetails } =
         toLocationDetailsResponse.data;
 
-    debugger;
     const fromDetails = {
         locationName: from.structured_formatting.main_text,
         latitude: fromLocationDetails.geometry.location.lat,
@@ -183,7 +199,7 @@ export default function PostRide() {
     };
 
     const preferences = handlePreferences()
-    const stops = fields.map(field => field.value).filter(value => value !== undefined && value !== null);
+    const stops = await getStopsValue();
     debugger;
     const details = {
         from: fromDetails,
@@ -205,7 +221,6 @@ export default function PostRide() {
               Authorization: `Bearer ${token}`
           }
       }
-      debugger;
       const {data} = await axios.post(
           `http://192.168.0.158:4000/rides`,
           details,

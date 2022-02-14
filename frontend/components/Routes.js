@@ -5,7 +5,6 @@ import Login from "./login";
 import Signup from "../components/Signup";
 import DashBoard from "../components/DashBoard";
 import SplashScreen from "./SplashScreen";
-// import ErrorScreen from "./ErrorScreen";
 import { getToken } from "../helpers/Token";
 import ChatScreen from "./IndexComponents/ChatScreen";
 import { AuthContext } from "../context/AuthContext";
@@ -55,6 +54,14 @@ export default function Routes() {
                           <Stack.Screen name="RideForm" component={PostRide} />
                           <Stack.Screen name="Wallet" component={Wallet} />
                           <Stack.Screen name="AddCard" component={AddCard} />
+                          <Stack.Screen
+                              name="ChatScreen"
+                              component={ChatScreen}
+                              options={({ route }) => ({
+                                  title: route.params.userName,
+                                  headerBackTitleVisible: false,
+                              })}
+                          />
                       </>
                   ) : (
                       <>
@@ -72,14 +79,6 @@ export default function Routes() {
                               name="Signup"
                               component={Signup}
                               options={{ gestureEnabled: false }}
-                          />
-                          <Stack.Screen
-                              name="ChatScreen"
-                              component={ChatScreen}
-                              options={({ route }) => ({
-                                  title: route.params.userName,
-                                  headerBackTitleVisible: false,
-                              })}
                           />
                       </>
                   )}

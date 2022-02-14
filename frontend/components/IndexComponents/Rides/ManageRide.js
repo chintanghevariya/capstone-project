@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import {Text,View,StyleSheet,TouchableOpacity,SafeAreaView, ScrollView} from 'react-native'
+import { View, Button, Text } from "native-base";
+import {TouchableOpacity, StyleSheet,SafeAreaView, ScrollView} from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Icon } from 'react-native-elements';
 import { getRideOfCurrentUserAsDriver, getRideOfCurrentUserAsPassenger } from '../../../api/rides';
@@ -59,18 +60,21 @@ export default function ManageRide({ navigation }) {
       <SafeAreaView style={Styles.container}>
           <ScrollView>
               <View>
-                    {
-                        (user.role === "admin" ||
-                        (user.role === "driver" && user.driverDetailsValid)) &&
-                        <TouchableOpacity
-                            style={Styles.button}
-                            onPress={navigateToPostRide}
-                            // onPress={()=>this.props.navigation.navigate('PostRide')}
-                            underlayColor="#fff"
-                        >
-                            <Text style={Styles.buttonText}> + Post New Ride </Text>
-                        </TouchableOpacity>
-                    }
+                  {(user.role === "admin" ||
+                      (user.role === "driver" && user.driverDetailsValid)) && (
+                      <Button
+                          style={Styles.button}
+                          padding={3}
+                          margin={3}
+                          onPress={navigateToPostRide}
+                          underlayColor="#fff"
+                      >
+                          <Text fontWeight={"bold"} color={"white"}>
+                              {" "}
+                              + Post New Ride{" "}
+                          </Text>
+                      </Button>
+                  )}
 
                   <View></View>
                   <View style={Styles.containerViewAll}>
@@ -129,21 +133,9 @@ const Styles = StyleSheet.create({
                 flex:1
             },
             button:{
-                marginRight:40,
-                marginLeft:40,
-                marginTop:80,
-                paddingTop:10,
-                paddingBottom:10,
                 backgroundColor:'#2265C9',
-                borderRadius:10,
-                borderWidth: 1,
+                borderRadius: 3,
                 borderColor: '#fff'
-            },
-            buttonText:{
-                color:'#fff',
-                textAlign:'center',
-                paddingLeft : 10,
-                paddingRight : 10
             },
             containerViewAll:{
                 flex:2,

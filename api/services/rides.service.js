@@ -200,6 +200,7 @@ class RidesService {
             "from",
             "to"
         );
+        console.log(rideDetails.stops);
         this.validateStartDateAndTime(rideDetails.startDateAndTime);
         this.validateNumberOfSeats(rideDetails.numberOfSeats);
         this.validatePricePerSeat(rideDetails.pricePerSeat);

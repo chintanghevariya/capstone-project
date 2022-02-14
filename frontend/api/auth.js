@@ -6,7 +6,7 @@ const API_URL = Platform.OS === "android" ? "http://192.168.0.158:4000" : "http:
 export async function loginUser(email,password) {
     try {
         const request = await axios.post(
-            "http://localhost:4000/rides/login",
+            `${API_URL}/rides/login`,
             {
                 email,password,
                 headers: {

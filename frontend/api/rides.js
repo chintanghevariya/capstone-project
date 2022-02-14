@@ -3,11 +3,17 @@ import * as Loc from "expo-location";
 import { getToken } from '../helpers/Token';
 import {getUser} from '../helpers/user'
 
+const API_URL =
+    Platform.OS === "android"
+        ? "http://192.168.0.158:4000"
+        : "http://localhost:4000";
+
+
 export async function getRides() {
     const token = await getToken()
     try {
         const request = await axios.post(
-            "http://192.168.0.158:4000/rides/filter",
+            `${API_URL}/rides/filter`,
             {},
             {
                 headers: {
@@ -28,7 +34,7 @@ export async function getRidesAroundUser() {
         const location = await Loc.getCurrentPositionAsync({ enableHighAccuracy: true });
         const { latitude, longitude } = location.coords;
         const request = await axios.get(
-            "http://192.168.0.158:4000/rides/around/user?latitude=" + latitude + "&longitude="+ longitude,
+            `${API_URL}/rides/around/user?latitude=latitude&longitude=longitude`,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -47,7 +53,7 @@ export async function getRideOfCurrentUserAsPassenger(){
     const token = await getToken()
     try {
         const request = await axios.get(
-            "http://192.168.0.158:4000/rides/of-user/as-passenger",
+            `${API_URL}/rides/of-user/as-passenger`,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -66,7 +72,7 @@ export async function getRideOfCurrentUserAsDriver() {
     const token = await getToken();
     try {
         const request = await axios.get(
-            "http://192.168.0.158:4000/rides/of-user/as-driver",
+            `${API_URL}/rides/of-user/as-driver`,
             {
                 headers: {
                     "Content-Type": "application/json",

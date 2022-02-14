@@ -30,8 +30,11 @@ export default function AddCard({ navigation }) {
             email: "aarytrivedi@gmail.com",
         };
         const [result, setupIntentError] = await getSetupIntentId();
+        if (setupIntentError) {
+            console.error(setupIntentError);
+            return;
+        }
         const { secret } = result.data;
-        console.log("HERE");
         const { setupIntent, error } = await confirmSetupIntent(secret, {
             type: "Card",
             billingDetails,
