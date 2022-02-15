@@ -12,6 +12,13 @@ export default function Profile() {
           setstarCount(rating)
     }
 
+    const logout = async () => {
+        alert("Log out Successfully")
+        // AsyncStorage.removeItem("user");
+        // await SecureStore.deleteItemAsync("token");
+        // authContext.logoutUser();
+    };
+
 
   return (
     <SafeAreaView style={Styles.container}>
@@ -55,7 +62,7 @@ export default function Profile() {
                 </View>  
             </View>    
         </ScrollView>
-        <TouchableOpacity style={Styles.logout}>
+        <TouchableOpacity onPress={logout} style={Styles.logout}>
             <Text style={Styles.logoutText}>
                 Log Out
             </Text>
@@ -83,7 +90,7 @@ const Styles = StyleSheet.create({
     },
     parentContainer:{
        // borderWidth : 0.5,
-       
+
     },
     childContainer:{
         padding:10,
