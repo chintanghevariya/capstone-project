@@ -4,8 +4,10 @@ import {
   extendTheme,
 
 } from "native-base";
-import Routes from './components/Routes'
 
+import { AuthProvider, AuthStateValue } from "./context/AuthContext";
+
+import Routes from './components/Routes'
 // Define the config
 const config = {
   useSystemColorMode: false,
@@ -18,7 +20,9 @@ export const theme = extendTheme({ config });
 export default function App() {
   return (
       <NativeBaseProvider>
-        <Routes/>
+          <AuthProvider>
+              <Routes />
+          </AuthProvider>
       </NativeBaseProvider>
   );
 }

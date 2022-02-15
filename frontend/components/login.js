@@ -1,20 +1,29 @@
-import React, { useState } from 'react'
-import { useFocusEffect } from '@react-navigation/native';
+import React, { useContext, useState } from 'react'
 import { Button } from 'native-base'
 import axios from 'axios';
 import {Alert,View, Text, ImageBackground ,TouchableOpacity, Dimensions, StyleSheet, TextInput } from 'react-native'
 import Loading from './Loading';
 import { setToken } from "../helpers/Token";
+import { setUser } from "../helpers/user"
 import { getToken } from "../helpers/Token";
+import { getUser } from "../helpers/user"
+import { delete_Token_user } from './IndexComponents/Profile';
+import { AuthContext } from '../context/AuthContext';
 
 export default function Login({navigation})  {
     const [email,setEmail] = useState("");
     const [password,setPassword] = useState("");
     const [emailValidate,setEmailValidate] = useState(false);
     const [passValidate,setPassValidate] = useState(false);
-    const [error,setError] = useState("");
+    const [error,setError] = useState();
     const [submitBtn,setSubmitBtn] = useState(true);
     const [isLoading,setIsLoading] = useState(false);
+
+    const authContext = useContext(AuthContext);
+    
+    // useEffect(()=>{
+    //     delete_Token_user(navigation);
+    // },[navigation])
 
     React.useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
@@ -26,7 +35,8 @@ export default function Login({navigation})  {
             setPassValidate(passValidate)
             setError(error)
             setSubmitBtn(submitBtn)
-        });
+            
+        }); 
 
         return unsubscribe;
     }, [navigation]);
@@ -65,30 +75,28 @@ export default function Login({navigation})  {
     const handleSubmit = async (e) => {
         if(emailValidate && passValidate){
             try {
-                const config={
-                    headers:{
-                        "Content-type":"application/json"
-                    }
-                }
-                setIsLoading(true)
-                const {data} = await axios.post(
-                    `http://localhost:4000/users/login`,
+                const config = {
+                    headers: {
+                        "Content-type": "application/json",
+                    },
+                };
+                setIsLoading(true);
+                const { data } = await axios.post(
+                    `http://192.168.0.158:4000/users/login`,
                     {
-                        email, // R@P.com   
-                        password,// Rutik123
+                        email, // R@P.com
+                        password, // Rutik123
                     },
                     config
-                );  
-                
-                setToken(data.data.token).then(
-                    navigation.navigate('DashBoard')                    
                 );
-                setIsLoading(false)
-                
+                // console.log(data);
+                setToken(data.data.token);
+                setUser(data.data.user)
+                authContext.signInUser();
+                setIsLoading(false);
             } catch (e) {
-                setError(e.response.data.error),
+                Alert.alert(e.response.data.error)
                 setIsLoading(false)
-                Alert.alert(error)
             }
         }
        else{
@@ -130,6 +138,9 @@ export default function Login({navigation})  {
                             <Text></Text>
 
                         <Button style={styles.btn2}>forgot password </Button>
+                            <Button onPress={() => getUser().then((value) => alert(value))}>user</Button>
+                            <Button onPress={() => getToken().then((value) => alert(value))}>token</Button>
+
                         <View style={styles.signupTextCont}>
                             <Text style={styles.signupText}>Don't have account yet?</Text>
                             <TouchableOpacity onPress={()=>navigation.navigate('Signup')}><Text style={styles.signupButton}> Sign Up</Text></TouchableOpacity>

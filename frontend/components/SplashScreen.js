@@ -1,31 +1,62 @@
-import React, { Component } from 'react';
-import { ImageBackground,View,Image, StyleSheet,TouchableOpacity,Text } from 'react-native';
+import React, { Component, useEffect } from 'react';
+import { Alert,ImageBackground,View,Image,Linking, StyleSheet,TouchableOpacity,Text } from 'react-native';
+import * as Location from 'expo-location';
+import Constants from 'expo-constants'
+import * as IntentLauncher from 'expo-intent-launcher'
+import { LocationAutoComplete } from './Input/LocationAutoComplete';
 
-export default class SplashScreen extends Component {
-  render() {
-    return (
-        <View
-        style={{flex:1}}
-        showsVerticalScrollIndicator={false}>
-        <ImageBackground source={require('../assets/login.png')}
-        style={
-            [Styles.imgBackground,{height:'100%',width:'100%'}]
-        }>
-        <View style={Styles.container}>
-            <Image resizeMode={'contain'} source={require('../assets/Home.png') }
-            style={Styles.img}/>
-        
-            <TouchableOpacity onPress={()=>{this.props.navigation.navigate('Signup')}} style={Styles.btn}><Text style={Styles.text}>Get Started</Text></TouchableOpacity>
-            <View style={Styles.signupTextCont}>
-                    <Text style={Styles.signupText}>Already have account?</Text>
-                    <TouchableOpacity onPress={()=>this.props.navigation.navigate('Login')}><Text style={Styles.signupButton}> Login</Text></TouchableOpacity>
+export default function SplashScreen({navigation}) {
+    const pkg = Constants.manifest.releaseChannel
+        ? Constants.manifest.android.package
+        : 'host.exp.exponent'
+
+    const toSetting = () => {
+        if (Platform.OS === 'ios') {  // open setting in ios for location
+            Linking.openURL('app-settings:')
+        } else {
+            IntentLauncher.startActivityAsync(
+                IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
+                { data: 'package:' + pkg },
+            )
+        }
+    }
+
+    const locationPermission = async()=>{
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+        Alert.alert('Error',
+            'Permission to access location was denied',
+            [
+                { text: 'Allow', onPress: toSetting },
+            ]);
+        }
+    }
+    useEffect(()=>{
+        locationPermission()
+    })
+        return (
+            <View
+                style={{ flex: 1 }}
+                showsVerticalScrollIndicator={false}>
+                <ImageBackground source={require('../assets/login.png')}
+                    style={
+                        [Styles.imgBackground, { height: '100%', width: '100%' }]
+                    }>
+                    <View style={Styles.container}>
+                        <Image resizeMode={'contain'} source={require('../assets/Home.png')}
+                            style={Styles.img} />
+
+                        <TouchableOpacity onPress={() => { navigation.navigate('Signup') }} style={Styles.btn}><Text style={Styles.text}>Get Started</Text></TouchableOpacity>
+                        <View style={Styles.signupTextCont}>
+                            <Text style={Styles.signupText}>Already have account?</Text>
+                            <TouchableOpacity onPress={() => navigation.navigate('Login')}><Text style={Styles.signupButton}> Login</Text></TouchableOpacity>
+                        </View>
+                    </View>
+                </ImageBackground>
             </View>
-        </View>
-        </ImageBackground>
-        </View>
-    );
-  }
-}
+        );
+    }
+
 const Styles = StyleSheet.create({
     container:{
         display:'flex',
