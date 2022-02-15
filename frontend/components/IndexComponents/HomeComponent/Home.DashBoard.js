@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import {View,Text, StyleSheet, Touchable, TouchableOpacity} from 'react-native'
-import { Button, ScrollView } from 'native-base';
+import {Text, StyleSheet, TouchableOpacity} from 'react-native'
+import { View, Button, ScrollView } from 'native-base';
 import {GetCurrentLocation} from './GetCurrentLocation';
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { getUser } from "../../../helpers/user"
-import { getRides } from '../../../api/rides';
+import { getRidesAroundUser } from "../../../api/rides";
 
 export default function Main({navigation}) {
     const[location,setLocation] =useState({})
     const[user,setUser] = useState({})
-    const[rides,setRides] = useState([{}])
+    const[rides,setRides] = useState([])
 
     const myCar = <Icon name="car" size={20} />;
     const myArrow = <Icon name="arrow-right" size={20} />;
@@ -23,7 +23,7 @@ export default function Main({navigation}) {
 
     const list = () => {
         try{
-        return rides.map((element) => {
+        return [].map((element) => {
             return (
                 <View key={element._id}>
                     <View>
@@ -55,74 +55,106 @@ export default function Main({navigation}) {
     };
     // setUser(getUser())
     // to access the lattitude and longitude the use location.lat and location.long 
-    useEffect(() => { 
-        getRides().then((response) => {
+    useEffect(() => {    
+        getRidesAroundUser().then((response) => {
             const [result, error] = response;
             if (error) {
                 alert(error);
                 return;
             }
-            setRides(result.data.data);
+            setRides([]);
         });    
-        GetCurrentLocation().then((value) => setLocation(value));   
-        getUser().then((value)=>setUser(value))
+        GetCurrentLocation().then((value) => {
+            setLocation(value)
+        });   
+        getUser().then((user)=>{
+            setUser(user);
+            if (user.isNew) {
+                navigation.navigate("StripeConsent")
+            }
+        })
     }, []) 
 
-    const navigateToRideForm = () => {
-        navigation.navigate("RideForm")
+    const navigateToManageRide = () => {
+        navigation.navigate("ManageRide")
     }
+
+    const navigateToWallet = () => {
+        navigation.navigate("Wallet");
+    }
+
   return (
       <ScrollView style={Styles.container}>
-          <View style={Styles.header}>
+          <View
+              flex={1}
+              flexDirection={"row"}
+              justifyContent={"space-between"}
+              alignItems={"center"}
+              padding={"3"}
+          >
               <View style={Styles.welcome}>
                   <Text>Welcome</Text>
                   <Text style={Styles.userName}>
                       {user.firstName} {user.lastName}
                   </Text>
               </View>
-              <View style={Styles.wallet}>
+              <Button
+                  height={"10"}
+                  variant={"solid"}
+                  onPress={navigateToWallet}
+              >
                   <Text>Wallet</Text>
-              </View>
+              </Button>
           </View>
-          <View style={Styles.background}>
+          <View height={"95"} style={Styles.background}>
               <Text style={[Styles.containerText, { marginTop: "2%" }]}>
                   Next ride
               </Text>
               <Text style={Styles.containerText}>in 0000 hours</Text>
-              <View style={Styles.backgroundContainer}>
-                  <TouchableOpacity>
-                      <Text>Details</Text>
-                  </TouchableOpacity>
-              </View>
           </View>
-          <TouchableOpacity
-              onPress={navigateToRideForm}
-              style={Styles.manageRide}
-          >
-              <Text style={Styles.manageRideText}> {myCar} Manage Rides</Text>
-              <Text style={Styles.manageRideText}> {myArrow} </Text>
+          <View marginTop={"-10"} style={Styles.backgroundContainer}>
+              <TouchableOpacity>
+                  <Text>Details</Text>
+              </TouchableOpacity>
+          </View>
+          <TouchableOpacity onPress={navigateToManageRide}>
+              <View
+                  flex={"1"}
+                  flexDirection={"row"}
+                  background={"#fff"}
+                  marginX={"3"}
+                  padding={"3"}
+                  justifyContent={"center"}
+                  borderColor={"#cccccc"}
+                  borderWidth={"1"}
+              >
+                  <Text style={Styles.manageRideText}>
+                      {" "}
+                      {myCar} Manage Rides
+                  </Text>
+                  <Text>{"  "}</Text>
+                  <Text style={Styles.manageRideText}> {myArrow} </Text>
+              </View>
           </TouchableOpacity>
-          <Text style={{ marginLeft: 20, fontSize: 20 }}>Rides around you</Text>
-
-          {list()}
+          <View marginY={"2"}>
+              <Text style={{ marginLeft: 20, fontSize: 20 }}>
+                  Rides around you
+              </Text>
+              {list()}
+          </View>
       </ScrollView>
   );
 }
 
 const Styles = StyleSheet.create({
-    container: {
-        margin:'1%',
-        width:'100%'
-    },
     header: {
         flex: 1,
         flexDirection:'row',
+        justifyContent: "space-between"
     },
     welcome:{
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
-        marginRight:"55%",
-        marginLeft: '1%',
     },
     userName:{
         fontSize:26,
@@ -130,8 +162,6 @@ const Styles = StyleSheet.create({
     },
     background:{
         backgroundColor: '#21A656',
-        height:100,
-        borderRadius: 4,
     },
     backgroundContainer:{
         margin: 10,
@@ -139,7 +169,7 @@ const Styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
         height:100,
         shadowColor: '#000000',
-        borderRadius: 3,
+        borderRadius: 2,
         shadowColor: '#171717',
         shadowOffset: { width: -2, height: 4 },
         shadowOpacity: 0.5,

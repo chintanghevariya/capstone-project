@@ -4,6 +4,9 @@ import {Button,Input} from 'native-base'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import  RadioForm from 'react-native-simple-radio-button';
 import { LocationAutoComplete } from '../../Input/LocationAutoComplete';
+import { getToken } from '../../../helpers/Token';
+import axios from 'axios';
+import { getLocationDetails } from '../../../api/map';
 // import { Autocomplete, verify } from '@lob/react-address-autocomplete'
 const { width } = Dimensions.get("window");
 
@@ -41,9 +44,9 @@ export default function PostRide() {
     setShowDateTimePicker(false)
   };
 
-  const handleChange = (i, value) =>{
+  const handleChange = (i, loc) =>{
     const values = [...fields];
-    values[i].value = value;
+    values[i].value = loc;
     setFields(values);
   }
 
@@ -76,20 +79,6 @@ export default function PostRide() {
         }  
   }
 
-  const handleFrom=(text) => {
-      if(text.trim() === ""){
-        setFrom(false),
-        setError("From : can't be empty")
-        return false;
-      }
-      else 
-      {
-        setFrom(true);
-        setError("")
-        return true
-      }
-  }
-
   const handleTo = (text)=> {
     if(text === '')
     {
@@ -119,7 +108,7 @@ export default function PostRide() {
       return false;
     }else{
       setError("")
-      setAmount(true);
+      setAmount(value);
       return true
     };
 
@@ -137,7 +126,7 @@ export default function PostRide() {
       return false;
     }else {
       setError("")
-      setSeatsAvailable(true);
+      setSeatsAvailable(value);
       return true;
     }
   
@@ -160,86 +149,89 @@ export default function PostRide() {
   }
 
   const handlePreferences=()=>{
-    
-    console.warn(pet)
-    // alert("\n pet : " + pet+
-    // "\n smokeFree : " + smokeFree+
-    // "\n Female   : "  + female+
-    // "\n Luggage : "+ luggage)
+    const preferences = [];
+    if (pet) { preferences.push("pet") }
+    if (smokeFree) { preferences.push("somefree") }
+    if (female) { preferences.push("female") }
+    if (luggage) { preferences.push("luggage") }
+    return preferences;    
+  }
 
-    
+  const getStopsValue = async () => {
+    const stops = [];
+    for (const field of fields) {
+      if (field !== undefined && field !== null && field.value !== undefined && field.value !== null) {
+        const [locationDetailsResponse, locationDetailsError] = await getLocationDetails(field.value.place_id);
+        const { result: locationDetails } = locationDetailsResponse.data;
+        const details = {
+            locationName: field.value.structured_formatting.main_text,
+            latitude: locationDetails.geometry.location.lat,
+            longitude: locationDetails.geometry.location.lng,
+        };
+        stops.push(details);
+      }
+    }
+    return stops;
   }
 
 
   const handlePost = async ()=>{
 
-    debugger;
-    debugger;
-
-    const abc = from;
-    const abcdef = to;
-    const lag = fields;
-
-    handlePreferences()
-    // alert(paymentMethod 
-    // + "\n from : " +  from 
-    // + "\n  To  : " + to
-    // + "\n date : " + date 
-    // + "\n  Error : " + error
-    // + "\n Stops : " + JSON.stringify(fields)
-    // + "\n  Amount : " + amount
-    // + "\n  Seats : " + seatsAvailable
-    // )
-
-    // try {
-    //   const config={
-    //       headers:{
-    //           "Content-type":"application/json"
-    //       }
-    //   }
-    //   const {data} = await axios.post(
-    //       `http://localhost:4000/rides`,
-    //       {
-              
-    //       },
-    //       config
-    //       );  
-      
-    //   } catch (e) {
-    //   Alert.alert(e)
-  
+    const [fromLocationDetailsResponse, fromLocationDetailsError] =
+        await getLocationDetails(from.place_id);
+    const [toLocationDetailsResponse, toLocationDetailsError] =
+        await getLocationDetails(to.place_id);
     
+    const { result: fromLocationDetails } = fromLocationDetailsResponse.data;
+    const { result: toLocationDetails } =
+        toLocationDetailsResponse.data;
+
+    const fromDetails = {
+        locationName: from.structured_formatting.main_text,
+        latitude: fromLocationDetails.geometry.location.lat,
+        longitude: fromLocationDetails.geometry.location.lng,
+    };
+
+    const toDetails = {
+        locationName: to.structured_formatting.main_text,
+        latitude: toLocationDetails.geometry.location.lat,
+        longitude: toLocationDetails.geometry.location.lng,
+    };
+
+    const preferences = handlePreferences()
+    const stops = await getStopsValue();
+    debugger;
+    const details = {
+        from: fromDetails,
+        to: toDetails,
+        preferences,
+        startDateAndTime: date,
+        numberOfSeats: Number(seatsAvailable),
+        pricePerSeat: Number(amount),
+        paymentType: paymentMethod.toLowerCase(),
+        stops
+    };
+    debugger;
+
+    try {
+      const token = await getToken();
+      const config={
+          headers:{
+              "Content-type":"application/json",
+              Authorization: `Bearer ${token}`
+          }
+      }
+      const {data} = await axios.post(
+          `http://192.168.0.158:4000/rides`,
+          details,
+          config
+          );
+      } catch (e) {
+        console.error(e);
+        Alert.alert(e)
+      }
  
    }
- 
-
-  // const verifyAddress = (text) =>{
-
-  // verify("AIzaSyDsFlMXdgdEA-dRRmrUFU3j-cGKjguKrKM", text)
-  //   .then((result) => {
-  //     // Simplify response into something readable to the user
-  //     const summary = `This address is ${result.deliverability}`
-  //     setVerificationResult(summary)
-  //   })
-  //   .catch((errorData) => setVerificationResult(errorData.message))
-  // }
-
- 
-
-  // const list = () =>{
-  //   return stops.map((element) => {
-  //     return(
-  //       <View style={{ margin : "5%"}}> 
-  //         <Text># Stop {element.key}</Text>
-  //       <View key = {element.key} placeholder="Enter your stops" style={{borderWidth : '1'}}> 
-  //         <Text >{element.city}
-  //         </Text>
-  //       </View>
-  //       </View>
-
-  //     );
-  //   });
-  // };
  
   return (
       <View style={{ flex: 1 }} showsVerticalScrollIndicator={true}>
@@ -353,7 +345,7 @@ export default function PostRide() {
                               <View style={Styles.stopContainer} key={idx}>
                                   <LocationAutoComplete
                                       value={field.value}
-                                      onChange={(value) => handleChange(idx, value)}
+                                      onChange={(loc) => handleChange(idx, loc)}
                                   />
                                   <TouchableOpacity
                                       disabled={fields.length === 1}

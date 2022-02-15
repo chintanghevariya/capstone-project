@@ -20,16 +20,16 @@ function verifyToken(req, res, next) {
     const token = authHeader && authHeader.split(' ')[1]
     const tokenSecret = config["JWT_SECRET"];
 
-    console.log(req.headers);
-
     if (token == null) {
         httpResponse.sendUnauthorized(res, "Token missing");
+        console.log('HERE');
         return;
     }
 
     jwt.verify(token, tokenSecret, (err, user) => {
         if (err) {
             httpResponse.sendUnauthorized(res, "Token not verified");
+            console.log(token, "THERE");
             return;
         }
         req.user = user

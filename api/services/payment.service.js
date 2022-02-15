@@ -39,6 +39,7 @@ class PaymentService {
             throw new Error("Email is not in a valid format");
         }
         const customer = await this.getCustomerByEmail(email);
+        console.log(email);
         if (customer.data.length === 0) {
             throw new Error("User does not have stripe customer account");
         }

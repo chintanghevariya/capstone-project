@@ -1,93 +1,128 @@
 import React, { useState, useEffect } from 'react';
-import {Text,View,StyleSheet,TouchableOpacity,SafeAreaView, ScrollView} from 'react-native'
+import { View, Button, Text } from "native-base";
+import {TouchableOpacity, StyleSheet,SafeAreaView, ScrollView} from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Icon } from 'react-native-elements';
-import { getRides } from '../../../api/rides';
+import { getRideOfCurrentUserAsDriver, getRideOfCurrentUserAsPassenger } from '../../../api/rides';
 import { RideContainer } from './RideContainer';
-import { renderNode } from 'react-native-elements/dist/helpers';
+import { getUser } from '../../../helpers/user';
 
-export default function ManageRide() {
+export default function ManageRide({ navigation }) {
 
-  return(
-      
-    
-  
-    <SafeAreaView style={Styles.container}>
-    <ScrollView>
-    <View>
-        <TouchableOpacity
-        style={Styles.button}
-        onPress={() => {
-            alert('Post a Ride Page');
-        }}
-        // onPress={()=>this.props.navigation.navigate('PostRide')}
-        underlayColor='#fff'>
-        <Text style={Styles.buttonText}> + Post New Ride </Text>
-        </TouchableOpacity>
-    
-        <View></View>
-        <View style={Styles.containerViewAll}> 
-                <View style={Styles.box}>
-                    <Text>Upcoming Rides</Text>
-                    <TouchableOpacity onPress={()=>{this.props.navigation.navigate('AllRides')}} ><Text style={{color: '#0D92DD',}}>View All</Text></TouchableOpacity>
-                        </View>
-                        <View style={{borderBottomColor: '#CCCCCC',borderBottomWidth: 1,}} />
-                        <RideContainer
-                        fromLocationName = 'Toronto'
-                        toLocationName = 'Vancouver'
-                        ridePrice = '20.00'
-                        time ='10:00 AM'
-                        numberOfSeats = '5'
-                        ratings ='5'
-                        numberOfStops = '6' />
-                        <RideContainer 
-                        fromLocationName = 'Toronto'
-                        toLocationName = 'Vancouver'
-                        ridePrice = '20.00'
-                        time ='10:00 AM'
-                        numberOfSeats = '5'
-                        ratings ='5'
-                        numberOfStops = '6'/>
-        </View>    
+    const [completedRides, setCompletedRides ] = useState([]);
+    const [upcompingRides, setUpcomingRides] = useState([]);
+    const [user, setUser] = useState({});
 
+    const getRides = async () => {
+        const upcompingRides = [];
+        const completedRides = [];
+        const today = new Date();
+        const [rideAsDriverResponse, rideAsDriverError] = await getRideOfCurrentUserAsDriver();
+        const [rideAsPassengerResponse, rideAsPassengerError] =
+            await getRideOfCurrentUserAsPassenger();
+        const { rides: rideAsDriver } = rideAsDriverResponse.data;
+        const { rides: rideAsPassenger } = rideAsPassengerResponse.data;
+        for (const ride of rideAsDriver) {
+            const rideStartDate = new Date(ride.startDateAndTime);
+            if (rideStartDate < today) {
+                completedRides.push(ride)
+            } else {
+                upcompingRides.push(ride);
+            }
+        }
+        for (const ride of rideAsPassenger) {
+            const rideStartDate = new Date(ride.startDateAndTime);
+            if (rideStartDate < today) {
+                completedRides.push(ride);
+            } else {
+                upcompingRides.push(ride);
+            }
+        }
+        return { upcompingRides, completedRides };
+    }
 
-        <View></View>
-            <View style={Styles.containerCompleted}> 
-                <View style={Styles.box}> 
-                    <Text>Completed Rides</Text>
-                    <TouchableOpacity onPress={()=>{alert('View All');}}><Text style={{color: '#0D92DD',}}>View All</Text></TouchableOpacity> 
-                    {/* <TouchableOpacity onPress={()=>this.props.navigation.navigate('CompletedRides')}><Text style={{color: '#0D92DD', textDecorationLine: 'underline'}}>View All</Text></TouchableOpacity> */}
-                </View>
-                <View style={{ borderBottomColor: '#CCCCCC',borderBottomWidth: 1, }}/>
-                <RideContainer 
-                fromLocationName = 'Toronto'
-                toLocationName = 'Vancouver'
-                ridePrice = '20.00'
-                time ='10:00 AM'
-                numberOfSeats = '5'
-                ratings ='5'
-                numberOfStops = '6'/>
-                <RideContainer 
-                fromLocationName = 'Toronto'
-                toLocationName = 'Vancouver'
-                ridePrice = '20.00'
-                time ='10:00 AM'
-                numberOfSeats = '5'
-                ratings ='5'
-                numberOfStops = '6'/>
-                <RideContainer fromLocationName = 'Toronto'
-                toLocationName = 'Vancouver'
-                ridePrice = '20.00'
-                time ='10:00 AM'
-                numberOfSeats = '5'
-                ratings ='5'
-                numberOfStops = '6' />
-            </View>
+    useEffect(() => {
+        getRides()
+            .then(allRides => {
+                const { completedRides, upcompingRides } = allRides;
+                setUpcomingRides(upcompingRides);
+                setCompletedRides(completedRides);
+            })
+        getUser()
+            .then(setUser)
+        }, []);
 
-    </View>
-    </ScrollView>
-    </SafeAreaView>
-);
+        const navigateToPostRide = () => {
+            navigation.navigate("RideForm");
+        }
+
+  return (
+      <SafeAreaView style={Styles.container}>
+          <ScrollView>
+              <View>
+                  {(user.role === "admin" ||
+                      (user.role === "driver" && user.driverDetailsValid)) && (
+                      <Button
+                          style={Styles.button}
+                          padding={3}
+                          margin={3}
+                          onPress={navigateToPostRide}
+                          underlayColor="#fff"
+                      >
+                          <Text fontWeight={"bold"} color={"white"}>
+                              {" "}
+                              + Post New Ride{" "}
+                          </Text>
+                      </Button>
+                  )}
+
+                  <View></View>
+                  <View style={Styles.containerViewAll}>
+                      <View style={Styles.box}>
+                          <Text>Upcoming Rides</Text>
+                          <TouchableOpacity
+                              onPress={() => {
+                                  this.props.navigation.navigate("AllRides");
+                              }}
+                          >
+                              <Text style={{ color: "#0D92DD" }}>View All</Text>
+                          </TouchableOpacity>
+                      </View>
+                      <View
+                          style={{
+                              borderBottomColor: "#CCCCCC",
+                              borderBottomWidth: 1,
+                          }}
+                      />
+                      {upcompingRides.slice(0, 3).map((ride, index) => (
+                          <RideContainer ride={ride} />
+                      ))}
+                  </View>
+
+                  <View></View>
+                  <View style={Styles.containerCompleted}>
+                      <View style={Styles.box}>
+                          <Text>Completed Rides</Text>
+                          <TouchableOpacity
+                              onPress={() => {
+                                  alert("View All");
+                              }}
+                          >
+                              <Text style={{ color: "#0D92DD" }}>View All</Text>
+                          </TouchableOpacity>
+                          {/* <TouchableOpacity onPress={()=>this.props.navigation.navigate('CompletedRides')}><Text style={{color: '#0D92DD', textDecorationLine: 'underline'}}>View All</Text></TouchableOpacity> */}
+                      </View>
+                      <View
+                          style={{
+                              borderBottomColor: "#CCCCCC",
+                              borderBottomWidth: 1,
+                          }}
+                      />
+                  </View>
+              </View>
+          </ScrollView>
+      </SafeAreaView>
+  );
     }
 
 
@@ -98,21 +133,9 @@ const Styles = StyleSheet.create({
                 flex:1
             },
             button:{
-                marginRight:40,
-                marginLeft:40,
-                marginTop:80,
-                paddingTop:10,
-                paddingBottom:10,
                 backgroundColor:'#2265C9',
-                borderRadius:10,
-                borderWidth: 1,
+                borderRadius: 3,
                 borderColor: '#fff'
-            },
-            buttonText:{
-                color:'#fff',
-                textAlign:'center',
-                paddingLeft : 10,
-                paddingRight : 10
             },
             containerViewAll:{
                 flex:2,

@@ -89,6 +89,7 @@ export default function Login({navigation})  {
                     },
                     config
                 );
+                // console.log(data);
                 setToken(data.data.token);
                 setUser(data.data.user)
                 authContext.signInUser();

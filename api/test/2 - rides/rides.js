@@ -20,7 +20,7 @@ describe("Rides Tests", function () {
 
         function createRide(ride) {
             const token = generateToken({
-                userId: "61fafe0d8e5a5aae6fae4e1c",
+                _id: "61fafe0d8e5a5aae6fae4e1c",
             });
             return chai.request(app)
                 .post('/rides')

@@ -22,6 +22,7 @@ paymentRouter.post('/setup', verifyToken, async function (req, res, next) {
         const secret = await paymentService.createSetupIntent(req.user);
         httpResponse.sendSuccess(res, "Setup intent created", { secret });
     } catch (e) {
+        console.log(e.message);
         httpResponse.sendFailure(res, e.message);
     }
 })

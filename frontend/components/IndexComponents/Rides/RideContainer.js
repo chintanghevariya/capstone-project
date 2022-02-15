@@ -6,27 +6,14 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 export class RideContainer extends Component {
 
-
-
-
     constructor(props) {
         super(props);
         this.state = {
-         
-            fromLocationName : '',
-            toLocationName : '',
-            ridePrice : '',
-            time : '',
-            numberOfSeats :'',
-            ratings : '',
-            numberOfStops : '',
-
-          
         };
     }
 
      myCar = <Icon name="car" size={20} />;
-     myArrow = <Ionicons name="ray-start-arrow" size={20} />;
+     myArrow = <Ionicons name="arrow-down" size={20} />;
      map = <Icon name="map-marker" size={18}/>;
      arrow = <Ionicons name="ray-start-arrow" size={25}/>
      clock = <Icon name="clock-o" color={'orange'} size={16}/>;
@@ -38,34 +25,70 @@ export class RideContainer extends Component {
     
     
    
-        render() {
-           
-            return (
-                <View style={Styles.container}>
-                    <View style={Styles.parentContainer}>
-                                        <View style={Styles.childContainer}>
-
-                                            <Text style={{fontSize : 18, fontWeight: "bold"}}>{this.map} {this.props.fromLocationName}</Text>
-                                            <Text>{this.myArrow}</Text>
-                                            <Text style={{fontSize : 18, fontWeight: "bold"}}>{this.map} {this.props.toLocationName}</Text>
-                                            <Text style={{fontSize : 20}}>{this.dollar} {this.props.ridePrice}</Text>
-                                        </View>
-                                            
-                                        <View style={{borderBottomColor: '#F5F5F5',borderBottomWidth: 1,}} />
-                                        
-                                        <View style={Styles.childContainer}>
-                                       
-                                            <Text style={{fontSize : 15}}>{this.clock} {this.props.time}</Text>
-                                            <Text style={{fontSize : 15}}>{this.seat} {this.props.numberOfSeats}</Text>
-                                            <Text style={{fontSize : 15}}>{this.star} {this.props.ratings}</Text>
-                                            <Text style={{fontSize : 15}}>{this.flag} {this.props.numberOfStops}</Text>
-                                            <TouchableOpacity onPress={()=>{this.props.navigation.navigate('RideDetails')}} ><Text style={{color: '#0D92DD',}}>Details</Text></TouchableOpacity>
-                                        </View>
-                     </View>
+    render() {
+        
+        return (
+            <View style={Styles.container}>
+                <View style={Styles.parentContainer}>
+                    <View style={Styles.childContainer}>
+                        <View>
+                            <View>
+                                <Text
+                                    style={{ fontSize: 13, fontWeight: "bold" }}
+                                >
+                                    {this.map}{" "}
+                                    {this.props.ride.from.locationName.substring(
+                                        0,
+                                        40
+                                    )}
+                                </Text>
+                            </View>
+                            <Text>{this.myArrow}</Text>
+                            <View>
+                                <Text
+                                    style={{ fontSize: 13, fontWeight: "bold" }}
+                                >
+                                    {this.map}{" "}
+                                    {this.props.ride.to.locationName.substring(
+                                        0,
+                                        40
+                                    )}
+                                </Text>
+                            </View>
+                        </View>
+                        <Text style={{ fontSize: 20 }}>
+                            {this.dollar} {this.props.ride.pricePerSeat}
+                        </Text>
+                    </View>
+                    <View
+                        style={{
+                            borderBottomColor: "#F5F5F5",
+                            borderBottomWidth: 1,
+                        }}
+                    />
+                    <View style={Styles.childContainer}>
+                        <Text style={{ fontSize: 15 }}>
+                            {this.clock} {this.props.ride.startDateAndTime}
+                        </Text>
+                        <Text style={{ fontSize: 15 }}>
+                            {this.seat} {this.props.ride.numberOfSeats}
+                        </Text>
+                        <Text style={{ fontSize: 15 }}>
+                            {this.flag} {this.props.ride.stops.length}
+                        </Text>
+                        <TouchableOpacity
+                            onPress={() => {
+                                this.props.navigation.navigate("RideDetails");
+                            }}
+                        >
+                            <Text style={{ color: "#0D92DD" }}>Details</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-            );
-        }
+            </View>
+        );
     }
+}
     
     
 const Styles = StyleSheet.create({
@@ -75,15 +98,13 @@ const Styles = StyleSheet.create({
             
         },
         childContainer:{
-            height:"50%",
             padding:10,
-            justifyContent: 'center',
             flexDirection: 'row',
-            justifyContent: 'space-between'
-            },
+            justifyContent: 'space-between',
+            alignItems: "center"
+        },
         parentContainer:{
             backgroundColor:'#fff',
-            height:100,
             borderWidth: 1,
             borderRadius: 1,
             borderColor: '#fff',

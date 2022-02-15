@@ -1,7 +1,9 @@
 import axios from 'axios';
 
-export const API_URL = "https://api.locationiq.com/v1";
-const token = "pk.e5888301fc6f8975929e024f06f075b0";
+const AUTOCOMPLETE_API_URL = "https://maps.googleapis.com/maps/api/place/autocomplete/json";
+const PLACE_DETAIL_API_URL =
+    "https://maps.googleapis.com/maps/api/place/details/json";
+const token = "AIzaSyAD3HNAwZ_A5ShqokH6RP-B8Nn5S2TTlkc";
 
 export async function getLocationsByName(name) {
     try {
@@ -14,12 +16,35 @@ export async function getLocationsByName(name) {
         if (name.trim() === "") {
             return [null, null];
         }
-        if (name.length < 4) {
+        if (name.length < 5) {
             return [null, null];
         }
-        const request = await axios.get(API_URL + `/autocomplete.php?key=${token}&q=${name}`);
+        const request = await axios.get(
+            AUTOCOMPLETE_API_URL + `?input=${name}&key=${token}`
+        );
         return [request, null];
     } catch (e) {
         return [null, e.message];
+    }
+}
+
+export async function getLocationDetails(locationId) {
+    try {
+        if (locationId === undefined || locationId === null) {
+            return [null, null];
+        }
+        if (typeof locationId !== "string") {
+            throw new Error("Name parameter must be a string");
+        }
+        if (locationId.trim() === "") {
+            return [null, null];
+        }
+        const request = await axios.get(
+            PLACE_DETAIL_API_URL + `?place_id=${locationId}&key=${token}`
+        );
+        return [request, null];
+    } catch (err) {
+        console.error(err);
+        return [null, JSON.stringify(err, Object.getOwnPropertyNames(err))];
     }
 }
