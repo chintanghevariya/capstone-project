@@ -4,7 +4,7 @@ import { View,StyleSheet,Text } from 'react-native';
 export default function Chat() {
     return (
         <View style={Styles.container}>
-            <Text>Chat Screen</Text>
+            <Text>Chat Screen </Text>
         </View>
     );
   }
