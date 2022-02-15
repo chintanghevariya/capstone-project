@@ -194,7 +194,6 @@ export default function PostRide() {
 
     const preferences = handlePreferences()
     const stops = await getStopsValue();
-    debugger;
     const details = {
       from: fromDetails,
       to: toDetails,
@@ -205,7 +204,6 @@ export default function PostRide() {
       paymentType: paymentMethod.toLowerCase(),
       stops
     };
-    debugger;
 
     try {
       const token = await getToken();

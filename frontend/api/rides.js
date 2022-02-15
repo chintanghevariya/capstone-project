@@ -10,12 +10,6 @@ const API_URL =
         : "http://localhost:4000";
 
 
-const API_URL =
-    Platform.OS === "android"
-        ? "http://192.168.0.158:4000"
-        : "http://localhost:4000";
-
-
 export async function getRides() {
     const token = await getToken()
     try {

@@ -86,7 +86,6 @@ export default function Login({ navigation }) {
                     },
                     config
                 );
-                debugger
                 await setToken(data.data.token);
                 await setUser(data.data.user);
                 authContext.signInUser();
