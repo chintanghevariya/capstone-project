@@ -130,8 +130,4 @@ class LogInPage extends Component{
     }
 
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> main
 export default LogInPage
