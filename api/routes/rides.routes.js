@@ -18,7 +18,7 @@ ridesRouter.get("/:rideId", verifyToken, async function (req, res, next) {
 })
 
 // Get rides request
-ridesRouter.post("/filter", verifyToken, async function (req, res, next) {
+ridesRouter.post("/filter", verifyToken,async function (req, res, next) {
     try {
         const rides = await ridesService.getRides(req.body);
         httpResponse.sendSuccess(res, "Rides fetched successfully", rides);
@@ -31,11 +31,13 @@ ridesRouter.post("/filter", verifyToken, async function (req, res, next) {
 ridesRouter.post("/", verifyToken, async function (req, res, next) {
     try {
         // Set driver id of ride to current logged in user id
-        const { userId: driverId } = req.user;
+        const { _id: driverId } = req.user;
         req.body.driver = driverId;
         const ride = await ridesService.createRide(req.body);
+        console.log("DONE");
         httpResponse.sendSuccess(res, "Ride created successfully", ride);
     } catch (e) {
+        console.log(e);
         httpResponse.sendFailure(res, e.message);
     }
 })
@@ -101,5 +103,21 @@ ridesRouter.delete("/:rideId/passengers/:passengerId", verifyToken, async functi
         httpResponse.sendFailure(res, e.message);
     }
 })
+
+ridesRouter.get("/around/user", verifyToken, async function (req, res, next) {
+    try {
+        const response = await ridesService.getRidesAroundUser(
+            req.query
+        );
+        httpResponse.sendSuccess(
+            res,
+            "Remove from passenger successfully.",
+            response
+        );
+    } catch (e) {
+        console.log(e.message);
+        httpResponse.sendFailure(res, e.message);
+    }
+});
 
 module.exports = ridesRouter;

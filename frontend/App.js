@@ -4,11 +4,10 @@ import {
   extendTheme,
 
 } from "native-base";
-import ManageRide from './components/IndexComponents/Rides/ManageRide'
-import Routes from './components/Routes'
-import { RideContainer } from "./components/IndexComponents/Rides/RideContainer";
-import Chat from "./components/IndexComponents/Chat";
 
+import { AuthProvider, AuthStateValue } from "./context/AuthContext";
+
+import Routes from './components/Routes'
 // Define the config
 const config = {
   useSystemColorMode: false,
@@ -21,9 +20,9 @@ export const theme = extendTheme({ config });
 export default function App() {
   return (
       <NativeBaseProvider>
-        {/* <ManageRide/> */}
-        <Routes/>
-        {/* <Chat/> */}
+          <AuthProvider>
+              <Routes />
+          </AuthProvider>
       </NativeBaseProvider>
   );
 }
