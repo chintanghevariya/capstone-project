@@ -37,4 +37,31 @@ paymentRouter.get("/methods", verifyToken, async function (req, res, next) {
     }
 })
 
+// Create payment intent method
+paymentRouter.post("/wallet", verifyToken, async function (req, res, next) {
+    try {
+        const details = await paymentService.createPaymentIntent(req.body.amount, req.user);
+        httpResponse.sendSuccess(res, "Payment intent created successfully.", {
+            details
+        });
+    } catch (e) {
+        httpResponse.sendFailure(res, e.message);
+    }
+})
+
+// Confirm payment intent method
+paymentRouter.post("/intent/confirm", verifyToken, async function (req, res, next) {
+    try {
+        const details = await paymentService.confirmPaymentIntent(
+            req.body.paymentIntentId,
+            req.body.paymentMethodId
+        );
+        httpResponse.sendSuccess(res, "Payment intent confirmed successfully.", {
+            details,
+        });
+    } catch (e) {
+        httpResponse.sendFailure(res, e.message);
+    }
+})
+
 module.exports = paymentRouter;
