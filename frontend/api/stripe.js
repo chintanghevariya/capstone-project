@@ -43,3 +43,42 @@ export async function getSetupIntentId() {
         return [null, e.message]
     }
 }
+
+export async function getPaymentMethods() {
+    try {
+        const token = await getToken();
+        const request = await axios.get(
+            `${API_URL}/payments/methods`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + token,
+                },
+            }
+        );
+        return [request.data, null];
+    } catch (e) {
+        return [null, e.message];
+    }
+}
+
+export async function addToWallet(paymentDetails) {
+    try {
+        const token = await getToken();
+        const request = await axios.post(
+            `${API_URL}/payments/wallet`,
+            {
+                paymentDetails,
+            },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + token,
+                },
+            }
+        );
+        return [request.data, null];
+    } catch (e) {
+        return [null, e.message];
+    }
+}

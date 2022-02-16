@@ -65,6 +65,7 @@ class PaymentService {
             throw new Error("Token is invalid");
         }
         const customer = await this.getCustomerByEmail(email);
+        console.log(customer);
         if (customer.data.length === 0) {
             throw new Error("Customer is not registered in stripe.");
         }
@@ -75,11 +76,13 @@ class PaymentService {
         return methods.data;
     }
 
-    async createPaymentIntent(amount, user) {
+    async addToWallet(user, paymentDetails) {
+        const { amount, paymentMethodId } = paymentDetails;
         if (typeof amount !== "number") {
             throw new Error("Amount must be a number");
         }
         const customerAccount = await this.getCustomerByEmail(user.email);
+        const { amountInWallet } = customerAccount.data[0].metadata;
         const walletAccount = await stripe.accounts.retrieve(
             config["WALLET_ACC_ID"]
         );
@@ -92,19 +95,22 @@ class PaymentService {
                 destination: walletAccount.id,
             },
         });
-        return paymentIntent;
-    }
-
-    async confirmPaymentIntent(user, paymentIntentId, paymentMethodId) {
-        const customerAccount = await this.getCustomerByEmail(user.email);
-        const { amountInWallet } = customerAccount.data[0].metadata;
-        const confirmedIntent = await stripe.paymentIntents.confirm(paymentIntentId, {
+        await stripe.paymentIntents.confirm(paymentIntent.id, {
             payment_method: paymentMethodId,
         });
         stripe.customers.update(customerAccount.data[0].id, {
             metadata: {
-                amountInWallet: Number(amountInWallet) + (confirmedIntent.amount / 100),
+                amountInWallet:
+                    Number(amountInWallet) + amount,
             },
+        });
+        return {};
+    }
+
+    async confirmPaymentIntent(user, paymentIntentId, paymentMethodId) {
+        const customerAccount = await this.getCustomerByEmail(user.email);
+        const confirmedIntent = await stripe.paymentIntents.confirm(paymentIntentId, {
+            payment_method: paymentMethodId,
         });
         return "Done";
     }

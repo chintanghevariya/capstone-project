@@ -40,11 +40,15 @@ paymentRouter.get("/methods", verifyToken, async function (req, res, next) {
 // Create payment intent method
 paymentRouter.post("/wallet", verifyToken, async function (req, res, next) {
     try {
-        const details = await paymentService.createPaymentIntent(req.body.amount, req.user);
-        httpResponse.sendSuccess(res, "Payment intent created successfully.", {
+        const details = await paymentService.addToWallet(
+            req.user,
+            req.body.paymentDetails,
+        );
+        httpResponse.sendSuccess(res, "Added to wallet.", {
             details
         });
     } catch (e) {
+        console.log(e);
         httpResponse.sendFailure(res, e.message);
     }
 })
