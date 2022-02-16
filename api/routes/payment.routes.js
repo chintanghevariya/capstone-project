@@ -16,6 +16,17 @@ paymentRouter.post('/customer', verifyToken, async function (req, res, next) {
     }
 });
 
+paymentRouter.get("/customer", verifyToken, async function (req, res, next) {
+    try {
+        const customer = await paymentService.getCustomer(req.user);
+        httpResponse.sendSuccess(res, "Customer fetched created", {
+            customer
+        });
+    } catch (e) {
+        httpResponse.sendFailure(res, e.message);
+    }
+});
+
 // Create stripe SetupIntent route
 paymentRouter.post('/setup', verifyToken, async function (req, res, next) {
     try {

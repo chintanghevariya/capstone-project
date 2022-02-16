@@ -4,9 +4,24 @@ import { Button } from 'native-base';
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { RecentTransaction } from './RecentTransaction';
+import { getCustomerAccount } from '../../api/stripe';
 
 
 export default function Wallet({ navigation }) {
+
+    const [customerData, setCustomerData] = useState({});
+
+    useEffect(() => {
+        getCustomerAccount().then((result) => {
+            const [response, error] = result;
+            if (error) {
+                console.error(error);
+                return;
+            }
+            setCustomerData(response.data.customer.data[0])
+        });
+    }, [])
+
     wall = <Ionicons name="wallet" size={40} />;
    
 
@@ -26,7 +41,10 @@ export default function Wallet({ navigation }) {
                       </Text>
                       <Text style={{ fontSize: 18, fontWeight: "bold" }}>
                           {wall}
-                          {"             "}$ 120.00
+                          {"             "}$ {
+                              customerData && customerData.metadata ?
+                              customerData.metadata.amountInWallet : "0"
+                          }
                           {"                        "}
                       </Text>
                   </View>

@@ -107,6 +107,11 @@ class PaymentService {
         return {};
     }
 
+    async getCustomer(userDetails) {
+        const user = await this.getCustomerByEmail(userDetails.email);
+        return user;
+    }
+
     async confirmPaymentIntent(user, paymentIntentId, paymentMethodId) {
         const customerAccount = await this.getCustomerByEmail(user.email);
         const confirmedIntent = await stripe.paymentIntents.confirm(paymentIntentId, {
