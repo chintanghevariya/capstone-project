@@ -1,5 +1,5 @@
-import React, {useRef,useState} from 'react';
-import {View,Text,StyleSheet,SafeAreaView,Image,Dimensions,ScrollView,TouchableOpacity} from 'react-native'
+import React, {useState} from 'react';
+import {View,Text,StyleSheet,Switch,SafeAreaView,Image,Dimensions,ScrollView,TouchableOpacity} from 'react-native'
 import {Button,Input} from 'native-base'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import  RadioForm from 'react-native-simple-radio-button';
@@ -7,61 +7,122 @@ import { LocationAutoComplete } from '../../Input/LocationAutoComplete';
 import { getToken } from '../../../helpers/Token';
 import axios from 'axios';
 import { getLocationDetails } from '../../../api/map';
-// import { Autocomplete, verify } from '@lob/react-address-autocomplete'
-const { width } = Dimensions.get("window");
+import SelectBox from 'react-native-multi-selectbox'
+import { xorBy } from 'lodash'
+import NumericInput from 'react-native-numeric-input'
 
 export default function PostRide() {
 
   const [date, setDate] = useState(new Date());
-  const [mode, setMode] = useState('datetime');
-  const [show, setShow] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("Cash");
   const [from,setFrom] = useState(false);
   const [to,setTo] = useState(false);
-  const [amount, setAmount] = useState(false);
-  const [seatsAvailable, setSeatsAvailable] = useState(false);
-  const [fields, setFields] = useState([{ value: null, key : 1}]);
+  const [amount, setAmount] = useState(0);
+  const [seatsAvailable, setSeatsAvailable] = useState(0);
+  const [fields, setFields] = useState([{ value: null, amount : null}]);
   const [showDateTimePicker, setShowDateTimePicker] = useState(false);
-
   const [pet,setPet] = useState(false);
   const [smokeFree, setSmokeFree] = useState(false);
   const [female, setFemale] = useState(false);
   const [luggage, setLuggage] = useState(false);
   const [preferences, setPreferences] = useState([''])
+  const [isRecurring, setRecurring] = useState(false);
+  const [selectedTeams, setSelectedTeams] = useState([])
+  const [errors,setErrors] = useState(
+    {
+      fromError : "",
+      toError : "",
+      dateError : "",
+      amountError : "",
+      stopAmountError : "",
+      seatsError: ""
+    }
+  );
+ 
+  const K_OPTIONS = [
+    {
+      item: 'Sunday',
+      id: 1,
+    },
+    {
+      item: 'Monday',
+      id: 2,
+    },
+    {
+      item: 'Tuesday',
+      id: 3,
+    },
+    {
+      item: 'Wednesday',
+      id: 4,
+    },
+    {
+      item: 'Thursday',
+      id: 5,
+    },
+    {
+      item: 'Friday',
+      id: 6,
+    },
+    {
+      item: 'Saturday',
+      id: 7,
+    }
+  ]
 
-  const [submitBtn,setSubmitBtn] = useState(true);
-  const [error,setError] = useState([{}]);
-
+  const toggleSwitch = () => {
+    setRecurring(!isRecurring)
+  };
   //const Preferences = ['Pet Allowed','Smoke free','Women Friendly','Luggage'];
   const radio_props = [
     {label: 'Cash', value: 0 },
     {label: 'Card', value: 1 },
   ];
-
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setDate(currentDate);
     setShowDateTimePicker(false)
   };
-
-  const handleChange = (i, loc) =>{
+  const handleChangeStop = (i, loc) =>{
     const values = [...fields];
     values[i].value = loc;
     setFields(values);
   }
-
+  const handleStopAmount = (i, loc) =>{
+    const values = [...fields];
+    if(fields[0].values === ""){
+      setErrors({
+				...errors,
+				stopAmountError : "Please select stop address first !"
+			})  
+    }
+    else if(loc === null)
+    {
+      setErrors({
+				...errors,
+				stopAmountError : "Amount can not be empty"
+			})    
+    }
+    else
+    { 
+      setErrors({
+        ...errors,
+        stopAmountError: "",
+      });   
+      values[i].amount = loc;
+      setFields(values);
+    }
+  }
   const handleAdd =()=> {
     const values = [...fields];
     values.push({value : null});
     setFields(values);
   }
-
   const handleRemove=(i)=> {
     const values = [...fields];
     values.splice(i, 1);
     setFields(values);
   }
-
   const handleRole=(value)=>
   {
         if(!value)
@@ -79,74 +140,75 @@ export default function PostRide() {
         }  
   }
 
-  const handleTo = (text)=> {
-    if(text === '')
+  const handleFrom =(text) => {
+    if(text === "" || text === undefined || text === null)
     {
-        setTo(false)
-        setError("To : can't be empty")
-        return false
+      setErrors({
+				...errors,
+				fromError : "Please select 'from' location"
+			})
     }
     else
     {
-        setTo(true)
-        setError(null)
-        return true
+      setErrors({
+				...errors,
+				fromError : ""
+			})
     }
+
   }
 
+  const handleTo = (text)=> {
+    if(text === "" || text === undefined || text === null)
+    {
+      setErrors({
+				...errors,
+				toError : "Please select 'to' location"
+			})
+    }
+    else
+    {
+      setErrors({
+				...errors,
+				toError : ""
+			})
+    }
+  }
   const handleAmount = (value) => {
     let pattern = new RegExp(/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)$/);
     if(value.trim() === "")
     {
-      setError("Amount : can't be empty")
-      setAmount(false);
-      return false;
+      setErrors({
+				...errors,
+				amountError : "Please enter a valid amount! "
+			}) 
     }else if(!pattern.test(value)){ 
-      setError("Only numbers are acceptable")
-      setAmount(false);
-      return false;
+      setErrors({
+				...errors,
+				amountError : "Only numeric values are allowed! "
+			}) 
     }else{
-      setError("")
-      setAmount(value);
-      return true
+      setErrors({
+				...errors,
+				amountError : ""
+			}) 
+      setAmount(value)
     };
 
   }
-
-  const handleSeat = (value) => {
-    let pattern = new RegExp(/^[0-9\b]+$/);
-    if (value.trim() === ""){
-      setError('please enter number of available seats')
-      setSeatsAvailable(false);
-      return false;
-    }else if(!pattern.test(value)){ 
-      setError("Only numbers are acceptable")
-      setSeatsAvailable(false);
-      return false;
-    }else {
-      setError("")
-      setSeatsAvailable(value);
-      return true;
-    }
   
-  }
-
   const checkPet = () => {
     setPet(!pet) 
   }
-
   const checkSmoke = () => {
     setSmokeFree(!smokeFree)
   }
-
   const checkFemale = () =>{
     setFemale(!female)
   }
-
   const checkLuggage = () =>{
     setLuggage(!luggage)
   }
-
   const handlePreferences=()=>{
     const preferences = [];
     if (pet) { preferences.push("pet") }
@@ -155,7 +217,6 @@ export default function PostRide() {
     if (luggage) { preferences.push("luggage") }
     return preferences;    
   }
-
   const getStopsValue = async () => {
     const stops = [];
     for (const field of fields) {
@@ -172,8 +233,6 @@ export default function PostRide() {
     }
     return stops;
   }
-
-
   const handlePost = async ()=>{
 
     const [fromLocationDetailsResponse, fromLocationDetailsError] =
@@ -210,7 +269,6 @@ export default function PostRide() {
         paymentType: paymentMethod.toLowerCase(),
         stops
     };
-    debugger;
 
     try {
       const token = await getToken();
@@ -221,7 +279,7 @@ export default function PostRide() {
           }
       }
       const {data} = await axios.post(
-          `http://192.168.0.158:4000/rides`,
+          `http://localhost:4000/rides`,
           details,
           config
           );
@@ -231,7 +289,11 @@ export default function PostRide() {
       }
  
    }
- 
+
+  function onMultiChange() {
+    return (item) => setSelectedTeams(xorBy(selectedTeams, [item], 'id'))
+  }
+
   return (
       <View style={{ flex: 1 }} showsVerticalScrollIndicator={true}>
           <SafeAreaView style={Styles.container}>
@@ -239,10 +301,22 @@ export default function PostRide() {
                   <Text style={Styles.header}>Post a Ride</Text>
                   <Text style={Styles.secondaryHeader}>Ride Details</Text>
 
-                  <Text style={Styles.textLable}>From</Text>
-                  <LocationAutoComplete value={from} onChange={setFrom} />
-                  <Text style={Styles.textLable}>To</Text>
-                  <LocationAutoComplete value={to} onChange={setTo} />
+                  
+                  <Text style={Styles.textLable}>
+                        From {" "}
+                        <Text fontSize={"sm"} color={"red.600"}>
+                            {errors.fromError}
+                        </Text>
+                    </Text>
+                  <LocationAutoComplete style={Styles.input}  value={from} onChange={()=>handleFrom()} />
+                
+                  <Text style={Styles.textLable}>
+                        To {" "}
+                        <Text fontSize={"sm"} color={"red.600"}>
+                            {errors.toError}
+                        </Text>
+                    </Text>
+                  <LocationAutoComplete value={to} onChange={()=>handleTo()} />
 
                   <TouchableOpacity
                       onPress={() => {
@@ -263,26 +337,57 @@ export default function PostRide() {
                       )}
                   </View>
 
-                  <Text style={Styles.textLable}>Amount</Text>
+                  <Text style={Styles.textLable}>
+                        Amount {" "}
+                        <Text style={{color:"red"}}>
+                            {errors.amountError}
+                        </Text>
+                    </Text>
                   <Input
                       style={Styles.input}
                       placeholder={" $35"}
                       keyboardType="decimal-pad"
-                      maxLength={6}
-                      autoCapitalize="none"
+                      maxLength={6}           
                       onChangeText={(text) => handleAmount(text)}
                   />
-
+                  
+                  <Text style={Styles.textLable}>Ride recurring ?</Text>
+                  <View style={{marginLeft:'3%',flex:1,alighItems:"flex-start"}}>
+                  
+                    <Switch size="sm" value={isRecurring} onValueChange={toggleSwitch} />
+                    {isRecurring&& 
+                     <View> 
+                     <SelectBox   
+                        label="Select Days"
+                        options={K_OPTIONS}
+                        selectedValues={selectedTeams}
+                        onMultiSelect={onMultiChange()}
+                        onTapClose={onMultiChange()}
+                        isMulti
+                      />
+                      </View>}
+               
+                  </View>           
+                    
                   <Text style={Styles.textLable}>Seats Available</Text>
-                  <Input
+                  {/* <Input
                       style={Styles.input}
                       placeholder={" 4 "}
                       autoCapitalize="none"
                       onChangeText={(text) => handleSeat(text)}
-                  />
+                  /> */}
+                  <View style={{marginLeft:'3%', marginTop:'1%'}}>
+                  <NumericInput 
+                      value={seatsAvailable} 
+                      onChange={(value)=>setSeatsAvailable(value)} 
+                      onLimitReached={(isMax,msg) => alert(msg)}               
+                      valueType='real'
+                      rounded 
+                      minValue={0}                  
+                   /></View>
 
                   <Text style={Styles.textLable}>Preferences</Text>
-
+                
                   <View style={Styles.img}>
                       <TouchableOpacity
                           onPress={() => checkPet()}
@@ -337,24 +442,32 @@ export default function PostRide() {
                   </View>
 
                   <Text style={Styles.secondaryHeader}>Stops</Text>
-
+                        <Text style={{color:"red"}}>
+                            {errors.stopAmountError}
+                        </Text>
                   <View>
                       {fields.map((field, idx) => {
                           return (
+                            <View style={Styles.stopContainer}>
                               <View style={Styles.stopContainer} key={idx}>
                                   <LocationAutoComplete
                                       value={field.value}
-                                      onChange={(loc) => handleChange(idx, loc)}
+                                      onChange={(loc) => handleChangeStop(idx, loc)}
                                   />
+                                  <Input placeholder={" $15 "}
+
+                                        onChange={(loc)=>handleStopAmount(idx, loc)}
+/>
                                   <TouchableOpacity
                                       disabled={fields.length === 1}
                                       style={Styles.stopButton}
                                       onPress={() => handleRemove(idx)}
-                                      Remove
-                                  >
-                                      <Text style={Styles.innerText}>X</Text>
+                                      Remove>
+                                      <Text style={Styles.innerText}>  X </Text>
                                   </TouchableOpacity>
+                                
                               </View>
+                            </View>
                           );
                       })}
                   </View>
@@ -401,13 +514,14 @@ const Styles = StyleSheet.create({
     width : '100%',
     alignSelf : "center",
     textAlign : "center",
-    opacity:0.5,
+    opacity: 0.5,
     color:'black'
   },
 
   innerText: {
     color: 'red',
-    fontWeight : 'bold',
+    fontWeight : '700',
+    fontSize : 18,
   },
 
   icons: {
@@ -421,9 +535,10 @@ const Styles = StyleSheet.create({
     width : 30
   },
 
-  addBtn:{width : '100%',
-  height : 50,
-  justifyContent : "center"  
+  addBtn:{
+    width : '100%',
+    height : 50,
+    justifyContent : "center"  
   },
 
   addBtnText:{
@@ -446,17 +561,18 @@ const Styles = StyleSheet.create({
   },
 
   textLable:{
-    marginTop : "5%",
-    marginLeft : "5%"
+    marginTop : "6%",
+    marginLeft : "3%"
   },
 
   input:{
     borderColor:'black',
     height: 35 , 
     width : "90%" , 
-    marginLeft : "5%",
+    marginLeft : "3%",
     borderRadius :5,
   },
+
   dateTime : {
     width : "90%" , 
     marginLeft : "5%",
@@ -464,7 +580,8 @@ const Styles = StyleSheet.create({
   },
   stopContainer:{
     flexDirection:"row",
-    width : "100%",
+    marginLeft : "1%",
+    width : "88%",
   },
 
   img : {
@@ -488,9 +605,18 @@ const Styles = StyleSheet.create({
     marginRight : "15%",
     color:'#FF0000',
     alignSelf : "center",
-    fontWeight: '100'
+    fontWeight: '100',
   },
- 
+
+  recurring:{
+    borderColor:'black',
+    height: 35 , 
+    width : "90%" , 
+    marginLeft : "3%",
+    borderRadius :5,
+    flexDirection:'row',
+    alignItems:'center'
+  },
 
   radio:{
     flex: 1,
@@ -504,8 +630,11 @@ const Styles = StyleSheet.create({
     marginLeft : "3%",
     marginTop : '3%'
   },
+
   container:{
       flex: 1,
+      marginRight:'3%',
+      marginLeft : "3%",
   },
   screen: {
     flex: 1,
