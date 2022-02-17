@@ -8,6 +8,7 @@ import {
 import { AuthProvider, AuthStateValue } from "./context/AuthContext";
 
 import Routes from './components/Routes'
+
 // Define the config
 const config = {
   useSystemColorMode: false,
