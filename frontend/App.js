@@ -4,10 +4,10 @@ import {
   extendTheme,
 
 } from "native-base";
-import Routes from './components/Routes'
-import Chat from "./components/IndexComponents/Chat";
-import RideDetails from "./components/RideDetailComponents/RideDetails";
 
+import { AuthProvider, AuthStateValue } from "./context/AuthContext";
+
+import Routes from './components/Routes'
 
 // Define the config
 const config = {
@@ -20,11 +20,11 @@ export const theme = extendTheme({ config });
 
 export default function App() {
   return (
-      <NativeBaseProvider>
-        {/* <Routes/> */}
-        {/* <Chat/> */}
-        <RideDetails/>
-      </NativeBaseProvider>
+    <NativeBaseProvider>
+      <AuthProvider>
+        <Routes />
+      </AuthProvider>
+    </NativeBaseProvider>
   );
 }
 

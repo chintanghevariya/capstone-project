@@ -22,12 +22,14 @@ function verifyToken(req, res, next) {
 
     if (token == null) {
         httpResponse.sendUnauthorized(res, "Token missing");
+        console.log('HERE');
         return;
     }
 
     jwt.verify(token, tokenSecret, (err, user) => {
         if (err) {
             httpResponse.sendUnauthorized(res, "Token not verified");
+            console.log(token, "THERE");
             return;
         }
         req.user = user

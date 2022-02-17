@@ -31,7 +31,13 @@ class UserService {
         const user = new User(userDetails);
         await user.save();
         const token = generateToken({ ...user._doc });
-        return { token };
+        return {
+            token,
+            user: {
+                ...user._doc,
+                isNew: true
+            }
+        };
     }
 
     async loginUser(userDetails) {
@@ -50,7 +56,7 @@ class UserService {
             throw new Error("Password is incorrect");
         }
         const token = generateToken({ ...user._doc })
-        return { token }
+        return { token,user }
     }
 
     async getUserByEmail(email) {
