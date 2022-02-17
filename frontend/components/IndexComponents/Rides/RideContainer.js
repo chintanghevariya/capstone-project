@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {Text,View,StyleSheet, TouchableOpacity, Alert} from 'react-native'
+import React, { Component } from 'react';
+import { Text, View, StyleSheet, TouchableOpacity, Alert } from 'react-native'
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -12,21 +12,21 @@ export class RideContainer extends Component {
         };
     }
 
-     myCar = <Icon name="car" size={20} />;
-     myArrow = <Ionicons name="arrow-down" size={20} />;
-     map = <Icon name="map-marker" size={18}/>;
-     arrow = <Ionicons name="ray-start-arrow" size={25}/>
-     clock = <Icon name="clock-o" color={'orange'} size={16}/>;
-     seat = <Ionicons name="seat" size={16}/>
-     star = <Icon name="star" size={16}/>
-     flag = <Icon name="flag" size={16}/>
-     dollar =<Icon name ="dollar" size={16}/>
-    check = <Icon  name = "Check" size ={16} color = {'green'}/>
-    
-    
-   
+    myCar = <Icon name="car" size={20} />;
+    myArrow = <Ionicons name="arrow-down" size={20} />;
+    map = <Icon name="map-marker" size={18} />;
+    arrow = <Ionicons name="ray-start-arrow" size={25} />
+    clock = <Icon name="clock-o" color={'orange'} size={16} />;
+    seat = <Ionicons name="seat" size={16} />
+    star = <Icon name="star" size={16} />
+    flag = <Icon name="flag" size={16} />
+    dollar = <Icon name="dollar" size={16} />
+    check = <Icon name="Check" size={16} color={'green'} />
+
+
+
     render() {
-        
+
         return (
             <View style={Styles.container}>
                 <View style={Styles.parentContainer}>
@@ -78,7 +78,7 @@ export class RideContainer extends Component {
                         </Text>
                         <TouchableOpacity
                             onPress={() => {
-                                this.props.navigation.navigate("RideDetails");
+                                alert('this.props.navigation.navigate("RideDetails")');
                             }}
                         >
                             <Text style={{ color: "#0D92DD" }}>Details</Text>
@@ -89,33 +89,33 @@ export class RideContainer extends Component {
         );
     }
 }
-    
-    
+
+
 const Styles = StyleSheet.create({
 
-        container:{
-            justifyContent:'center',
-            
-        },
-        childContainer:{
-            padding:10,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: "center"
-        },
-        parentContainer:{
-            backgroundColor:'#fff',
-            borderWidth: 1,
-            borderRadius: 1,
-            borderColor: '#fff',
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 1 },
-            shadowOpacity: 0.8,
-            shadowRadius: 1,
-            elevation: 1,
-            marginLeft: 5,
-            marginRight: 5,
-            marginTop:5,
-        },
-    
+    container: {
+        justifyContent: 'center',
+
+    },
+    childContainer: {
+        padding: 10,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: "center"
+    },
+    parentContainer: {
+        backgroundColor: '#fff',
+        borderWidth: 1,
+        borderRadius: 1,
+        borderColor: '#fff',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.8,
+        shadowRadius: 1,
+        elevation: 1,
+        marginLeft: 5,
+        marginRight: 5,
+        marginTop: 5,
+    },
+
 });
