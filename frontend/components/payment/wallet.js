@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {Text,View,StyleSheet,TouchableOpacity,SafeAreaView, ScrollView} from 'react-native'
+import {Text,View,StyleSheet,TouchableOpacity,SafeAreaView, ScrollView, Image} from 'react-native'
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { RecentTransaction } from './RecentTransaction';
