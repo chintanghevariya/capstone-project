@@ -1,7 +1,8 @@
 import axios from 'axios';
 import * as Loc from "expo-location";
+import { GetCurrentLocation } from '../components/IndexComponents/HomeComponent/GetCurrentLocation';
 import { getToken } from '../helpers/Token';
-import {getUser} from '../helpers/user'
+import { getUser } from '../helpers/user'
 
 const API_URL =
     Platform.OS === "android"
@@ -24,6 +25,7 @@ export async function getRides() {
         );
         return [request, null];
     } catch (e) {
+        console.log(e);
         return [null, e.message];
     }
 }
@@ -48,7 +50,7 @@ export async function getRidesAroundUser() {
     }
 }
 
-export async function getRideOfCurrentUserAsPassenger(){
+export async function getRideOfCurrentUserAsPassenger() {
     const user = getUser()
     const token = await getToken()
     try {

@@ -5,7 +5,7 @@ const User = require("../models/user");
 class UserService {
 
     async createUser(userDetails) {
-        const { email, firstName, lastName, password,role } = userDetails;
+        const { email, firstName, lastName, password } = userDetails;
         if (email === undefined || email === null || email.trim().length === 0) {
             throw new Error("Email cannot be empty");
         }

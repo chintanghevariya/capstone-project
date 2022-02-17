@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
 import {
-  StyleSheet,
-  Dimensions,
-  ImageBackground,
-  TouchableOpacity
+    StyleSheet,
+    Dimensions,
+    ImageBackground,
+    TouchableOpacity
 } from "react-native";
 import { Button, Heading, Input, View, Text, Radio, Stack } from 'native-base';
 import axios from 'axios';
@@ -14,38 +14,38 @@ import { registerUser } from "../api/auth";
 
 export default function Signup({ navigation }) {
 
-	const authContext = useContext(AuthContext);
+    const authContext = useContext(AuthContext);
 
-	const [firstName, setFirstName] = useState("");
-	const [lastName, setLastName] = useState("");
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
-	const [confirmPassword, setConfirmPassword] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [role, setRole] = useState("driver");
-	const [errors, setErrors] = useState({
-		firstNameError: "",
-		lastNameError: "",
-		emailError: "",
-		passwordError: "",
-		confirmPasswordError: "",
-	})
+    const [errors, setErrors] = useState({
+        firstNameError: "",
+        lastNameError: "",
+        emailError: "",
+        passwordError: "",
+        confirmPasswordError: "",
+    })
 
-	useEffect(() => {
-		if (firstName.trim() === "") {
-			setErrors({
-				...errors,
-				firstNameError: "First name cannot be empty"
-			})
-		} else {
-			setErrors({
+    useEffect(() => {
+        if (firstName.trim() === "") {
+            setErrors({
+                ...errors,
+                firstNameError: "First name cannot be empty"
+            })
+        } else {
+            setErrors({
                 ...errors,
                 firstNameError: "",
             });
-		}
-	}, [firstName])
+        }
+    }, [firstName])
 
-	useEffect(() => {
-		if (lastName.trim() === "") {
+    useEffect(() => {
+        if (lastName.trim() === "") {
             setErrors({
                 ...errors,
                 lastNameError: "Last name cannot be empty",
@@ -56,10 +56,10 @@ export default function Signup({ navigation }) {
                 lastNameError: "",
             });
         }
-	}, [lastName])
+    }, [lastName])
 
-	useEffect(() => {
-		if (email.trim() === "") {
+    useEffect(() => {
+        if (email.trim() === "") {
             setErrors({
                 ...errors,
                 emailError: "Email cannot be empty",
@@ -70,30 +70,30 @@ export default function Signup({ navigation }) {
                 emailError: "",
             });
         }
-	}, [email])
+    }, [email])
 
-	useEffect(() => {
-		if (password.trim() === "") {
+    useEffect(() => {
+        if (password.trim() === "") {
             setErrors({
                 ...errors,
                 passwordError: "Password cannot be empty",
             });
         } else if (password.trim() !== confirmPassword.trim()) {
-			setErrors({
+            setErrors({
                 ...errors,
                 confirmPasswordError: "Password does not match",
             });
-		} else {
+        } else {
             setErrors({
                 ...errors,
                 passwordError: "",
-				confirmPasswordError: ""
+                confirmPasswordError: ""
             });
         }
-	}, [password])
+    }, [password])
 
-	useEffect(() => {
-		if (confirmPassword.trim() === "") {
+    useEffect(() => {
+        if (confirmPassword.trim() === "") {
             setErrors({
                 ...errors,
                 confirmPasswordError: "Confirm Password cannot be empty",
@@ -109,10 +109,10 @@ export default function Signup({ navigation }) {
                 confirmPasswordError: "",
             });
         }
-	}, [confirmPassword]);
+    }, [confirmPassword]);
 
-	const isDisabled = () => {
-		return (
+    const isDisabled = () => {
+        return (
             email.trim() === "" ||
             firstName.trim() === "" ||
             lastName.trim() === "" ||
@@ -122,29 +122,29 @@ export default function Signup({ navigation }) {
             errors.passwordError.trim() !== "" ||
             errors.confirmPasswordError.trim() !== ""
         );
-	}
+    }
 
-	const onSubmit = () => {
-		const userDetails = {
-			firstName, lastName, email, password, role
-		}
-		registerUser(userDetails)
-			.then(async (response) => {
-				const [result, error] = response;
-				if (error) {
-					console.error(error);
-					return;
-				}
-				await setToken(result.data.token);
-				await setUser(result.data.user);
-				authContext.signInUser();
-			})
-			.catch(error => {
-				console.error(error);
-			})
-	}
+    const onSubmit = () => {
+        const userDetails = {
+            firstName, lastName, email, password, role
+        }
+        registerUser(userDetails)
+            .then(async (response) => {
+                const [result, error] = response;
+                if (error) {
+                    console.error(error);
+                    return;
+                }
+                await setToken(result.data.token);
+                await setUser(result.data.user);
+                authContext.signInUser();
+            })
+            .catch(error => {
+                console.error(error);
+            })
+    }
 
-	return (
+    return (
         <ImageBackground
             source={require("../assets/login.png")}
             style={{ height: Dimensions.get("screen") }.height}
