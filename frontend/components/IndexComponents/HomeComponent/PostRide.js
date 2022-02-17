@@ -4,9 +4,6 @@ import { Button, Input } from 'native-base'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import RadioForm from 'react-native-simple-radio-button';
 import { LocationAutoComplete } from '../../Input/LocationAutoComplete';
-import { getToken } from '../../../helpers/Token';
-import axios from 'axios';
-import { getLocationDetails } from '../../../api/map';
 // import { Autocomplete, verify } from '@lob/react-address-autocomplete'
 const { width } = Dimensions.get("window");
 
@@ -46,7 +43,7 @@ export default function PostRide() {
 
   const handleChange = (i, loc) => {
     const values = [...fields];
-    values[i].value = loc;
+    values[i].value = value;
     setFields(values);
   }
 
@@ -87,6 +84,7 @@ export default function PostRide() {
       setError(null)
       return true
     }
+
   }
 
   const handleAmount = (value) => {
@@ -101,7 +99,7 @@ export default function PostRide() {
       return false;
     } else {
       setError("")
-      setAmount(value);
+      setAmount(true);
       return true
     };
 
@@ -119,7 +117,7 @@ export default function PostRide() {
       return false;
     } else {
       setError("")
-      setSeatsAvailable(value);
+      setSeatsAvailable(true);
       return true;
     }
 
@@ -193,6 +191,7 @@ export default function PostRide() {
 
     const preferences = handlePreferences()
     const stops = await getStopsValue();
+    debugger;
     const details = {
       from: fromDetails,
       to: toDetails,
@@ -203,6 +202,7 @@ export default function PostRide() {
       paymentType: paymentMethod.toLowerCase(),
       stops
     };
+    debugger;
 
     try {
       const token = await getToken();
@@ -365,9 +365,9 @@ export default function PostRide() {
           <Button style={Styles.enabled} onPress={() => handlePost()}>
             Post Ride
           </Button>
-        </ScrollView >
-      </SafeAreaView >
-    </View >
+        </ScrollView>
+      </SafeAreaView>
+    </View>
   );
 }
 

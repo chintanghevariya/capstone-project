@@ -19,11 +19,11 @@ export const theme = extendTheme({ config });
 
 export default function App() {
   return (
-      <NativeBaseProvider>
-          <AuthProvider>
-              <Routes />
-          </AuthProvider>
-      </NativeBaseProvider>
+    <NativeBaseProvider>
+      <AuthProvider>
+        <Routes />
+      </AuthProvider>
+    </NativeBaseProvider>
   );
 }
 
