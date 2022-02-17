@@ -1,84 +1,114 @@
 import React, { useState, useEffect } from 'react';
 import {Text,View,StyleSheet,TouchableOpacity,SafeAreaView, ScrollView} from 'react-native'
+import { Button } from 'native-base';
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { RecentTransaction } from './RecentTransaction';
-
+import { getCustomerAccount } from '../../api/stripe';
 
 
 export default function Wallet({ navigation }) {
+
+    const [customerData, setCustomerData] = useState({});
+
+    useEffect(() => {
+        getCustomerAccount().then((result) => {
+            const [response, error] = result;
+            if (error) {
+                console.error(error);
+                return;
+            }
+            setCustomerData(response.data.customer.data[0])
+        });
+    }, [])
+
     wall = <Ionicons name="wallet" size={40} />;
    
 
   return (
       <SafeAreaView style={Styles.container}>
           <ScrollView>
-            <View>
-                 <View style={Styles.con}>
-                    <Text style={{ fontSize: 18, fontWeight: "bold",      justifyContent:'center', }}>
-                        My Balance
-                    </Text>
-                    <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-                        {wall}{"             "}
-                        $ 120.00
-                        {"                        "}
-                    </Text>
-                </View>
-                        
-                <View
-                    style={{ borderBottomColor: "#CCCCCC", borderBottomWidth: 1,  shadowColor: '#000',
-                    shadowOffset: { width: 0, height: 1 },
-                    shadowOpacity: 0.8,
-                    shadowRadius: 1,}}
-                 />
-                
-                <TouchableOpacity
-                    style={Styles.button}
-                //  onPress={navigateToAddCard}
-                    onPress={()=>navigation.navigate('AddCard')}
-                    underlayColor="#fff"
-                >
-                        
-                    <Text style={Styles.buttonText}> Add New Card </Text>
-                </TouchableOpacity>
-                
-                <Text style={{ fontSize: 14, marginLeft:40,}} >Recent Transaction</Text>
-                
-                <View style={Styles.recentTrans}>
-                            
-                            <RecentTransaction
-                            FirstName = {'John'}
-                            LastName = {'Doe'}
-                            price = {'$ 30.00'}
-                            Date = {'10/11/2021'}
-                            Time = {'10:25AM'}
-                            />
-                             
-                             <RecentTransaction
-                            FirstName = {'John'}
-                            LastName = {'Doe'}
-                            price = {'$ 30.00'}
-                            Date = {'10/11/2021'}
-                            Time = {'10:25AM'}
-                            />
-                             
-                             <RecentTransaction
-                            FirstName = {'John'}
-                            LastName = {'Doe'}
-                            price = {'$ 30.00'}
-                            Date = {'10/11/2021'}
-                            Time = {'10:25AM'}
-                            />
-                             
-                             <RecentTransaction
-                            FirstName = {'John'}
-                            LastName = {'Doe'}
-                            price = {'$ 30.00'}
-                            Date = {'10/11/2021'}
-                            Time = {'10:25AM'}
-                            />
-                        </View>
-            </View>
+              <View>
+                  <View style={Styles.con}>
+                      <Text
+                          style={{
+                              fontSize: 18,
+                              fontWeight: "bold",
+                              justifyContent: "center",
+                          }}
+                      >
+                          My Balance
+                      </Text>
+                      <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+                          {wall}
+                          {"             "}$ {
+                              customerData && customerData.metadata ?
+                              customerData.metadata.amountInWallet : "0"
+                          }
+                          {"                        "}
+                      </Text>
+                  </View>
+                  <View
+                      style={{
+                          borderBottomColor: "#CCCCCC",
+                          borderBottomWidth: 1,
+                          shadowColor: "#000",
+                          shadowOffset: { width: 0, height: 1 },
+                          shadowOpacity: 0.8,
+                          shadowRadius: 1,
+                      }}
+                  />
+                  <TouchableOpacity
+                      style={Styles.button}
+                      onPress={() => navigation.navigate("AddCard")}
+                      underlayColor="#fff"
+                  >
+                      <Text style={Styles.buttonText}> Add New Card </Text>
+                  </TouchableOpacity>
+                  <Button
+                      onPress={() => navigation.navigate("AddToWallet")}
+                      width={"xs"}
+                      marginX={"10"}
+                  >
+                      <Text style={Styles.buttonText}>Add To Wallet</Text>
+                  </Button>
+                  <Text style={{ fontSize: 14, marginLeft: 40 }}>
+                      Recent Transaction
+                  </Text>
+                  <View style={Styles.recentTrans}>
+                      <RecentTransaction
+                          FirstName={"John"}
+                          LastName={"Doe"}
+                          price={"$ 30.00"}
+                          Date={"10/11/2021"}
+                          Time={"10:25AM"}
+                      />
+
+                      <RecentTransaction
+                          FirstName={"John"}
+                          LastName={"Doe"}
+                          price={"$ 30.00"}
+                          Date={"10/11/2021"}
+                          Time={"10:25AM"}
+                      />
+
+                      <RecentTransaction
+                          FirstName={"John"}
+                          LastName={"Doe"}
+                          price={"$ 30.00"}
+                          Date={"10/11/2021"}
+                          Time={"10:25AM"}
+                      />
+
+                      <RecentTransaction
+                          FirstName={"John"}
+                          LastName={"Doe"}
+                          price={"$ 30.00"}
+                          Date={"10/11/2021"}
+                          Time={"10:25AM"}
+                      />
+                  </View>
+              </View>
           </ScrollView>
       </SafeAreaView>
   );
@@ -87,7 +117,6 @@ export default function Wallet({ navigation }) {
 
 const Styles = StyleSheet.create({
     container:{
-        marginTop:80,
         justifyContent:'center',
         flex:1
     },

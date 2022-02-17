@@ -87,7 +87,6 @@ export default function PostRide() {
       setError(null)
       return true
     }
-
   }
 
   const handleAmount = (value) => {
