@@ -78,7 +78,9 @@ export class RideContainer extends Component {
                         </Text>
                         <TouchableOpacity
                             onPress={() => {
-                                alert('this.props.navigation.navigate("RideDetails")');
+                                this.props.navigation.navigate("RideDetails", {
+                                    rideId: this.props.ride._id
+                                })
                             }}
                         >
                             <Text style={{ color: "#0D92DD" }}>Details</Text>

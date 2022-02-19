@@ -31,7 +31,7 @@ class RidesService {
         const user = await User.findOneAndUpdate(
             { _id: rideDetails.driver },
             {
-                $inc: { "numberOfRides": 1 }
+                $inc: { numberOfRides: 1 },
             }
         );
         const { numberOfRides } = user;
@@ -119,7 +119,7 @@ class RidesService {
         return {};
     }
 
-    async createRequestForRide(rideId, user) {
+    async createRequestForRide(rideId, user, stopId = "") {
         const { _id: userId } = user;
         if (userId === null || userId === undefined) {
             throw new Error("Token is invalid");
@@ -132,15 +132,41 @@ class RidesService {
             throw new Error("Request for user already exists");
         }
         const request = {
-            userId
-        }
+            userId,
+            stopId
+        };
+        console.log(request);
         const notification = new notificationModel({
             fromUser: userId,
             forUser: ride.driver,
             ride: ride._id,
-            type: "join-request"
-        })
+            type: "join-request",
+        });
         ride.requests.push(request);
+        await notification.save();
+        await ride.save();
+        return {};
+    }
+
+    async removeRideRequest(rideId, user) {
+        const { _id: userId } = user;
+        if (userId === null || userId === undefined) {
+            throw new Error("Token is invalid");
+        }
+        const ride = await this.getRideById(rideId);
+        if (ride === null) {
+            throw new Error("Ride with provided id does not exist");
+        }
+        const newRideRequests = ride.requests.filter(
+            (request) => request.userId.toString() !== userId
+        );
+        ride.requests = newRideRequests;
+        const notification = new notificationModel({
+            fromUser: userId,
+            forUser: ride.driver,
+            ride: ride._id,
+            type: "reject-request",
+        });
         await notification.save();
         await ride.save();
         return {};
@@ -152,37 +178,39 @@ class RidesService {
 
         const longitudeDistance = getLongitudeDifference(numLatitude);
         const latitudeDistance = getLatitudeDifference();
-        
-        const longFiveKMPlus = (longitudeDistance) + numLongitude;
-        const latFiveKMPlus = (latitudeDistance) + numLatitude;
 
-        const longFiveKMMinus = numLongitude - (longitudeDistance);
-        const latFiveKMMinus = numLatitude - (latitudeDistance);
+        const longFiveKMPlus = longitudeDistance + numLongitude;
+        const latFiveKMPlus = latitudeDistance + numLatitude;
+
+        const longFiveKMMinus = numLongitude - longitudeDistance;
+        const latFiveKMMinus = numLatitude - latitudeDistance;
 
         const rides = await Ride.find({
             "from.latitude": {
                 $gt: latFiveKMMinus,
-                $lt: latFiveKMPlus
+                $lt: latFiveKMPlus,
             },
             "from.longitude": {
                 $gt: longFiveKMMinus,
-                $lt: longFiveKMPlus
-            }
+                $lt: longFiveKMPlus,
+            },
         });
-        
+
         return {
             longFiveKMPlus,
             latFiveKMPlus,
             longFiveKMMinus,
             latFiveKMMinus,
-            rides
-        }
+            rides,
+        };
     }
 
     userHasRequestToJoin(userId, ride) {
-        return ride.requests.findIndex(request => {
-            return request.userId.toString() === userId;
-        }) > -1;
+        return (
+            ride.requests.findIndex((request) => {
+                return request.userId.toString() === userId;
+            }) > -1
+        );
     }
 
     removePassengerByIdFromRide(passengerId, ride) {

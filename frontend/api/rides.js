@@ -87,3 +87,58 @@ export async function getRideOfCurrentUserAsDriver() {
         return [null, e.message];
     }
 }
+
+export async function getRideById(rideId) {
+    const token = await getToken();
+    try {
+        const request = await axios.get(`${API_URL}/rides/${rideId}`, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return [request.data, null];
+    } catch (e) {
+        return [null, e.message];
+    }
+}
+
+export async function sendRideRequest(rideId, stopId="") {
+    console.log(stopId);
+    const token = await getToken();
+    try {
+        const request = await axios.post(
+            `${API_URL}/rides/${rideId}/request`,
+            {
+                stopId
+            },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return [request.data, null];
+    } catch (e) {
+        return [null, e.message];
+    }
+}
+
+export async function removeRideRequest(rideId) {
+    const token = await getToken();
+    try {
+        const request = await axios.delete(
+            `${API_URL}/rides/${rideId}/request`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return [request.data, null];
+    } catch (e) {
+        return [null, e.message];
+    }
+}
