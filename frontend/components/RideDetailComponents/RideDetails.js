@@ -87,7 +87,13 @@ export default function RideDetails({ route, navigation }) {
           console.error(error);
           return;
         }
-        console.log(result);
+        const newRideDetails = rideDetails;
+        newRideDetails.requests.push({
+          _id: "ride",
+          userId: currentUser._id,
+          stopId
+        })
+        setRideDetails(newRideDetails);
       });
   }
 
@@ -98,7 +104,13 @@ export default function RideDetails({ route, navigation }) {
             console.error(error);
             return;
         }
-        console.log(result);
+        const newRideDetails = rideDetails;
+        const { requests } = rideDetails;
+        const newRequests = requests.filter(
+            (request) => request.userId !== currentUser._id
+        );
+        newRideDetails.requests = newRequests;
+        setRideDetails(newRideDetails);
     });
   }
 
