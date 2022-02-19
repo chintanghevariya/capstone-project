@@ -102,3 +102,40 @@ export async function getRideById(rideId) {
         return [null, e.message];
     }
 }
+
+export async function sendRideRequest(rideId) {
+    const token = await getToken();
+    try {
+        const request = await axios.post(
+            `${API_URL}/rides/${rideId}/request`,
+            {},
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return [request.data, null];
+    } catch (e) {
+        return [null, e.message];
+    }
+}
+
+export async function removeRideRequest(rideId) {
+    const token = await getToken();
+    try {
+        const request = await axios.delete(
+            `${API_URL}/rides/${rideId}/request`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return [request.data, null];
+    } catch (e) {
+        return [null, e.message];
+    }
+}
