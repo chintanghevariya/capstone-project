@@ -1,22 +1,42 @@
 import {
-  View,
-  Text,
   StyleSheet,
-  SafeAreaView,
 } from "react-native";
-import { TouchableOpacity} from 'react-native-gesture-handler'
+import { View, Text, Button, ScrollView } from 'native-base';
 
-import MapView from "react-native-maps";
-
-
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 
 import Ionicons from "react-native-vector-icons/MaterialIcons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Fontisto from "react-native-vector-icons/Fontisto";
+import { getRideById } from "../../api/rides";
+import { getUser, setUser } from "../../helpers/user";
+import MapView, { Marker, Polyline } from 'react-native-maps';
 
-export default function RideDetails() {
+export default function RideDetails({ route, navigation }) {
+
+  const { rideId } = route.params;
+  const [rideDetails, setRideDetails] = useState({})
+  const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState({});
+
+  useEffect(() => {
+    getRideById(rideId)
+      .then(response => {
+        const [result, error] = response;
+        if (error) {
+          console.error(error);
+          return;
+        }
+        setRideDetails(result.data.ride);
+      })
+      .finally(() => setLoading(false));
+    getUser()
+      .then(user => {
+        setUser(user)
+      })
+  }, [])
+
   const clock = <Icon name="clock-o" color={"orange"} size={16} />;
   const seat = <Ionicons name="event-seat" size={21} />;
   const dollar = <Icon name="dollar" size={20} />;
@@ -54,7 +74,6 @@ export default function RideDetails() {
   const [depature, Setdepature] = useState("To");
   const [arrival, Setarrival] = useState("V");
 
-
   const [region, setRegion] = useState({
     latitude: 51.5079145,
     longitude: -0.0899163,
@@ -62,137 +81,233 @@ export default function RideDetails() {
     longitudeDelta: 0.01,
   });
 
-  const checkPet = () => {
-    setPet(!pet);
-  };
-
-  const checkSmoke = () => {
-    setSmokeFree(!smokeFree);
-  };
-
-  const checkFemale = () => {
-    setFemale(!female);
-  };
-
-  const checkLuggage = () => {
-    setLuggage(!luggage);
-  };
+  if (loading) {
+    return (
+      <View>
+        <Text>
+          Loading...
+        </Text>
+      </View>
+    );
+  }
 
   return (
-    <SafeAreaView style={Styles.mainContainer}>
-      <View style={Styles.TopSection}>
-        <Text style={{ paddingLeft: "25%", color: "white" }}>{depature}</Text>
-        <Text style={{ padding: 5, color: "white" }}>{direction}</Text>
-        <Text style={{ padding: 5, color: "white" }}>{arrival}</Text>
-      </View>
-      <View style={Styles.map}>
-      
-
-
-
-
-      </View>
-      <View style={Styles.body}>
-       
-
-        <View style={Styles.Button}>
-          <TouchableOpacity
-            onPress={() => console.log("Delete Button Pressed")}
-            style={Styles.DeleteButton}
-          >
-            <Text style={{ paddingLeft: 10, fontSize: 1 }}>{deleteIcon}</Text>
-            <Text style={{ color: "red", paddingTop: 5 }}>Delete</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => console.log("Edit Button Pressed")}
-            style={Styles.EditButton}
-          >
-            <Text style={{ paddingLeft: 10, fontSize: 1 }}>{editIcon}</Text>
-            <Text style={{ color: "blue", paddingTop: 5 }}>Edit</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={Styles.TopBAR}>
-          <View style={Styles.backgroundContainer}>
-            <Text
-              style={{
-                padding: 15,
-                paddingLeft: "20%",
-                fontSize: 15,
-                alignContent: "center",
-                justifyContent: "center",
-                alignItems: "center",
-              }}>
-              {clock}
-              {date}
-              {time}
-            </Text>
+      <>
+          <ScrollView>
+              <View textAlign={"center"} backgroundColor="#21A656">
+                  <Text mx={3}>{rideDetails.from.locationName}</Text>
+                  {direction}
+                  <Text mx={3}>{rideDetails.to.locationName}</Text>
+              </View>
+              <View
+                  marginTop={-2}
+                  flex={1}
+                  flexDirection={"row"}
+                  justifyContent={"center"}
+                  zIndex={999}
+              >
+                  <MapView
+                      style={{
+                          width: 300,
+                          height: 200,
+                          zIndex: 999,
+                      }}
+                      initialRegion={{
+                          latitude: rideDetails.from.latitude,
+                          longitude: rideDetails.from.longitude,
+                          latitudeDelta: 1.5,
+                          longitudeDelta: 1.5,
+                      }}
+                  >
+                      <Marker
+                          coordinate={{
+                              latitude: rideDetails.from.latitude,
+                              longitude: rideDetails.from.longitude,
+                          }}
+                      ></Marker>
+                      <Marker
+                          coordinate={{
+                              latitude: rideDetails.to.latitude,
+                              longitude: rideDetails.to.longitude,
+                          }}
+                      ></Marker>
+                      {rideDetails.stops.map((stop, idx) => (
+                          <Marker
+                              key={idx}
+                              coordinate={{
+                                  latitude: stop.latitude,
+                                  longitude: stop.longitude,
+                              }}
+                          ></Marker>
+                      ))}
+                  </MapView>
+              </View>
+              {rideDetails.driver === currentUser._id ? (
+                  <View
+                      flex={1}
+                      flexDirection={"row"}
+                      justifyContent={"space-around"}
+                      alignItems={"center"}
+                      my={3}
+                  >
+                      <Button
+                          onPress={() => console.log("Delete Button Pressed")}
+                          variant={"outline"}
+                          flex={1}
+                          flexDirection={"row"}
+                          size={"sm"}
+                          maxWidth={"120"}
+                          leftIcon={deleteIcon}
+                      >
+                          <Text>Delete</Text>
+                      </Button>
+                      <Button
+                          onPress={() => console.log("Edit Button Pressed")}
+                          flex={1}
+                          flexDirection={"row"}
+                          size={"sm"}
+                          maxWidth={"120"}
+                          leftIcon={editIcon}
+                          variant={"outline"}
+                      >
+                          <Text>Edit</Text>
+                      </Button>
+                  </View>
+              ) : null}
+              <View
+                  marginTop={3}
+                  marginX={5}
+                  backgroundColor="white"
+                  padding={4}
+                  alignItems={"center"}
+                  borderRadius={3}
+                  borderWidth={1}
+                  borderColor={"#ccc"}
+              >
+                  <Text fontSize={"md"}>
+                      {clock}
+                      {date}
+                      {time}
+                  </Text>
+              </View>
+              <View
+                  marginY={3}
+                  flex={1}
+                  flexDirection={"row"}
+                  marginX={5}
+                  justifyContent={"space-between"}
+              >
+                  <View
+                      backgroundColor={"white"}
+                      paddingY={2}
+                      paddingX={4}
+                      flex={1}
+                      flexDirection={"row"}
+                      maxWidth={60}
+                      justifyContent={"center"}
+                      alignItems={"center"}
+                  >
+                      {dollar}
+                      <Text> {rideDetails.pricePerSeat}</Text>
+                  </View>
+                  <View
+                      backgroundColor={"white"}
+                      paddingY={2}
+                      paddingX={4}
+                      flex={1}
+                      flexDirection={"row"}
+                      marginX={3}
+                      justifyContent={"center"}
+                      alignItems={"center"}
+                  >
+                      {arrowSwap}
+                      <Text> {occurence}</Text>
+                  </View>
+                  <View
+                      backgroundColor={"white"}
+                      paddingY={2}
+                      paddingX={4}
+                      flex={1}
+                      flexDirection={"row"}
+                      maxWidth={60}
+                      justifyContent={"center"}
+                      alignItems={"center"}
+                  >
+                      {seat}
+                      <Text> {rideDetails.numberOfSeats}</Text>
+                  </View>
+              </View>
+              <View
+                  flex={1}
+                  flexDirection={"row"}
+                  justifyContent={"center"}
+                  marginX={3}
+              >
+                  <View
+                      borderRadius={2}
+                      padding={3}
+                      backgroundColor={"white"}
+                      marginX={3}
+                  >
+                      {petIcon}
+                  </View>
+                  <View
+                      borderRadius={2}
+                      padding={3}
+                      backgroundColor={"white"}
+                      marginX={3}
+                  >
+                      {smokeIcon}
+                  </View>
+                  <View
+                      borderRadius={2}
+                      padding={3}
+                      backgroundColor={"white"}
+                      marginX={3}
+                  >
+                      {genderIcon}
+                  </View>
+                  <View
+                      borderRadius={2}
+                      padding={3}
+                      backgroundColor={"white"}
+                      marginX={3}
+                  >
+                      {luggageIcon}
+                  </View>
+              </View>
+          </ScrollView>
+          <View position={"absolute"} bottom={10} left={10} right={10}>
+              <Button
+                  flex={1}
+                  flexDirection={"row"}
+                  justifyContent={"center"}
+                  alignItems={"center"}
+                  backgroundColor={"#2421A6"}
+                  onPress={() => console.log("start pressed")}
+              >
+                  {currentUser._id === rideDetails.driver ? (
+                      <>
+                          <MaterialCommunityIcons
+                              name="play-circle"
+                              size={25}
+                              color={"white"}
+                          />
+                          <Text color={"white"}>Start</Text>
+                      </>
+                  ) : (
+                      <>
+                          <Ionicons
+                              name="person-add"
+                              size={25}
+                              color={"white"}
+                          />
+                          <Text color={"white"}>Send join request</Text>
+                      </>
+                  )}
+              </Button>
           </View>
-        </View>
-        <View style={Styles.MiddleBAR}>
-          <View style={Styles.backgroundContainer2}>
-            <Text style={{ padding: 20, fontSize: 18 }}>{dollar} {price}</Text>
-          </View>
-          <View style={Styles.backgroundContainer4}>
-            <Text style={{ padding: 20, fontSize: 18 }}>{arrowSwap} {occurence}</Text>
-          </View>
-          <View style={Styles.backgroundContainer2}>
-            <Text style={{ padding: 20, fontSize: 18 }}> {seat} {numberSeat}{" "}</Text>
-          </View>
-        </View>
-        <View style={Styles.LastSection}>
-          <View style={Styles.backgroundContainer3}>
-            <TouchableOpacity
-              onPress={() => checkPet()}
-              style={pet ? Styles.iconSelected : Styles.icons}
-            >
-              <Text style={{ paddingLeft: 30, paddingTop: 8, fontSize: 1 }}> {petIcon}</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={Styles.backgroundContainer3}>
-            <TouchableOpacity
-              onPress={() => checkSmoke()}
-              style={smokeFree ? Styles.iconSelected : Styles.icons}>
-              <Text style={{ paddingLeft: 30, paddingTop: 8, fontSize: 1 }}>
-                {smokeIcon}
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={Styles.backgroundContainer3}>
-            <TouchableOpacity
-              onPress={() => checkFemale()}
-              color="red"
-              style={female ? Styles.iconSelected : Styles.icons}
-            >
-              <Text style={{ paddingLeft: 30, paddingTop: 8, fontSize: 1 }}>
-                {genderIcon}
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View style={Styles.backgroundContainer3}>
-            <TouchableOpacity
-              onPress={() => checkLuggage()}
-              style={luggage ? Styles.iconSelected : Styles.icons}
-            >
-              <Text style={{ paddingLeft: 30, paddingTop: 8, fontSize: 1 }}>
-                {luggageIcon}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View style={Styles.buttonSection}>
-          <TouchableOpacity
-            onPress={() => console.log("start pressed")}
-            style={Styles.StartButton}
-          >
-            <Text style={{ paddingLeft: "40%", fontSize: 1 }}>{Play}</Text>
-            <Text style={{ color: "white", paddingTop: 5, paddingLeft: 10 }}>
-              Start
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </SafeAreaView>
+      </>
   );
 }
 

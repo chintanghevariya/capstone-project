@@ -270,7 +270,7 @@ export default function PostRide() {
             style={Styles.input}
             placeholder={" 4 "}
             autoCapitalize="none"
-            onChangeText={(text) => handleSeat(text)}
+            onChangeText={handleSeat}
           />
 
           <Text style={Styles.textLable}>Preferences</Text>
