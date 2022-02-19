@@ -54,6 +54,19 @@ ridesRouter.post("/:rideId/request", verifyToken, async function (req, res, next
     }
 })
 
+// Delete ride request route
+ridesRouter.delete("/:rideId/request", verifyToken, async function (req, res, next) {
+    try {
+        const response = await ridesService.removeRideRequest(
+            req.params.rideId, req.user
+        );
+        httpResponse.sendSuccess(res, "Request removed successfully", {});
+    } catch (e) {
+        console.log(e.message);
+        httpResponse.sendFailure(res, e.message);
+    }
+})
+
 // Add as rider route
 ridesRouter.post("/:rideId/passenger", verifyToken, async function (req, res, next) {
     try {
