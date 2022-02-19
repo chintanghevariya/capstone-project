@@ -46,10 +46,11 @@ ridesRouter.post("/", verifyToken, async function (req, res, next) {
 ridesRouter.post("/:rideId/request", verifyToken, async function (req, res, next) {
     try {
         const response = await ridesService.createRequestForRide(
-            req.params.rideId, req.user
+            req.params.rideId, req.user, req.body.stopId
         );
         httpResponse.sendSuccess(res, "Request created successfully", {});
     } catch (e) {
+        console.log(e.message);
         httpResponse.sendFailure(res, e.message);
     }
 })

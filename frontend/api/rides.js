@@ -103,12 +103,15 @@ export async function getRideById(rideId) {
     }
 }
 
-export async function sendRideRequest(rideId) {
+export async function sendRideRequest(rideId, stopId="") {
+    console.log(stopId);
     const token = await getToken();
     try {
         const request = await axios.post(
             `${API_URL}/rides/${rideId}/request`,
-            {},
+            {
+                stopId
+            },
             {
                 headers: {
                     "Content-Type": "application/json",

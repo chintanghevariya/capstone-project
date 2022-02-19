@@ -1,4 +1,4 @@
-import { View, Text, Button, ScrollView } from 'native-base';
+import { Box, View, Text, Button, ScrollView, Actionsheet, useDisclose } from 'native-base';
 
 import React, { useState, useEffect } from "react";
 
@@ -16,10 +16,13 @@ import MapView, { Marker } from 'react-native-maps';
 
 export default function RideDetails({ route, navigation }) {
 
+  const { isOpen, onOpen, onClose } = useDisclose();
+
   const { rideId } = route.params;
   const [rideDetails, setRideDetails] = useState({})
   const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState({});
+  const [showJoinOptions, setShowJoinOptions] = useState(false);
 
   useEffect(() => {
     getRideById(rideId)
@@ -76,8 +79,8 @@ export default function RideDetails({ route, navigation }) {
     );
   }
 
-  const sendJoinRequest = async () => {
-    sendRideRequest(rideId)
+  const sendJoinRequest = async (stopId="") => {
+    sendRideRequest(rideId, stopId)
       .then(response => {
         const [result, error] = response;
         if (error) {
@@ -103,6 +106,10 @@ export default function RideDetails({ route, navigation }) {
     const requestedToJoin = rideDetails.requests.findIndex(request => {
       return request.userId === currentUser._id
     }) > -1;
+    let handlePress = requestedToJoin ? removeJoinRequest : sendJoinRequest;
+    if (requestedToJoin === false && rideDetails.stops.length > 0) {
+      handlePress = onOpen;
+    }
     return (
         <Button
             flex={1}
@@ -110,7 +117,7 @@ export default function RideDetails({ route, navigation }) {
             justifyContent={"center"}
             alignItems={"center"}
             backgroundColor={"#2421A6"}
-            onPress={requestedToJoin ? removeJoinRequest : sendJoinRequest}
+            onPress={handlePress}
         >
             {requestedToJoin ? (
                 <Ionicons
@@ -141,6 +148,52 @@ export default function RideDetails({ route, navigation }) {
           <Ionicons name="play-circle" size={25} color={"white"} />
           <Text color={"white"}>Start</Text>
       </Button>
+    );
+  }
+
+  const JoinOptions = () => {
+    if (!isOpen) { return null; }
+    return (
+        <Actionsheet minHeight={"50%"} isOpen={isOpen} onClose={onClose}>
+            <Actionsheet.Content>
+                {rideDetails.stops.map((stop, idx) => (
+                    <Box h={50} w={"90%"} my={3} key={idx}>
+                        <Actionsheet.Item
+                            flex={1}
+                            flexDirection={"row"}
+                            justifyContent={"center"}
+                            alignItems={"center"}
+                            backgroundColor={"#2421A6"}
+                            onPress={() => sendJoinRequest(stop._id)}
+                            height={"30"}
+                        >
+                            <Ionicons
+                                name="person-add"
+                                size={25}
+                                color={"white"}
+                            />
+                            <Text color={"white"}>
+                                Till {stop.locationName}
+                            </Text>
+                        </Actionsheet.Item>
+                    </Box>
+                ))}
+                <Box h={50} w={"90%"} my={3}>
+                    <Actionsheet.Item
+                        flex={1}
+                        flexDirection={"row"}
+                        justifyContent={"center"}
+                        alignItems={"center"}
+                        backgroundColor={"#2421A6"}
+                        onPress={() => sendJoinRequest("")}
+                        height={"30"}
+                    >
+                        <Ionicons name="person-add" size={25} color={"white"} />
+                        <Text color={"white"}>entire ride</Text>
+                    </Actionsheet.Item>
+                </Box>
+            </Actionsheet.Content>
+        </Actionsheet>
     );
   }
 
@@ -336,6 +389,7 @@ export default function RideDetails({ route, navigation }) {
                   :
                   <RequestButton />
                   }
+                  <JoinOptions />
               </View>
           </ScrollView>
       </>

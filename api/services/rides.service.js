@@ -119,7 +119,7 @@ class RidesService {
         return {};
     }
 
-    async createRequestForRide(rideId, user) {
+    async createRequestForRide(rideId, user, stopId = "") {
         const { _id: userId } = user;
         if (userId === null || userId === undefined) {
             throw new Error("Token is invalid");
@@ -133,7 +133,9 @@ class RidesService {
         }
         const request = {
             userId,
+            stopId
         };
+        console.log(request);
         const notification = new notificationModel({
             fromUser: userId,
             forUser: ride.driver,
