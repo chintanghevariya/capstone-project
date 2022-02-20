@@ -4,6 +4,7 @@ import { Button, Input } from 'native-base'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import RadioForm from 'react-native-simple-radio-button';
 import { LocationAutoComplete } from '../../Input/LocationAutoComplete';
+import { getLocationDetails } from '../../../api/map';
 // import { Autocomplete, verify } from '@lob/react-address-autocomplete'
 const { width } = Dimensions.get("window");
 

@@ -9,6 +9,7 @@ const User = require("../models/user");
 
 class RidesService {
     async getRides(filters = {}) {
+        console.log(filters);
         if (Object.keys(filters).length === 0) {
             return [];
         }
