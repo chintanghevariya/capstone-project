@@ -96,7 +96,7 @@ export default function ManageRide({ navigation }) {
                             }}
                         />
                         {upcompingRides.slice(0, 3).map((ride, index) => (
-                            <RideContainer ride={ride} />
+                            <RideContainer ride={ride} key={index} />
                         ))}
                     </View>
 

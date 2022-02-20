@@ -39,21 +39,17 @@ class RidesService {
         return rideIdentifier;
     }
 
-    async addUserAsPassengerToRideOfId(user, rideId) {
-        const { _id } = user;
-        if (_id === undefined || _id === null) {
-            throw new Error("Token is invalid");
-        }
+    async addUserAsPassengerToRideOfId(userId, rideId) {
         const ride = await this.getRideById(rideId);
         if (ride === undefined || ride === null) {
             throw new Error("Ride with id does not exist");
         }
-        if (this.isUserPassengerOfRide(user, ride)) {
+        if (this.isUserPassengerOfRide(userId, ride)) {
             throw new Error("User is already passenger of ride.");
         }
         const code = this.generatePassengerCodeOfLength(7);
         const passengerProperties = {
-            userId: _id,
+            userId,
             code,
         };
         ride.passengers.push(passengerProperties);
@@ -146,15 +142,43 @@ class RidesService {
         return {};
     }
 
-    async acceptRequest(rideId, passengerId) {
-        this.removeAsPassengerByUserIdAndRideId();
-        this.addUserAsPassengerToRideOfId();
+    async acceptRequest(rideId, passengerId, userId) {
+        console.log(passengerId);
+        await this.removeRideRequest(rideId, passengerId);
+        await this.addUserAsPassengerToRideOfId(passengerId, rideId);
         const notification = new notificationModel({
-            fromUser: "",
-            toUser: "",
-            rideId: "",
-            type: "accept-request"
-        })
+            fromUser: userId,
+            forUser: passengerId,
+            ride: rideId,
+            type: "accept-request",
+        });
+        await notification.save();
+        return {}
+    }
+
+    async rejectRequest(rideId, passengerId, userId) {
+        await this.removeRideRequest(rideId, passengerId);
+        const notification = new notificationModel({
+            fromUser: userId,
+            forUser: passengerId,
+            ride: rideId,
+            type: "reject-request",
+        });
+        await notification.save();
+        return {}
+    }
+
+    async removeRideRequest(rideId, userId) {
+        const ride = await this.getRideById(rideId);
+        if (ride === null) {
+            throw new Error("Ride with provided id does not exist");
+        }
+        const newRideRequests = ride.requests.filter(
+            (request) => request.userId.toString() !== userId
+        );
+        ride.requests = newRideRequests;
+        await ride.save();
+        return {};
     }
 
     async getRidesAroundUser({ latitude, longitude }) {
@@ -358,10 +382,10 @@ class RidesService {
         return formattedFilters;
     }
 
-    isUserPassengerOfRide(user, ride) {
-        const { _id } = user;
+    isUserPassengerOfRide(_id, ride) {
         const isPassenger =
             ride.passengers.findIndex((passenger) => {
+                console.log(passenger);
                 return passenger.userId.toString() === _id;
             }) > -1;
         return isPassenger;

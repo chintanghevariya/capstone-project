@@ -1,7 +1,7 @@
 import { ScrollView,View, Button,Heading } from 'native-base'
 import { Text, StyleSheet } from 'react-native'
 import React, { useState, useEffect } from 'react'
-import { getRequestList, getRideOfCurrentUserAsDriver } from '../../../api/rides'
+import { getRequestList, requestAccept, requestReject } from '../../../api/rides'
 
 const RequestList = ({rideId,limit=null}) => {
 
@@ -37,10 +37,11 @@ const RequestList = ({rideId,limit=null}) => {
             {/* <Button onPress={() => alert(JSON.stringify(requestList))}>click me</Button> */}
             {requestList.map((request,index)=>(
                 <View key={index}>
+                    
                     <Text>{request.userId.firstName} {request.userId.lastName}</Text>
                     <View style={Styles.container}>
-                        <Button >Decline</Button>
-                        <Button>Accept</Button>
+                        <Button onPress={() => requestReject('620aae3d48dffbdadffdbc0a', request.userId._id).then((value) => alert(value))}>Decline</Button>
+                        <Button onPress={() => requestAccept('620aae3d48dffbdadffdbc0a', request.userId._id).then((value) => alert(JSON.stringify(value)))}>Accept</Button>
                     </View>
                 </View>
             ))}

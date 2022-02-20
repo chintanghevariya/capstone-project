@@ -166,7 +166,7 @@ const Styles = StyleSheet.create({
     welcome: {
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
-        marginRight: "55%",
+        // marginRight: "55%",
         marginLeft: '1%',
     },
     userName: {

@@ -105,3 +105,46 @@ export async function getRequestList(rideId) {
         return [null, e.message];
     }
 }
+
+export async function requestAccept(rideId,passengerId) {
+    const token = await getToken();
+    try {
+        const request = await axios.post(
+            `${API_URL}/rides/${rideId}/request/accept`,
+            {passengerId},
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
+            }
+        );
+        // console.log(request.data)
+        return [request.data, null];
+    } catch (e) {
+        return [null, e.message];
+    }
+}
+
+export async function requestReject(rideId, passengerId) {
+    const token = await getToken();
+    try {
+        debugger;
+        const request = await axios.post(
+            `${API_URL}/rides/${rideId}/request/reject`,
+            {passengerId },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
+            }
+            
+        );
+        debugger
+        return [request.data, null];
+        debugger
+    } catch (e) {
+        return [null, e.message];
+    }
+}
