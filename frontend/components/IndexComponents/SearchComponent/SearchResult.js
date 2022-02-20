@@ -6,7 +6,11 @@ export default function SearchResult({ route, navigation }) {
 
     const { rides } = route.params;
 
-    console.log(rides);
+    const handleRideSelect = (rideId) => {
+        navigation.navigate("RideDetail", {
+            rideId,
+        });
+    }
 
     return (
         <View>
@@ -14,7 +18,8 @@ export default function SearchResult({ route, navigation }) {
                 rides.map((ride, index) => (
                     <RideContainer 
                         key={index} 
-                        ride={ride} />
+                        ride={ride}
+                        onSelect={() => handleRideSelect(ride._id)} />
                 ))
             }
         </View>
