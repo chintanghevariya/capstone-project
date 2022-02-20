@@ -10,19 +10,15 @@ const API_URL =
         : "http://localhost:4000";
 
 
-export async function getRides() {
+export async function getRides(filters) {
     const token = await getToken()
     try {
-        const request = await axios.post(
-            `${API_URL}/rides/filter`,
-            {},
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
+        const request = await axios.post(`${API_URL}/rides/filter`, filters, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        });
         return [request, null];
     } catch (e) {
         console.log(e);
@@ -104,7 +100,6 @@ export async function getRideById(rideId) {
 }
 
 export async function sendRideRequest(rideId, stopId="") {
-    console.log(stopId);
     const token = await getToken();
     try {
         const request = await axios.post(
