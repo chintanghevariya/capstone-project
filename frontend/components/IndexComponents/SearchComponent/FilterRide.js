@@ -7,7 +7,7 @@ import NumericInput from 'react-native-numeric-input';
 import { getLocationDetails } from '../../../api/map';
 import { getRides } from '../../../api/rides';
 
-export default function FilterRide() {
+export default function FilterRide({ navigation }) {
 
     const [from, setFrom] = useState({}); 
     const [to, setTo] = useState({}); 
@@ -87,6 +87,10 @@ export default function FilterRide() {
             console.error(error);
             return;
         }
+
+        navigation.navigate("SearchResult", {
+            rides: rides.data.data
+        })
     }
 
     return (
