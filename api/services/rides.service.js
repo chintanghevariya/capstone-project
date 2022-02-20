@@ -146,6 +146,17 @@ class RidesService {
         return {};
     }
 
+    async acceptRequest(rideId, passengerId) {
+        this.removeAsPassengerByUserIdAndRideId();
+        this.addUserAsPassengerToRideOfId();
+        const notification = new notificationModel({
+            fromUser: "",
+            toUser: "",
+            rideId: "",
+            type: "accept-request"
+        })
+    }
+
     async getRidesAroundUser({ latitude, longitude }) {
         const numLatitude = Number(latitude);
         const numLongitude = Number(longitude);

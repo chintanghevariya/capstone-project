@@ -1,4 +1,5 @@
-import { View, Button } from 'native-base'
+import { ScrollView,View, Button,Heading } from 'native-base'
+import { Text, StyleSheet } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { getRequestList, getRideOfCurrentUserAsDriver } from '../../../api/rides'
 
@@ -11,6 +12,7 @@ const RequestList = ({rideId,limit=null}) => {
             console.log(error);
             return;
         }
+        console.log(requestList.data)
         return requestList.data
     }
 
@@ -28,15 +30,31 @@ const RequestList = ({rideId,limit=null}) => {
     }, []);
 
     return (
-        <View>
+        <ScrollView >
+            <Heading size="xl">
+                Requests
+            </Heading>
             {/* <Button onPress={() => alert(JSON.stringify(requestList))}>click me</Button> */}
-            {requestList.map((request,index)=>{
-                <View>
-                    
+            {requestList.map((request,index)=>(
+                <View key={index}>
+                    <Text>{request.userId.firstName} {request.userId.lastName}</Text>
+                    <View style={Styles.container}>
+                        <Button >Decline</Button>
+                        <Button>Accept</Button>
+                    </View>
                 </View>
-            })}
-        </View>
+            ))}
+        </ScrollView>
     )
 }
 
 export default RequestList
+
+const Styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent:'space-between',
+        alignItems: 'center'
+    },
+})
