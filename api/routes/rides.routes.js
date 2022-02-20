@@ -53,6 +53,17 @@ ridesRouter.post("/:rideId/request", verifyToken, async function (req, res, next
         httpResponse.sendFailure(res, e.message);
     }
 })
+//to get all ride request
+ridesRouter.get("/:rideId/request", verifyToken, async function (req, res, next) {
+    try {
+        const response = await ridesService.getRequestList(
+            req.params.rideId
+        );
+        httpResponse.sendSuccess(res, "Requests fetched successfully", response);
+    } catch (e) {
+        httpResponse.sendFailure(res, e.message);
+    }
+})
 
 // Add as rider route
 ridesRouter.post("/:rideId/passenger", verifyToken, async function (req, res, next) {

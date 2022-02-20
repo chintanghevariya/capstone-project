@@ -152,7 +152,7 @@ class RidesService {
 
         const longitudeDistance = getLongitudeDifference(numLatitude);
         const latitudeDistance = getLatitudeDifference();
-        
+
         const longFiveKMPlus = (longitudeDistance) + numLongitude;
         const latFiveKMPlus = (latitudeDistance) + numLatitude;
 
@@ -169,7 +169,7 @@ class RidesService {
                 $lt: longFiveKMPlus
             }
         });
-        
+
         return {
             longFiveKMPlus,
             latFiveKMPlus,
@@ -354,6 +354,17 @@ class RidesService {
                 return passenger.userId.toString() === _id;
             }) > -1;
         return isPassenger;
+    }
+
+    async getRequestList(_id) {
+        const result = await Ride.findOne({ _id }).populate({
+            path: "requests",
+            populate: {
+                path: "userId"
+            }
+        })
+        const requestList = result.requests
+        return requestList;
     }
 }
 
