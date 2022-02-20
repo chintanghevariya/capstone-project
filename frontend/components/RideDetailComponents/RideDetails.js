@@ -119,7 +119,7 @@ export default function RideDetails({ route, navigation }) {
       return request.userId === currentUser._id
     }) > -1;
     let handlePress = requestedToJoin ? removeJoinRequest : sendJoinRequest;
-    if (requestedToJoin === false && rideDetails.stops.length > 0) {
+    if (requestedToJoin === false && rideDetails.stops.length > 0 && rideDetails.isRecurring === false) {
       handlePress = onOpen;
     }
     return (
