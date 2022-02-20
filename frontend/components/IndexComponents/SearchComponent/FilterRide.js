@@ -88,7 +88,7 @@ export default function FilterRide({ navigation }) {
             return;
         }
 
-        navigation.navigate("SearchResult", {
+        navigation.navigate("AllRides", {
             rides: rides.data.data
         })
     }

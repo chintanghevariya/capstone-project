@@ -16,7 +16,7 @@ import { StripeProvider } from "@stripe/stripe-react-native";
 import StripeConsent from "./payment/stripe-consent";
 import AddToWallet from "./payment/AddToWallet";
 import RideDetails from "./RideDetailComponents/RideDetails";
-import SearchResult from "./IndexComponents/SearchComponent/SearchResult";
+import AllRides from "./IndexComponents/SearchComponent/AllRides";
 
 const Stack = createNativeStackNavigator();
 
@@ -55,12 +55,17 @@ export default function Routes() {
                               component={StripeConsent}
                           />
                           <Stack.Screen
-                            name="RideDetail" component={RideDetails} />
+                              name="RideDetail"
+                              component={RideDetails}
+                          />
                           <Stack.Screen name="RideForm" component={PostRide} />
                           <Stack.Screen name="Wallet" component={Wallet} />
                           <Stack.Screen name="AddCard" component={AddCard} />
-                          <Stack.Screen name="AddToWallet" component={AddToWallet} />
-                          <Stack.Screen name="SearchResult" component={SearchResult} />
+                          <Stack.Screen
+                              name="AddToWallet"
+                              component={AddToWallet}
+                          />
+                          <Stack.Screen name="AllRides" component={AllRides} />
                           <Stack.Screen
                               name="ChatScreen"
                               component={ChatScreen}
