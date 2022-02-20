@@ -56,6 +56,24 @@ export default function ManageRide({ navigation }) {
         navigation.navigate("RideForm");
     }
 
+    const navigateToRide = (rideId) => {
+        navigation.navigate("RideDetail", {
+            rideId
+        })
+    }
+
+    const showAllCompletedRides = () => {
+        navigation.navigate("AllRides", {
+            rides: completedRides
+        })
+    }
+
+    const showAllUpcomingRides = () => {
+        navigation.navigate("AllRides", {
+            rides: upcompingRides,
+        });
+    };
+
     return (
         <SafeAreaView style={Styles.container}>
             <ScrollView>
@@ -82,11 +100,7 @@ export default function ManageRide({ navigation }) {
                         <View style={Styles.box}>
                             <Text>Upcoming Rides</Text>
                             <TouchableOpacity
-                                onPress={() => {
-                                    alert(
-                                        'this.props.navigation.navigate("AllRides")'
-                                    );
-                                }}
+                                onPress={showAllUpcomingRides}
                             >
                                 <Text style={{ color: "#0D92DD" }}>
                                     View All
@@ -100,7 +114,11 @@ export default function ManageRide({ navigation }) {
                             }}
                         />
                         {upcompingRides.slice(0, 3).map((ride, index) => (
-                            <RideContainer key={index} ride={ride} />
+                            <RideContainer
+                                key={index}
+                                ride={ride}
+                                onSelect={() => navigateToRide(ride._id)}
+                            />
                         ))}
                     </View>
 
@@ -109,9 +127,7 @@ export default function ManageRide({ navigation }) {
                         <View style={Styles.box}>
                             <Text>Completed Rides</Text>
                             <TouchableOpacity
-                                onPress={() => {
-                                    alert("View All");
-                                }}
+                                onPress={showAllCompletedRides}
                             >
                                 <Text style={{ color: "#0D92DD" }}>
                                     View All
@@ -126,9 +142,10 @@ export default function ManageRide({ navigation }) {
                         />
                         {completedRides.slice(0, 3).map((ride, index) => (
                             <RideContainer
-                                navigation={navigation}
                                 key={index}
-                                ride={ride} />
+                                ride={ride}
+                                onSelect={() => navigateToRide(ride._id)}
+                            />
                         ))}
                     </View>
                 </View>
