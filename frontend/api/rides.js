@@ -36,7 +36,7 @@ export async function getRidesAroundUser() {
         const location = await Loc.getCurrentPositionAsync({ enableHighAccuracy: true });
         const { latitude, longitude } = location.coords;
         const request = await axios.get(
-            `${API_URL}/rides/around/user?latitude=latitude&longitude=longitude`,
+            `${API_URL}/rides/around/user?latitude=${latitude}&longitude=${longitude}`,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -78,7 +78,25 @@ export async function getRideOfCurrentUserAsDriver() {
             {
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
+                    "Authorization": `Bearer ${token}`,
+                },
+            }
+        );
+        return [request.data, null];
+    } catch (e) {
+        return [null, e.message];
+    }
+}
+
+export async function getRequestList(rideId) {
+    const token = await getToken();
+    try {
+        const request = await axios.get(
+            `${API_URL}/rides/${rideId}/request`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
                 },
             }
         );
