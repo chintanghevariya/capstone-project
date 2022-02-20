@@ -2,7 +2,7 @@ import { View, Button } from 'native-base'
 import React, { useState, useEffect } from 'react'
 import { getRequestList, getRideOfCurrentUserAsDriver } from '../../../api/rides'
 
-const RequestList = () => {
+const RequestList = ({rideId,limit=null}) => {
 
     const [requestList, setRequestList] = useState([])
     const getRides = async () => {
@@ -11,19 +11,30 @@ const RequestList = () => {
             console.log(error);
             return;
         }
-        alert(JSON.stringify(requestList.data))
+        return requestList.data
     }
 
     useEffect(() => {
         getRides()
             .then(allRequest => {
-                setRequestList(allRequest)
+                if(limit === null){
+                    setRequestList(allRequest)
+                }
+                else{
+                    setRequestList(allRequest.slice(0, limit))
+                }
             })
+        
     }, []);
 
     return (
         <View>
-            {/* <Button onPress={() => getRideRequestList()}>click me</Button> */}
+            {/* <Button onPress={() => alert(JSON.stringify(requestList))}>click me</Button> */}
+            {requestList.map((request,index)=>{
+                <View>
+                    
+                </View>
+            })}
         </View>
     )
 }
