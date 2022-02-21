@@ -21,7 +21,7 @@ export default function Profile({navigation}){
         <ScrollView>
             <View style={Styles.container}>
                 <Text>Profile</Text>
-                <RequestList/>
+                <RequestList rideId='620aae3d48dffbdadffdbc0a'/>
             <TouchableOpacity onPress={logout}><Text style={Styles.icon}> Sign out</Text></TouchableOpacity>
             </View>
         </ScrollView>

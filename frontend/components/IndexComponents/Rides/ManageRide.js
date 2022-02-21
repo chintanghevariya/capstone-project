@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Button, Text } from "native-base";
 import { TouchableOpacity, StyleSheet, SafeAreaView, ScrollView } from 'react-native'
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Icon } from 'react-native-elements';
 import { getRideOfCurrentUserAsDriver, getRideOfCurrentUserAsPassenger, getRequestList } from '../../../api/rides';
 import { RideContainer } from './RideContainer';
 import { getUser } from '../../../helpers/user';
