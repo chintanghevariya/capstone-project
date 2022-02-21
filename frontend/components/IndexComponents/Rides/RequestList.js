@@ -30,22 +30,24 @@ const RequestList = ({rideId,limit=null}) => {
     }, []);
 
     return (
-        <ScrollView >
-            <Heading size="xl">
-                Requests
-            </Heading>
+        <View >
+        <Heading size="xl">
+            Requests
+        </Heading>
+            <ScrollView >
             {/* <Button onPress={() => alert(JSON.stringify(requestList))}>click me</Button> */}
             {requestList.map((request,index)=>(
-                <View key={index}>
-                    
-                    <Text>{request.userId.firstName} {request.userId.lastName}</Text>
-                    <View style={Styles.container}>
+                <View key={index} style={[Styles.container,Styles.requestContainer]}>
+                    <Text style={{marginLeft: 10}}>{request.userId.firstName} {request.userId.lastName}</Text>
+                    <View style={Styles.buttonContainer}>
                         <Button onPress={() => requestReject('620aae3d48dffbdadffdbc0a', request.userId._id).then((value) => alert(value))}>Decline</Button>
+                        <Text> </Text>
                         <Button onPress={() => requestAccept('620aae3d48dffbdadffdbc0a', request.userId._id).then((value) => alert(JSON.stringify(value)))}>Accept</Button>
                     </View>
                 </View>
             ))}
         </ScrollView>
+        </View>
     )
 }
 
@@ -56,6 +58,23 @@ const Styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         justifyContent:'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
     },
+    requestContainer: {
+        margin: 10,
+        borderWidth: 0.2,
+        backgroundColor: '#FFFFFF',
+        shadowColor: '#000000',
+        borderRadius: 4,
+        shadowColor: '#171717',
+        width:'95%',
+        shadowOpacity: 0.5,
+        shadowRadius: 9,
+        height:50,
+        
+    },
+    buttonContainer:{
+        flexDirection: 'row',
+        marginRight:10,
+    }
 })
