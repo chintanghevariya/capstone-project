@@ -36,11 +36,7 @@ class RegisterPage extends Component {
           }
         };
 
-<<<<<<< HEAD
-        const { data } = await axios.post(`http://localhost:4000/users/register`,
-=======
         const { data } = await axios.post(`http://localhost:4000/users`,
->>>>>>> main
           {
             firstName: this.state.firstName,
             lastName: this.state.lastName,
@@ -209,9 +205,5 @@ class RegisterPage extends Component {
     );
   }
 }
-<<<<<<< HEAD
-export default RegisterPage
-=======
 
 export default RegisterPage
->>>>>>> main
