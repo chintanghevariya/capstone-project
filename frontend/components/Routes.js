@@ -80,7 +80,7 @@ export default function Routes() {
                           <Stack.Screen
                               name="SplashScreen"
                               component={SplashScreen}
-                              options={{ gestureEnabled: false }}
+                            options={{ headerShown: false, gestureEnabled: false }}
                           />
                           <Stack.Screen
                               name="Login"
