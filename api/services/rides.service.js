@@ -145,41 +145,11 @@ class RidesService {
         return {};
     }
 
-<<<<<<< HEAD
-    async acceptRequest(rideId, passengerId, userId) {
-        console.log(passengerId);
-        await this.removeRideRequest(rideId, passengerId);
-        await this.addUserAsPassengerToRideOfId(passengerId, rideId);
-        const notification = new notificationModel({
-            fromUser: userId,
-            forUser: passengerId,
-            ride: rideId,
-            type: "accept-request",
-        });
-        await notification.save();
-        return {}
-    }
-
-    async rejectRequest(rideId, passengerId, userId) {
-        await this.removeRideRequest(rideId, passengerId);
-        const notification = new notificationModel({
-            fromUser: userId,
-            forUser: passengerId,
-            ride: rideId,
-            type: "reject-request",
-        });
-        await notification.save();
-        return {}
-    }
-
-    async removeRideRequest(rideId, userId) {
-=======
     async removeRideRequest(rideId, user) {
         const { _id: userId } = user;
         if (userId === null || userId === undefined) {
             throw new Error("Token is invalid");
         }
->>>>>>> main
         const ride = await this.getRideById(rideId);
         if (ride === null) {
             throw new Error("Ride with provided id does not exist");
@@ -188,8 +158,6 @@ class RidesService {
             (request) => request.userId.toString() !== userId
         );
         ride.requests = newRideRequests;
-<<<<<<< HEAD
-=======
         const notification = new notificationModel({
             fromUser: userId,
             forUser: ride.driver,
@@ -197,7 +165,6 @@ class RidesService {
             type: "reject-request",
         });
         await notification.save();
->>>>>>> main
         await ride.save();
         return {};
     }
@@ -208,12 +175,6 @@ class RidesService {
 
         const longitudeDistance = getLongitudeDifference(numLatitude);
         const latitudeDistance = getLatitudeDifference();
-<<<<<<< HEAD
-
-        const longFiveKMPlus = (longitudeDistance) + numLongitude;
-        const latFiveKMPlus = (latitudeDistance) + numLatitude;
-=======
->>>>>>> main
 
         const longFiveKMPlus = longitudeDistance + numLongitude;
         const latFiveKMPlus = latitudeDistance + numLatitude;

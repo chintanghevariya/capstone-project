@@ -113,15 +113,11 @@ export default function ManageRide({ navigation }) {
                             }}
                         />
                         {upcompingRides.slice(0, 3).map((ride, index) => (
-<<<<<<< HEAD
-                            <RideContainer ride={ride} key={index} />
-=======
                             <RideContainer
                                 key={index}
                                 ride={ride}
                                 onSelect={() => navigateToRide(ride._id)}
                             />
->>>>>>> main
                         ))}
                     </View>
 
