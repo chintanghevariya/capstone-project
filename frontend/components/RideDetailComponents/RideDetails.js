@@ -207,7 +207,6 @@ export default function RideDetails({ route, navigation }) {
         </Actionsheet>
     );
   }
-
   return (
       <>
           <ScrollView>
@@ -235,6 +234,8 @@ export default function RideDetails({ route, navigation }) {
                           latitudeDelta: 3,
                           longitudeDelta: 3,
                       }}
+                      showsUserLocation={true}
+                      zoomEnabled={true}
                   >
                       <Marker
                           coordinate={{
