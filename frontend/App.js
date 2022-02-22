@@ -7,7 +7,7 @@ import {
 
 import { AuthProvider, AuthStateValue } from "./context/AuthContext";
 
-
+import StartRide from "./components/IndexComponents/Rides/StartRide";
 import Routes from './components/Routes'
 
 // Define the config
@@ -22,9 +22,10 @@ export const theme = extendTheme({ config });
 export default function App() {
   return (
     <NativeBaseProvider>
-      <AuthProvider>
-        <Routes />
-      </AuthProvider>
+      {/* <AuthProvider> */}
+        {/* <Routes /> */}
+        <StartRide/>
+      {/* </AuthProvider> */}
     </NativeBaseProvider>
   );
 }
