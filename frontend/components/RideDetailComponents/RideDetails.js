@@ -1,7 +1,6 @@
 import { Box, View, Text, Button, ScrollView, Actionsheet, useDisclose } from 'native-base';
-
 import React, { useState, useEffect } from "react";
-
+import Loading from '../Loading';
 import Ionicons from "react-native-vector-icons/MaterialIcons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -208,7 +207,6 @@ export default function RideDetails({ route, navigation }) {
         </Actionsheet>
     );
   }
-
   return (
       <>
           <ScrollView>
@@ -236,6 +234,8 @@ export default function RideDetails({ route, navigation }) {
                           latitudeDelta: 3,
                           longitudeDelta: 3,
                       }}
+                      showsUserLocation={true}
+                      zoomEnabled={true}
                   >
                       <Marker
                           coordinate={{
@@ -308,6 +308,7 @@ export default function RideDetails({ route, navigation }) {
                       {time}
                   </Text>
               </View>
+              
               <View
                   marginY={3}
                   flex={1}

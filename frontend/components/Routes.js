@@ -8,7 +8,7 @@ import SplashScreen from "./SplashScreen";
 import { getToken } from "../helpers/Token";
 import ChatScreen from "./IndexComponents/ChatScreen";
 import { AuthContext } from "../context/AuthContext";
-import PostRide from "./IndexComponents/HomeComponents/PostRide";
+import PostRide from "./IndexComponents/HomeComponent/PostRide";
 import ManageRide from "./IndexComponents/Rides/ManageRide";
 import Wallet from "./payment/wallet";
 import AddCard from "./payment/AddCard";
@@ -80,7 +80,7 @@ export default function Routes() {
                           <Stack.Screen
                               name="SplashScreen"
                               component={SplashScreen}
-                              options={{ gestureEnabled: false }}
+                            options={{ headerShown: false, gestureEnabled: false }}
                           />
                           <Stack.Screen
                               name="Login"
