@@ -1,4 +1,5 @@
-import React,{Component} from 'react';
+import React, { Component } from 'react';
+import { Text, View, Image } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Search from './IndexComponents/Search';
@@ -9,6 +10,7 @@ import NotificationScreen from './IndexComponents/NotificationComponents/Notific
 
 const Tab = createBottomTabNavigator();
 export default class DashBoard extends Component {
+
   render() {
     return (
         <Tab.Navigator

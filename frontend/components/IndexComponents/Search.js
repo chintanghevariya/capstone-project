@@ -1,11 +1,11 @@
 import React from 'react';
 import { View,StyleSheet,Text } from 'react-native';
-
-export default function Search(){
+import FilterRide from'./SearchComponent/FilterRide'
+export default function Search({ navigation }){
 
     return (
         <View style={Styles.container}>
-            <Text>Search Screen</Text>
+            <FilterRide navigation={navigation} />
         </View>
     );
   }
