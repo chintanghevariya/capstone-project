@@ -101,6 +101,7 @@ class LogInPage extends Component{
 
     render(){
         return (
+            <>
             <div className="text-center m-5-auto">
                 <h2>Sign in</h2>
                 <form onSubmit={this.handleSubmit} >
@@ -136,6 +137,7 @@ class LogInPage extends Component{
                     <p><Link to="/">Back to Homepage</Link>.</p>
                 </footer>
             </div>
+            </>
         )
     }
 
