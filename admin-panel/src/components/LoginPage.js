@@ -10,7 +10,8 @@ class LogInPage extends Component{
         super(props);
         this.state = {
             input: {},
-            errors: {}
+            errors: {},
+            responseError:{}
         };
         this.validate = this.validate.bind(this)
         this.handleChange = this.handleChange.bind(this);
@@ -56,9 +57,8 @@ class LogInPage extends Component{
     handleSubmit = async (e) => {
       e.preventDefault();
         const { email, password } = this.state.input;
-
+        let responseError = {};
         if (this.validate()) {
-        let errors = {};
           try {
             const config = {
                 headers: {
@@ -73,21 +73,24 @@ class LogInPage extends Component{
                 },
                 config
             ).then(response => {
-              console.log('response', response);
-              if((response.role ==="admin"||response.role ==="ADMIN"||response.role ==="Admin") && response.status === 200)
+            //   console.log('response', response);
+              const role = response.data.data.user.role
+              if(role ==="admin"||role ==="ADMIN"||role ==="Admin")
               {
                 window.localStorage.setItem('token', response.data.data.token);
                 alert('User logged-in successfully');
                 this.props.history.push("/home");
               }
-              else if (response.status === 200) {
-                alert('User must be admin')
+              else {
+                responseError['responseError'] = 'User must be admin'
+                // alert('User must be admin')
+                this.setState({ responseError: responseError});
                 this.props.history.push("/login");
               }
             });
            } catch (e) {
-              errors['responseError']=e.response.data.error
-              this.setState({ errors: errors });
+            responseError['responseError']=e.response.data.error
+            this.setState({ responseError: responseError });
           }
         }
         else {
@@ -101,7 +104,7 @@ class LogInPage extends Component{
             <div className="text-center m-5-auto">
                 <h2>Sign in</h2>
                 <form onSubmit={this.handleSubmit} >
-                <div className="text-danger">{this.state.errors.responseError}</div>
+                    <div className="text-danger">{this.state.responseError.responseError}</div>
                     <p>
                         <label>email address</label><br />
                         <input

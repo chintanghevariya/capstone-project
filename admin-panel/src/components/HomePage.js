@@ -1,13 +1,17 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import JsonData from './data.json'
+import jwt from 'jwt-decode'
+import { useHistory } from "react-router-dom";
 
+function HomePage({navigation}) {
+    let history = useHistory()
+    const user = jwt(localStorage.getItem('token'))
 
-function HomePage() {
     const DisplayData=JsonData.map(
-        (info)=>{
+        (info,idx)=>{
             return(
-                <tr>
+                <tr key={idx}>
                     <td>{info.id}</td>
                     <td><a href= "#">{info.name}</a></td>
                     <td>{info.city}</td>
@@ -17,15 +21,19 @@ function HomePage() {
             )
         }
     ) 
-
+    const handleLogout=()=>{
+        localStorage.clear();
+        history.push("/")
+    }
 
     return (
         <div className="text-center">
-            <div>
-            <h1 className="header">WELLCOME TO ADMIN PANEL</h1>
+            <div className="header">
+                <h3 style={{ marginLeft: '2%' }}>WELCOME TO ADMIN PANEL</h3> 
+                <h4 style={{marginRight:'2%'}}>{user.firstName} {user.lastName}</h4>
             </div>
             <div>
-            <table class="table table-striped">
+            <table className="table table-striped">
                 <thead>
                     <tr>
                     <th>Sr.NO</th>
@@ -42,9 +50,7 @@ function HomePage() {
             </table>
              
         </div>
-            <Link to="/">
-                <button className="primary-button">Log out</button>
-            </Link>
+            <button className="primary-button" onClick={()=>handleLogout()}>Log out</button>
         </div>
     )
  }
