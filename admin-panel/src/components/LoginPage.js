@@ -58,6 +58,7 @@ class LogInPage extends Component{
         const { email, password } = this.state.input;
 
         if (this.validate()) {
+        let errors = {};
           try {
             const config = {
                 headers: {
@@ -73,19 +74,24 @@ class LogInPage extends Component{
                 config
             ).then(response => {
               console.log('response', response);
-              if (response.status === 200) {
+              if((response.role ==="admin"||response.role ==="ADMIN"||response.role ==="Admin") && response.status === 200)
+              {
                 window.localStorage.setItem('token', response.data.data.token);
                 alert('User logged-in successfully');
                 this.props.history.push("/home");
               }
+              else if (response.status === 200) {
+                alert('User must be admin')
+                this.props.history.push("/login");
+              }
             });
-            alert(data)
            } catch (e) {
-              alert(e.response.data.error)
+              errors['responseError']=e.response.data.error
+              this.setState({ errors: errors });
           }
         }
         else {
-            alert(this.state.errors)
+            console.log(this.state.errors)
         }
       }
 
@@ -95,13 +101,14 @@ class LogInPage extends Component{
             <div className="text-center m-5-auto">
                 <h2>Sign in</h2>
                 <form onSubmit={this.handleSubmit} >
+                <div className="text-danger">{this.state.errors.responseError}</div>
                     <p>
                         <label>email address</label><br />
                         <input
                             type="text"
                             name="email"
                             onChange={this.handleChange}
-                             />
+                            />
                     </p>
                     <div className="text-danger">{this.state.errors.email}</div>
                     <p>

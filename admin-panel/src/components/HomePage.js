@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom'
 import JsonData from './data.json'
 
 
-
-
 function HomePage() {
     const DisplayData=JsonData.map(
         (info)=>{
