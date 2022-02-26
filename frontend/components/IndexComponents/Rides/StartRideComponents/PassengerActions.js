@@ -1,7 +1,9 @@
 import { Button, Divider, Heading, Input, Spinner, Text, View } from 'native-base'
 import React, { useEffect, useState } from 'react'
+import { StyleSheet } from 'react-native';
 import { markPresent } from '../../../../api/rides';
 import { getCustomerAccount, getPaymentMethods } from '../../../../api/stripe';
+import { BarCodeScanner } from "expo-barcode-scanner";
 
 export default function PassengerActions({ currentUser, rideDetails }) {
 
@@ -11,6 +13,8 @@ export default function PassengerActions({ currentUser, rideDetails }) {
     const [customerLoading, setCustomerLoading] = useState(true);
     const [paymentMethodsLoading, setPaymentMethodsLoading] = useState(true);
     const [paymentMethodIndex, setPaymentMethodIndex] = useState(null);
+    const [hasPermission, setHasPermission] = useState(false);
+    const [scanned, setScanned] = useState(false);
 
     useEffect(() => {
         getCustomerAccount()
@@ -64,6 +68,27 @@ export default function PassengerActions({ currentUser, rideDetails }) {
             })
     }
 
+    const handleBarcode = async () => {
+        const { status } = await BarCodeScanner.requestPermissionsAsync();
+        setHasPermission(status === 'granted');
+    }
+
+    const handleBarCodeScan = ({ type, data }) => {
+        console.log(data);
+        setScanned(true)
+    }
+
+    if (hasPermission && !scanned) {
+        return (
+            <BarCodeScanner
+                onBarCodeScanned={handleBarCodeScan}
+                style={{
+                    height: "70%"
+                }}
+            />
+        );
+    }
+
     return (
         <View padding={4}>
             <Heading>1) Select Payment Method</Heading>
@@ -108,6 +133,12 @@ export default function PassengerActions({ currentUser, rideDetails }) {
                 background={"white"}
                 marginY={2}
             />
+            <Divider />
+            <Heading>2) Or Scan and go</Heading>
+            <Button
+                onPress={handleBarcode}>
+                Scan and go
+            </Button>
             <Divider />
             <Heading>3) Pay and Ride!</Heading>
             <Button
