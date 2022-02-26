@@ -147,6 +147,16 @@ export default function RideDetails({ route, navigation }) {
     );
   }
 
+  const handleStartPress = () => {
+      try {
+          navigation.navigate("StartRide", {
+              rideId
+          })
+      } catch (e) {
+          console.error(e);
+      }
+  }
+
   const StartButton = () => {
     return(
       <Button
@@ -155,9 +165,8 @@ export default function RideDetails({ route, navigation }) {
           justifyContent={"center"}
           alignItems={"center"}
           backgroundColor={"#2421A6"}
-          onPress={() => console.log("start pressed")}
+          onPress={() => handleStartPress()}
       >
-          <Ionicons name="play-circle" size={25} color={"white"} />
           <Text color={"white"}>Start</Text>
       </Button>
     );
@@ -406,7 +415,10 @@ export default function RideDetails({ route, navigation }) {
               </View>
               <View
                 padding={4}>
-                  {currentUser._id === rideDetails.driver ?
+                  {
+                  (currentUser._id === rideDetails.driver)
+                  ||
+                  (rideDetails.started) ?
                   <StartButton />
                   :
                   <RequestButton />

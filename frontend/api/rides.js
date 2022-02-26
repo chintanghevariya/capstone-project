@@ -198,3 +198,25 @@ export async function removeRideRequest(rideId) {
         return [null, e.message];
     }
 }
+
+export async function markPresent(paymentDetails, rideDetails) {
+    const token = await getToken();
+    const { _id: rideId } = rideDetails;
+    try {
+        const request = await axios.post(
+            `${API_URL}/rides/${rideId}/mark-present`,
+            {
+                paymentDetails, rideDetails
+            },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return [request.data, null];
+    } catch (e) {
+        return [null, e.message];
+    }
+}
