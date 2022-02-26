@@ -1,4 +1,4 @@
-import { ScrollView, View, Heading} from 'native-base'
+import { ScrollView, View, Heading, Button } from 'native-base'
 import { Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { getRequestList, requestAccept, requestReject } from '../../../api/rides'
@@ -13,7 +13,6 @@ const RequestList = ({rideId,limit=null}) => {
             console.log(error);
             return;
         }
-        console.log(requestList.data)
         return requestList.data
     }
 
@@ -31,25 +30,77 @@ const RequestList = ({rideId,limit=null}) => {
     }, []);
 
     return (
-        <View >
-        <Heading size="xl">
-            Requests
-        </Heading>
-            <ScrollView >
-            {/* <TouchableOpacity onPress={() => alert(JSON.stringify(requestList))}>click me</TouchableOpacity> */}
-            {requestList.map((request,index)=>(
-                <View key={index} style={[Styles.container,Styles.requestContainer]}>
-                    <Text style={{marginLeft: 10,justifyContent:'center'}}>{user} {request.userId.firstName} {request.userId.lastName}</Text>
-                    <View style={Styles.buttonContainer}>
-                        <TouchableOpacity onPress={() => requestReject(rideId, request.userId._id).then((value) => alert(value))}><Text style={{color: 'red',fontSize:18}}>Decline</Text></TouchableOpacity>
-                        <Text>    </Text>
-                        <TouchableOpacity onPress={() => requestAccept(rideId, request.userId._id).then((value) => alert(JSON.stringify(value)))}><Text style={Styles.innerText}> Accept </Text></TouchableOpacity>
+        <View>
+            <Heading size="xl">Requests</Heading>
+            <ScrollView>
+                {/* <TouchableOpacity onPress={() => alert(JSON.stringify(requestList))}>click me</TouchableOpacity> */}
+                {requestList.map((request, index) => (
+                    <View
+                        key={index}
+                        style={[Styles.container, Styles.requestContainer]}
+                    >
+                        <Text
+                            style={{ marginLeft: 10, justifyContent: "center" }}
+                        >
+                            {user} {request.userId.firstName}{" "}
+                            {request.userId.lastName}
+                        </Text>
+                        <View style={Styles.buttonContainer}>
+                            <Button
+                                onPress={() =>
+                                    requestReject(rideId, request.userId._id)
+                                }
+                                variant={"link"}
+                                colorScheme={"red"}
+                            >
+                                Decline
+                            </Button>
+                            <Button
+                                onPress={() =>
+                                    requestAccept(
+                                        rideId,
+                                        request.userId._id
+                                    ).then((value) =>{
+                                        alert(JSON.stringify(value));
+                                    }
+                                    )
+                                }
+                                variant={"outline"}
+                                colorScheme={"emerald"}
+                            >
+                                Accept
+                            </Button>
+                            {/* <TouchableOpacity
+                                onPress={() =>
+                                    requestReject(
+                                        rideId,
+                                        request.userId._id
+                                    ).then((value) => alert(value))
+                                }
+                            >
+                                <Text style={{ color: "red", fontSize: 18 }}>
+                                    Decline
+                                </Text>
+                            </TouchableOpacity>
+                            <Text> </Text>
+                            <TouchableOpacity
+                                onPress={() =>
+                                    requestAccept(
+                                        rideId,
+                                        request.userId._id
+                                    ).then((value) =>
+                                        alert(JSON.stringify(value))
+                                    )
+                                }
+                            >
+                                <Text style={Styles.innerText}> Accept </Text>
+                            </TouchableOpacity> */}
+                        </View>
                     </View>
-                </View>
-            ))}
-        </ScrollView>
+                ))}
+            </ScrollView>
         </View>
-    )
+    );
 }
 export default RequestList
 

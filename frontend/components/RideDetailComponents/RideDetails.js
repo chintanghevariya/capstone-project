@@ -12,6 +12,7 @@ import {
 } from "../../api/rides";
 import { getUser } from "../../helpers/user";
 import MapView, { Marker } from 'react-native-maps';
+import RequestList from '../IndexComponents/Rides/RequestList';
 
 export default function RideDetails({ route, navigation }) {
 
@@ -394,6 +395,14 @@ export default function RideDetails({ route, navigation }) {
                   >
                       {luggageIcon}
                   </View>
+              </View>
+              <View
+                margin={3}>
+                  {
+                      currentUser._id === rideDetails.driver &&
+                      <RequestList
+                        rideId={rideDetails._id} />
+                  }
               </View>
               <View
                 padding={4}>
