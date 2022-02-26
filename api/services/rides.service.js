@@ -158,13 +158,6 @@ class RidesService {
             (request) => request.userId.toString() !== userId
         );
         ride.requests = newRideRequests;
-        const notification = new notificationModel({
-            fromUser: userId,
-            forUser: ride.driver,
-            ride: ride._id,
-            type: "reject-request",
-        });
-        await notification.save();
         await ride.save();
         return {};
     }
@@ -200,6 +193,31 @@ class RidesService {
             latFiveKMMinus,
             rides,
         };
+    }
+
+    async acceptRequest(rideId, passengerId, userId) {
+        await this.addUserAsPassengerToRideOfId(passengerId, rideId);
+        await this.removeRideRequest(rideId, { _id: passengerId });
+        const notification = new notificationModel({
+            fromUser: userId,
+            forUser: passengerId,
+            ride: rideId,
+            type: "accept-request",
+        });
+        await notification.save();
+        return {}
+    }
+
+    async rejectRequest(rideId, passengerId, userId) {
+        await this.removeRideRequest(rideId, { _id: passengerId });
+        const notification = new notificationModel({
+            fromUser: userId,
+            forUser: passengerId,
+            ride: rideId,
+            type: "reject-request",
+        });
+        await notification.save();
+        return {};
     }
 
     userHasRequestToJoin(userId, ride) {

@@ -155,6 +155,7 @@ ridesRouter.post("/:rideId/request/accept", verifyToken, async function (req, re
             response
         );
     } catch (e) {
+        console.log(e);
         httpResponse.sendFailure(res, e.message);
     }
 });
