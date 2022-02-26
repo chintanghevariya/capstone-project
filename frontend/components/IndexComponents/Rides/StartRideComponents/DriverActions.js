@@ -13,15 +13,8 @@ export default function DriverActions({ rideDetails }) {
             <Text>Scan QR Code</Text>
             <QRCode value={url} />
             <Divider />
-            <Text>Passenger Code</Text>
-            {
-                rideDetails.passengers.map((passenger, idx) => (
-                    <Text>
-                        { idx + 1} { " " }
-                        { passenger.code }
-                    </Text>
-                ))
-            }
+            <Text>Ride Code</Text>
+            <Text>{rideDetails.code}</Text>
         </View>
     );
 }

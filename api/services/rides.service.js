@@ -20,11 +20,11 @@ class RidesService {
     async createRide(rideDetails) {
         this.validateCreateRideFields(rideDetails);
         const rideIdentifier = await this.getRideIdentifier(rideDetails);
+        const rideCode = this.generateRideCodeOfLength(6);
         rideDetails.rideIdentifier = rideIdentifier;
-        console.log(rideIdentifier);
+        rideDetails.code = rideCode;
         const ride = new Ride(rideDetails);
         await ride.save();
-        console.log(ride);
         return ride;
     }
 
@@ -48,22 +48,20 @@ class RidesService {
         if (this.isUserPassengerOfRide(userId, ride)) {
             throw new Error("User is already passenger of ride.");
         }
-        const code = this.generatePassengerCodeOfLength(7);
         const passengerProperties = {
-            userId,
-            code,
+            userId
         };
         ride.passengers.push(passengerProperties);
         await ride.save();
         return {};
     }
 
-    generatePassengerCodeOfLength(length) {
-        var result = "";
-        var characters =
+    generateRideCodeOfLength(length) {
+        let result = "";
+        let characters =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        var charactersLength = characters.length;
-        for (var i = 0; i < length; i++) {
+        let charactersLength = characters.length;
+        for (let i = 0; i < length; i++) {
             result += characters.charAt(
                 Math.floor(Math.random() * charactersLength)
             );
@@ -130,7 +128,7 @@ class RidesService {
         }
         const request = {
             userId,
-            stopId
+            stopId,
         };
         console.log(request);
         const notification = new notificationModel({
@@ -205,7 +203,7 @@ class RidesService {
             type: "accept-request",
         });
         await notification.save();
-        return {}
+        return {};
     }
 
     async rejectRequest(rideId, passengerId, userId) {
@@ -403,10 +401,10 @@ class RidesService {
         const result = await Ride.findOne({ _id }).populate({
             path: "requests",
             populate: {
-                path: "userId"
-            }
-        })
-        const requestList = result.requests
+                path: "userId",
+            },
+        });
+        const requestList = result.requests;
         return requestList;
     }
 }
