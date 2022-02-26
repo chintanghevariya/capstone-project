@@ -29,11 +29,38 @@ const RequestList = ({rideId,limit=null}) => {
         
     }, []);
 
+    const acceptRequest = async (rideId, userId, requestId) => {
+        requestAccept(rideId, userId).then((result) => {
+            const [response, error] = result;
+            if (error) {
+                console.log(error);
+                return;
+            }
+            const newAllRequests = allRequest.filter(
+                (request) => request.id !== requestId
+            );
+            setRequestList(newAllRequests);
+        });
+    };
+
+    const rejectRequest = async (rideId, userId, requestId) => {
+        requestReject(rideId, userId).then((result) => {
+            const [response, error] = result;
+            if (error) {
+                console.log(error);
+                return;
+            }
+            const newAllRequests = allRequest.filter(
+                (request) => request.id !== requestId
+            );
+            setRequestList(newAllRequests);
+        });
+    };
+
     return (
         <View>
             <Heading size="xl">Requests</Heading>
             <ScrollView>
-                {/* <TouchableOpacity onPress={() => alert(JSON.stringify(requestList))}>click me</TouchableOpacity> */}
                 {requestList.map((request, index) => (
                     <View
                         key={index}
@@ -48,7 +75,7 @@ const RequestList = ({rideId,limit=null}) => {
                         <View style={Styles.buttonContainer}>
                             <Button
                                 onPress={() =>
-                                    requestReject(rideId, request.userId._id)
+                                    rejectRequest(rideId, request.userId._id, request._id)
                                 }
                                 variant={"link"}
                                 colorScheme={"red"}
@@ -57,12 +84,10 @@ const RequestList = ({rideId,limit=null}) => {
                             </Button>
                             <Button
                                 onPress={() =>
-                                    requestAccept(
+                                    acceptRequest(
                                         rideId,
-                                        request.userId._id
-                                    ).then((value) =>{
-                                        alert(JSON.stringify(value));
-                                    }
+                                        request.userId._id,
+                                        request._id
                                     )
                                 }
                                 variant={"outline"}
