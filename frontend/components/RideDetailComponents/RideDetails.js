@@ -415,7 +415,10 @@ export default function RideDetails({ route, navigation }) {
               </View>
               <View
                 padding={4}>
-                  {currentUser._id === rideDetails.driver ?
+                  {
+                  (currentUser._id === rideDetails.driver)
+                  ||
+                  (rideDetails.started) ?
                   <StartButton />
                   :
                   <RequestButton />

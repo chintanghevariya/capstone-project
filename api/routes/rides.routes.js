@@ -175,4 +175,18 @@ ridesRouter.post("/:rideId/request/reject", verifyToken, async function (req, re
     }
 });
 
+ridesRouter.post("/:rideId/mark-present", verifyToken, async function (req, res, next) {
+    try {
+        const response = await ridesService.markAsPresent(
+            req.user,
+            req.body.paymentDetails,
+            req.body.rideDetails
+        );
+        httpResponse.sendSuccess(res, "Rejected request", response);
+    } catch (e) {
+        console.log(e.message);
+        httpResponse.sendFailure(res, e.message);
+    }
+})
+
 module.exports = ridesRouter;

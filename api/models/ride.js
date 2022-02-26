@@ -145,6 +145,10 @@ const rideSchema = new mongoose.Schema({
     code: {
         type: String,
         required: true
+    },
+    started: {
+        type: Boolean,
+        default: false
     }
 });
 

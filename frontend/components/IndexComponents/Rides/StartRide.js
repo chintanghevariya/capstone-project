@@ -5,6 +5,7 @@ import { View, Text, Input, Spinner, Heading } from "native-base";
 import { getRideById } from "../../../api/rides";
 import { getUser } from "../../../helpers/user";
 import DriverActions from "./StartRideComponents/DriverActions";
+import PassengerActions from "./StartRideComponents/PassengerActions";
 
 export default function StartRide({ route, navigation }) {
 
@@ -51,8 +52,12 @@ export default function StartRide({ route, navigation }) {
                 </Heading>
             </View>
 			{
-				currentUser._id === rideDetails.driver &&
+				currentUser._id === rideDetails.driver ?
 				<DriverActions
+					rideDetails={rideDetails} />
+				:
+				<PassengerActions
+					currentUser={currentUser}
 					rideDetails={rideDetails} />
 			}
         </View>

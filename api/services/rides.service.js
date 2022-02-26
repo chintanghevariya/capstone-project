@@ -6,6 +6,7 @@ const {
 const notificationModel = require("../models/notification");
 const Ride = require("../models/ride");
 const User = require("../models/user");
+const paymentService = require("./payment.service");
 
 class RidesService {
     async getRides(filters = {}) {
@@ -215,6 +216,20 @@ class RidesService {
             type: "reject-request",
         });
         await notification.save();
+        return {};
+    }
+
+    async markAsPresent(user, paymentDetails, rideDetails) {
+        const { email } = user;
+        if (paymentDetails.method === "wallet") {
+            await paymentService.payByWallet(email, paymentDetails.amount);
+        } else {
+            await paymentService.payFromCustomerPayment(
+                email,
+                paymentDetails.paymentMethodId,
+                paymentDetails.amount
+            );
+        }
         return {};
     }
 
