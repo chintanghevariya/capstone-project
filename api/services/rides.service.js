@@ -40,21 +40,17 @@ class RidesService {
         return rideIdentifier;
     }
 
-    async addUserAsPassengerToRideOfId(user, rideId) {
-        const { _id } = user;
-        if (_id === undefined || _id === null) {
-            throw new Error("Token is invalid");
-        }
+    async addUserAsPassengerToRideOfId(userId, rideId) {
         const ride = await this.getRideById(rideId);
         if (ride === undefined || ride === null) {
             throw new Error("Ride with id does not exist");
         }
-        if (this.isUserPassengerOfRide(user, ride)) {
+        if (this.isUserPassengerOfRide(userId, ride)) {
             throw new Error("User is already passenger of ride.");
         }
         const code = this.generatePassengerCodeOfLength(7);
         const passengerProperties = {
-            userId: _id,
+            userId,
             code,
         };
         ride.passengers.push(passengerProperties);
@@ -376,13 +372,24 @@ class RidesService {
         return formattedFilters;
     }
 
-    isUserPassengerOfRide(user, ride) {
-        const { _id } = user;
+    isUserPassengerOfRide(_id, ride) {
         const isPassenger =
             ride.passengers.findIndex((passenger) => {
+                console.log(passenger);
                 return passenger.userId.toString() === _id;
             }) > -1;
         return isPassenger;
+    }
+
+    async getRequestList(_id) {
+        const result = await Ride.findOne({ _id }).populate({
+            path: "requests",
+            populate: {
+                path: "userId"
+            }
+        })
+        const requestList = result.requests
+        return requestList;
     }
 }
 

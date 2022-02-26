@@ -18,7 +18,7 @@ ridesRouter.get("/:rideId", verifyToken, async function (req, res, next) {
 })
 
 // Get rides request
-ridesRouter.post("/filter", verifyToken,async function (req, res, next) {
+ridesRouter.post("/filter", verifyToken, async function (req, res, next) {
     try {
         const rides = await ridesService.getRides(req.body);
         httpResponse.sendSuccess(res, "Rides fetched successfully", rides);
@@ -64,6 +64,17 @@ ridesRouter.delete("/:rideId/request", verifyToken, async function (req, res, ne
         httpResponse.sendSuccess(res, "Request removed successfully", {});
     } catch (e) {
         console.log(e.message);
+        httpResponse.sendFailure(res, e.message);
+    }
+})
+//to get all ride request
+ridesRouter.get("/:rideId/request", verifyToken, async function (req, res, next) {
+    try {
+        const response = await ridesService.getRequestList(
+            req.params.rideId
+        );
+        httpResponse.sendSuccess(res, "Requests fetched successfully", response);
+    } catch (e) {
         httpResponse.sendFailure(res, e.message);
     }
 })
@@ -129,7 +140,36 @@ ridesRouter.get("/around/user", verifyToken, async function (req, res, next) {
             response
         );
     } catch (e) {
-        console.log(e.message);
+        httpResponse.sendFailure(res, e.message);
+    }
+});
+
+ridesRouter.post("/:rideId/request/accept", verifyToken, async function (req, res, next) {
+    try {
+        const response = await ridesService.acceptRequest(
+            req.params.rideId, req.body.passengerId, req.user._id
+        );
+        httpResponse.sendSuccess(
+            res,
+            "Request accepted",
+            response
+        );
+    } catch (e) {
+        httpResponse.sendFailure(res, e.message);
+    }
+});
+
+ridesRouter.post("/:rideId/request/reject", verifyToken, async function (req, res, next) {
+    try {
+        const response = await ridesService.rejectRequest(
+            req.params.rideId, req.body.passengerId, req.user._id
+        );
+        httpResponse.sendSuccess(
+            res,
+            "Rejected request",
+            response
+        );
+    } catch (e) {
         httpResponse.sendFailure(res, e.message);
     }
 });
