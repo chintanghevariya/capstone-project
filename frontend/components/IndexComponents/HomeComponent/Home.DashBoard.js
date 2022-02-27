@@ -85,9 +85,9 @@ export default function Main({ navigation }) {
         navigation.navigate("Wallet")
     }
 
-    const goToRide = () => {
+    const goToRide = (rideId) => {
         navigation.navigate("RideDetail", {
-            rideId: "6209e0ccd1302a1731b61b66",
+            rideId,
         });
     }
 
@@ -148,15 +148,12 @@ export default function Main({ navigation }) {
                 <Text style={{ marginLeft: 20, fontSize: 20 }}>
                     Rides around you
                 </Text>
-                <Button onPress={goToRide}>
-                    Go to ride
-                </Button>
                 {
                     rides.map((ride, index) => (
                         <RideContainer
                             ride={ride}
                             key={index}
-                            navigation={navigation} />
+                            onSelect={() => goToRide(ride._id)} />
                     ))
                 }
             </View>

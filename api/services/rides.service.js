@@ -6,6 +6,7 @@ const {
 const notificationModel = require("../models/notification");
 const Ride = require("../models/ride");
 const User = require("../models/user");
+const ConnectedRides = require("./connected-rides.service");
 const paymentService = require("./payment.service");
 
 class RidesService {
@@ -230,6 +231,12 @@ class RidesService {
                 paymentDetails.amount
             );
         }
+        return {};
+    }
+
+    async getConnectedRides(fromLocation, toLocation) {
+        const connectedRide = new ConnectedRides(fromLocation, toLocation);
+        await connectedRide.getConnectingRides();
         return {};
     }
 
