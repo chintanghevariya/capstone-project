@@ -4,22 +4,37 @@ const Review = require("../models/review");
 const User = require("../models/user");
 
 class UserService {
-
     async createUser(userDetails) {
         const { email, firstName, lastName, password } = userDetails;
-        if (email === undefined || email === null || email.trim().length === 0) {
+        if (
+            email === undefined ||
+            email === null ||
+            email.trim().length === 0
+        ) {
             throw new Error("Email cannot be empty");
         }
         if (!validEmail(email)) {
             throw new Error("Email is not in proper format");
         }
-        if (firstName === undefined || firstName === null || firstName.trim().length === 0) {
+        if (
+            firstName === undefined ||
+            firstName === null ||
+            firstName.trim().length === 0
+        ) {
             throw new Error("First name cannot be empty");
         }
-        if (lastName === undefined || lastName === null || lastName.trim().length === 0) {
+        if (
+            lastName === undefined ||
+            lastName === null ||
+            lastName.trim().length === 0
+        ) {
             throw new Error("Last name cannot be empty");
         }
-        if (password === undefined || password === null || password.trim().length === 0) {
+        if (
+            password === undefined ||
+            password === null ||
+            password.trim().length === 0
+        ) {
             throw new Error("Password cannot be empty");
         }
         if (password.trim().length < 6) {
@@ -27,7 +42,7 @@ class UserService {
         }
         const userWithEmail = await User.findOne({ email });
         if (userWithEmail !== null) {
-            throw new Error("Email is already in use")
+            throw new Error("Email is already in use");
         }
         const user = new User(userDetails);
         await user.save();
@@ -36,8 +51,8 @@ class UserService {
             token,
             user: {
                 ...user._doc,
-                isNew: true
-            }
+                isNew: true,
+            },
         };
     }
 
@@ -56,8 +71,8 @@ class UserService {
         if (user.password !== password) {
             throw new Error("Password is incorrect");
         }
-        const token = generateToken({ ...user._doc })
-        return { token,user }
+        const token = generateToken({ ...user._doc });
+        return { token, user };
     }
 
     async getUserByEmail(email) {
@@ -72,10 +87,17 @@ class UserService {
         const { _id: fromUserId } = fromUser;
         const review = new Review({
             fromUser: fromUserId,
-            ...reviewDetails
+            ...reviewDetails,
         });
         await review.save();
         return {};
+    }
+
+    getReviewOfUser(userId) {
+        const reviews = await Review.find({
+            forUser: userId
+        });
+        return reviews;
     }
 }
 
