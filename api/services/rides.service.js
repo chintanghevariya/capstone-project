@@ -236,8 +236,10 @@ class RidesService {
 
     async getConnectedRides(fromLocation, toLocation) {
         const connectedRide = new ConnectedRides(fromLocation, toLocation);
-        await connectedRide.getConnectingRides();
-        return {};
+        const rides = await connectedRide.getConnectingRides();
+        return {
+            rides
+        };
     }
 
     userHasRequestToJoin(userId, ride) {

@@ -11,15 +11,20 @@ class ConnectedRides {
 
     async getConnectingRides() {
         const { allRides, locations, graph } = await this.createLocationGraph();
-        console.table(
-            locations.map((loc, idx) => ({
-                locationName: loc.locationName,
-                index: idx,
-            }))
+        const fromIndex = locations.findIndex(
+            (loc) =>
+                loc.longitude === this.from.longitude &&
+                loc.latitude === this.from.latitude
         );
-        console.table(graph)
-        const paths = this.dijkstra(graph, 5);
-        console.log(paths);
+        const toIndex = locations.findIndex(
+            (loc) =>
+                loc.longitude === this.to.longitude &&
+                loc.latitude === this.to.latitude
+        );
+        const { distance, parents } = this.dijkstra(graph, 5);
+        const path = this.calculatePathFromSourceToDestination(parents, fromIndex, toIndex);
+        const rides = this.getRideFromPath(path, locations, allRides);
+        return rides;
     }
 
     async createLocationGraph() {
@@ -41,7 +46,7 @@ class ConnectedRides {
         const fromFilters = {
             "from.latitude": {},
             "from.longitude": {},
-        }; 
+        };
         const toFilters = {
             "to.longitude": {},
             "to.latitude": {},
@@ -61,29 +66,29 @@ class ConnectedRides {
             toFilters["to.latitude"]["$gte"] = to.latitude;
         }
         const filters = {
-            $or: [
-                fromFilters, toFilters
-            ]
-        }
+            $or: [fromFilters, toFilters],
+        };
         return filters;
     }
 
     extractLocationsFrom(allRides) {
         const locations = [];
         for (const ride of allRides) {
-            const fromParsed = locations.findIndex(
-                (loc) =>
-                    loc.longitude === ride.from.longitude &&
-                    loc.latitude === ride.from.latitude
-            ) > -1;
+            const fromParsed =
+                locations.findIndex(
+                    (loc) =>
+                        loc.longitude === ride.from.longitude &&
+                        loc.latitude === ride.from.latitude
+                ) > -1;
             if (!fromParsed) {
                 locations.push(ride.from);
             }
-            const toParsed =locations.findIndex(
-                (loc) =>
-                    loc.longitude === ride.to.longitude &&
-                    loc.latitude === ride.to.latitude
-            ) > -1;
+            const toParsed =
+                locations.findIndex(
+                    (loc) =>
+                        loc.longitude === ride.to.longitude &&
+                        loc.latitude === ride.to.latitude
+                ) > -1;
             if (!toParsed) {
                 locations.push(ride.to);
             }
@@ -115,17 +120,19 @@ class ConnectedRides {
                     loc.longitude === ride.to.longitude &&
                     loc.latitude === ride.to.latitude
             );
-            graph[fromLocationIndex][toLocationIndex] = 1
+            graph[fromLocationIndex][toLocationIndex] = 1;
         }
     }
 
-    dijkstra(graph, source=0) {
+    dijkstra(graph, source = 0) {
         const distance = new Array(graph.length);
         const visited = new Array(graph.length);
+        const parents = new Array(graph.length);
 
         for (let i = 0; i < graph.length; i++) {
             distance[i] = Number.POSITIVE_INFINITY;
             visited[i] = false;
+            parents[i] = -1;
         }
 
         distance[source] = 0;
@@ -142,11 +149,12 @@ class ConnectedRides {
                     distance[minimum] + graph[i][j] < distance[j]
                 ) {
                     distance[j] = distance[minimum] + graph[minimum][j];
+                    parents[j] = minimum;
                 }
             }
         }
 
-        return distance;
+        return { distance, parents };
     }
 
     minimumDistance(distance, visited) {
@@ -163,6 +171,41 @@ class ConnectedRides {
         return minIndex;
     }
 
+    calculatePathFromSourceToDestination(parents, fromIndex, toIndex) {
+        const path = this.getPath(toIndex, parents);
+        return path;
+    }
+
+    getPath(vertex, parents) {
+        if (parents[vertex] === -1) {
+            return [vertex];
+        }
+        const next = this.getPath(parents[vertex], parents);
+        return [...next, vertex];
+    }
+
+    getRideFromPath(path, locations, allRides) {
+        if (path.length === 0) {
+            return [];
+        }
+        console.log(path);
+        const ride = [];
+        for (let locIndex = 0; locIndex < path.length - 1; locIndex++)  {
+            const currentLocIndex = path[locIndex];
+            const nextLocIndex = path[locIndex + 1];
+            const currentLocation = locations[currentLocIndex];
+            const nextLocation = locations[nextLocIndex];
+            const rideFromCurrentToNext = allRides.find(
+                ride => 
+                ride.from.longitude === currentLocation.longitude && 
+                ride.from.latitude === currentLocation.latitude && 
+                ride.to.longitude === nextLocation.longitude && 
+                ride.to.latitude === nextLocation.latitude
+            )
+            ride.push(rideFromCurrentToNext)
+        }
+        return ride;
+    }
 }
 
 module.exports = ConnectedRides

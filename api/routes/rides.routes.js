@@ -25,7 +25,6 @@ ridesRouter.post("/connecting-rides", async function (req, res, next) {
         );
         httpResponse.sendSuccess(res, "Rejected request", response);
     } catch (e) {
-        console.log(e.message);
         httpResponse.sendFailure(res, e.message);
     }
 });
