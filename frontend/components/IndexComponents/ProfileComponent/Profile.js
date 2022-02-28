@@ -1,15 +1,37 @@
 import {View,Text, ScrollView,Alert,TouchableOpacity,SafeAreaView,StyleSheet,Image,ImageBackground} from 'react-native'
 import StarRating from 'react-native-star-rating';
+import { TextArea } from 'native-base';
 import React, {useState} from 'react';
+import { createReview } from '../../../api/users';
 
-export default function Profile() {
+export default function Profile({ route, navigation }) {
+
+    const { userId } = route;
 
     const [starCount,setstarCount] = useState(4);
     const [totalJobs, setTotalJobs] = useState(102);
+    const [review, setReview] = useState("");
     
     const onStarRatingPress=(rating)=>
     {
           setstarCount(rating)
+    }
+
+    const submitReview = () => {
+        const reviewDetails = {
+            forUser: userId,
+            rating: starCount,
+            review,
+        }
+        createReview(reviewDetails)
+            .then(response => {
+                const [result, error] = response;
+                if (error) {
+                    console.log(error);
+                    return;
+                }
+                console.log("DONE");
+            })
     }
 
     const logout = async () => {
@@ -21,55 +43,98 @@ export default function Profile() {
 
 
   return (
-    <SafeAreaView style={Styles.container}>
-        <Text style={Styles.header}>Profile</Text>
-            <View style={Styles.profileContainer}> 
-            <ImageBackground
-                source={require('../../../assets/Home1.png')} style={{width:'100%', height:'100%'}}>
-                <Image source={require("../../../assets/user-1.png")}
-                        style={Styles.icons}>
-                </Image>  
-                <Text style={Styles.driverName}>Ana</Text>
-                <Text style={Styles.profileText}>Rating (154)</Text>
-                <View style={Styles.starRating}>
-                    <StarRating disabled={false} maxStars={5} starSize={33}  rating={starCount} selectedStar={(rating) => onStarRatingPress(rating)}/>
+      <SafeAreaView style={Styles.container}>
+          <Text style={Styles.header}>Profile</Text>
+          <View style={Styles.profileContainer}>
+              <ImageBackground
+                  source={require("../../../assets/Home1.png")}
+                  style={{ width: "100%", height: "100%" }}
+              >
+                  <Image
+                      source={require("../../../assets/user-1.png")}
+                      style={Styles.icons}
+                  ></Image>
+                  <Text style={Styles.driverName}>Ana</Text>
+                  <Text style={Styles.profileText}>Rating (154)</Text>
+                  <View style={Styles.starRating}>
+                      <StarRating
+                          disabled={false}
+                          maxStars={5}
+                          starSize={33}
+                          rating={starCount}
+                      />
+                  </View>
+                  <Text style={Styles.profileText}>Jobs : {totalJobs}</Text>
+              </ImageBackground>
+          </View>
+          <Text style={Styles.ReviewHeader}>They are saying...</Text>
+          <View>
+              <View style={Styles.starRating}>
+                  <StarRating
+                      disabled={false}
+                      maxStars={5}
+                      starSize={33}
+                      rating={starCount}
+                      selectedStar={(rating) => onStarRatingPress(rating)}
+                  />
+              </View>
+              <View>
+                  <TextArea
+                      h={20}
+                      placeholder="Text Area Placeholder"
+                      w="75%"
+                      maxW="300"
+                      onChangeText={setReview}
+                  ></TextArea>
+              </View>
+                <View>
+                    <Button onPress={submitReview}>Add Review</Button>
                 </View>
-                <Text style={Styles.profileText}>Jobs : {totalJobs}</Text>
-                </ImageBackground>
-            </View>
-            <Text style={Styles.ReviewHeader}>They are saying...</Text>
-            <ScrollView style={Styles.scrollView}>
-            <View style={Styles.parentContainer}> 
-                <View style={Styles.childContainer}>
-                    <Image style={Styles.reviewIcon} source={require("../../../assets/user-5.png")}></Image> 
-                     <Text>   Excellent , safe and professional driver... </Text> 
-                </View>  
-                <View style={Styles.childContainer}>
-                    <Image style={Styles.reviewIcon} source={require("../../../assets/user-5.png")}></Image> 
-                     <Text>   Excellent , safe and professional driver... </Text> 
-                </View>  
-                <View style={Styles.childContainer}>
-                    <Image style={Styles.reviewIcon} source={require("../../../assets/user-5.png")}></Image> 
-                     <Text>   Excellent , safe and professional driver... </Text> 
-                </View>  
-                <View style={Styles.childContainer}>
-                    <Image style={Styles.reviewIcon} source={require("../../../assets/user-5.png")}></Image> 
-                     <Text>   Excellent , safe and professional driver... </Text> 
-                </View>  
-                <View style={Styles.childContainer}>
-                    <Image style={Styles.reviewIcon} source={require("../../../assets/user-5.png")}></Image> 
-                     <Text>   Excellent , safe and professional driver... </Text> 
-                </View>  
-            </View>    
-        </ScrollView>
-        <TouchableOpacity onPress={logout} style={Styles.logout}>
-            <Text style={Styles.logoutText}>
-                Log Out
-            </Text>
-        </TouchableOpacity>
-    </SafeAreaView>
-
-  )
+          </View>
+          <ScrollView style={Styles.scrollView}>
+              <View style={Styles.parentContainer}>
+                  <View style={Styles.childContainer}>
+                      <Image
+                          style={Styles.reviewIcon}
+                          source={require("../../../assets/user-5.png")}
+                      ></Image>
+                      <Text> Excellent , safe and professional driver... </Text>
+                  </View>
+                  <View style={Styles.childContainer}>
+                      <Image
+                          style={Styles.reviewIcon}
+                          source={require("../../../assets/user-5.png")}
+                      ></Image>
+                      <Text> Excellent , safe and professional driver... </Text>
+                  </View>
+                  <View style={Styles.childContainer}>
+                      <Image
+                          style={Styles.reviewIcon}
+                          source={require("../../../assets/user-5.png")}
+                      ></Image>
+                      <Text> Excellent , safe and professional driver... </Text>
+                  </View>
+                  <View style={Styles.childContainer}>
+                      <Image
+                          style={Styles.reviewIcon}
+                          source={require("../../../assets/user-5.png")}
+                      ></Image>
+                      <Text> Excellent , safe and professional driver... </Text>
+                  </View>
+                  <View style={Styles.childContainer}>
+                      <Image
+                          style={Styles.reviewIcon}
+                          source={require("../../../assets/user-5.png")}
+                      ></Image>
+                      <Text> Excellent , safe and professional driver... </Text>
+                  </View>
+              </View>
+          </ScrollView>
+          <TouchableOpacity onPress={logout} style={Styles.logout}>
+              <Text style={Styles.logoutText}>Log Out</Text>
+          </TouchableOpacity>
+      </SafeAreaView>
+  );
 }
 
 const Styles = StyleSheet.create({
