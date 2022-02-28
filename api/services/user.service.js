@@ -1,5 +1,6 @@
 const { generateToken } = require("../helpers/token");
 const validEmail = require("../helpers/validEmail");
+const Review = require("../models/review");
 const User = require("../models/user");
 
 class UserService {
@@ -62,8 +63,19 @@ class UserService {
     async getUserByEmail(email) {
         return User.findOne({ email });
     }
+
     async getUserById(_id) {
         return User.findOne({ _id });
+    }
+
+    async createReview(fromUser, reviewDetails) {
+        const { _id: fromUserId } = fromUser;
+        const review = new Review({
+            fromUser: fromUserId,
+            ...reviewDetails
+        });
+        await review.save();
+        return {};
     }
 }
 

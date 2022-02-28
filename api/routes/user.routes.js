@@ -33,5 +33,13 @@ userRouter.post('/login', async function (req, res, next) {
     }
 })
 
+userRouter.post("/review", verifyToken, async function (req, res, next) {
+    try {
+        const result = await userService.createReview(req.user, req.body);
+        httpResponse.sendSuccess(res, "Review added successfully", result);
+    } catch (e) {
+        httpResponse.sendFailure(res, e.message);
+    }
+})
 
 module.exports = userRouter;
