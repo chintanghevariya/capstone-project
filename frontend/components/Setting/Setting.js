@@ -1,10 +1,9 @@
 import React from 'react';
-import {View,StyleSheet,Text, ImageBackground,Dimensions,ScrollView,Image, Switch} from 'react-native';
+import {View,StyleSheet,Text, ImageBackground,Dimensions,ScrollView,Image, Switch,TouchableOpacity,} from 'react-native';
 import { Icon } from 'react-native-elements';
 import { useState } from "react";
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { color } from 'react-native-elements/dist/helpers';
-import { marginBottom } from 'styled-system';
+import { IconButton, Colors } from 'react-native-paper';
 
 export default function Setting() {
     const [user, setUser] = useState('John Doe');
@@ -42,21 +41,41 @@ export default function Setting() {
                         </View>
                         <View style={Styles.label}>
                             <Text style={{fontSize : 20 }}>Change email </Text>
-                            {setq}
+                            <IconButton
+                                        icon="chevron-right"
+                                        color={Colors.black500}
+                                        size={25}
+                                        onPress={() => console.log('Pressed')}
+                            />
                         </View>
                         <View style={Styles.label}>
-                             <Text style={{fontSize : 20 }}>Change password </Text>
-                             {setq}
+                            <Text style={{fontSize : 20 }}>Change password </Text>
+                            <IconButton
+                                        icon="chevron-right"
+                                        color={Colors.black500}
+                                        size={25}
+                                        onPress={() => console.log('Pressed')}
+                            />
                         </View>
                         <View style={Styles.label}>
-                             <Text style={{fontSize : 20 }}>Become a driver </Text>
-                             {setq}
+                            <Text style={{fontSize : 20 }}>Become a driver </Text>
+                            <IconButton
+                                        icon="chevron-right"
+                                        color={Colors.black500}
+                                        size={25}
+                                        onPress={() => console.log('Pressed')}
+                            />
                         </View>
                         <View style={Styles.label}>
                             <Text style={{fontSize : 20 }}>Add a payment method </Text>
-                            {plus}
+                            <IconButton
+                                        icon="plus"
+                                        color={Colors.black500}
+                                        size={25}
+                                        onPress={() => console.log('Pressed')}
+                            />
                         </View>
-                        <View style={Styles.label}>
+                        <View style={Styles.label} marginTop= '2%'>
                             <Text style={{fontSize : 20 }}>Push notifications</Text>
                             <Switch
                             trackColor={{ false: "#767577", true: "#21A656" }}
@@ -79,15 +98,30 @@ export default function Setting() {
                         </View>
                         <View style={Styles.label}>
                             <Text style={{fontSize : 20 }}>About Us </Text>
-                            {setq}
+                            <IconButton
+                                        icon="chevron-right"
+                                        color={Colors.black500}
+                                        size={25}
+                                        onPress={() => console.log('Pressed')}
+                            />
                         </View>
                         <View style={Styles.label}>
                             <Text style={{fontSize : 20 }}>Privacy policy </Text>
-                            {setq}
+                            <IconButton
+                                        icon="chevron-right"
+                                        color={Colors.black500}
+                                        size={25}
+                                        onPress={() => console.log('Pressed')}
+                            />
                         </View>
                         <View style={Styles.label}>
                             <Text style={{fontSize : 20 }}>Terms and conditions </Text>
-                            {setq} 
+                            <IconButton
+                                        icon="chevron-right"
+                                        color={Colors.black500}
+                                        size={25}
+                                        onPress={() => console.log('Pressed')}
+                            />
                         </View>
                     </View>
                 </View>
@@ -102,7 +136,7 @@ const Styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-       
+        alignItems: 'stretch'
     },
     flexA:{
         marginTop : "20%",
@@ -142,8 +176,8 @@ const Styles = StyleSheet.create({
     label:{
         marginRight : '5%',
         marginLeft :'3%',
-        marginBottom : '3%',
-        marginTop : '3%',
+        marginBottom : '2%',
+        marginTop : '2%',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: "center"
