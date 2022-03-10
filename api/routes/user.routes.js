@@ -7,9 +7,9 @@ const { verifyToken } = require('../helpers/token');
 const userRouter = express.Router();
 
 // Get ride by id route
-userRouter.get("/:userId", verifyToken, async function (req, res, next) {
+userRouter.get("/", verifyToken, async function (req, res, next) {
     try {
-        const user = await userService.getUserById(req.params.userId);
+        const user = await userService.getUserById(req.user._id);
         httpResponse.sendSuccess(res, "User fetched successfully", { user });
     } catch (e) {
         httpResponse.sendFailure(res, e.message);
@@ -40,6 +40,7 @@ userRouter.post("/review", verifyToken, async function (req, res, next) {
         httpResponse.sendSuccess(res, "Review added successfully", result);
     } catch (e) {
         httpResponse.sendFailure(res, e.message);
+        console.log(e);
     }
 })
 

@@ -11,8 +11,7 @@ export async function getUserById(userId){
     const token = await getToken()
     try {
         const request = await axios.get(
-            `${API_URL}/users/${userId}`,
-            {},
+            `${API_URL}/users/`,
             {
                 headers: {
                     "Content-Type": "application/json",

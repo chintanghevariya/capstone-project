@@ -1,6 +1,6 @@
-import {View,Text, ScrollView,Alert,TouchableOpacity,SafeAreaView,StyleSheet,Image,ImageBackground} from 'react-native'
+import { ScrollView,Alert,TouchableOpacity,SafeAreaView,StyleSheet,Image,ImageBackground} from 'react-native'
 import StarRating from 'react-native-star-rating';
-import { TextArea } from 'native-base';
+import { View, Text, TextArea, Button } from 'native-base';
 import React, { useState, useEffect } from "react";
 import { createReview, getUserById } from '../../../api/users';
 
@@ -8,6 +8,7 @@ export default function Profile({ route, navigation }) {
 
     const { userId } = route;
 
+    const [user, setUser] = useState({});
     const [starCount,setstarCount] = useState(4);
     const [totalJobs, setTotalJobs] = useState(102);
     const [review, setReview] = useState("");
@@ -16,8 +17,12 @@ export default function Profile({ route, navigation }) {
         getUserById(userId)
             .then(response => {
                 const [result, error] = response;
+                if (error) {
+                    console.error(error);
+                    return;
+                }
+                setUser(result.data.data.user);
             })
-        
     }, [])
     
     const onStarRatingPress=(rating)=>
@@ -27,9 +32,9 @@ export default function Profile({ route, navigation }) {
 
     const submitReview = () => {
         const reviewDetails = {
-            forUser: userId,
+            forUser: "622a566c859cdbd91539ff5a",
             rating: starCount,
-            review,
+            comment: review,
         }
         createReview(reviewDetails)
             .then(response => {
@@ -62,7 +67,7 @@ export default function Profile({ route, navigation }) {
                       source={require("../../../assets/user-1.png")}
                       style={Styles.icons}
                   ></Image>
-                  <Text style={Styles.driverName}>Ana</Text>
+                  <Text style={Styles.driverName}>{ user.firstName + " " + user.lastName }</Text>
                   <Text style={Styles.profileText}>Rating (154)</Text>
                   <View style={Styles.starRating}>
                       <StarRating
@@ -75,31 +80,30 @@ export default function Profile({ route, navigation }) {
                   <Text style={Styles.profileText}>Jobs : {totalJobs}</Text>
               </ImageBackground>
           </View>
-          <Text style={Styles.ReviewHeader}>They are saying...</Text>
           <View>
-              <View style={Styles.starRating}>
-                  <StarRating
-                      disabled={false}
-                      maxStars={5}
-                      starSize={33}
-                      rating={starCount}
-                      selectedStar={(rating) => onStarRatingPress(rating)}
-                  />
-              </View>
-              <View>
-                  <TextArea
-                      h={20}
-                      placeholder="Text Area Placeholder"
-                      w="75%"
-                      maxW="300"
-                      onChangeText={setReview}
-                  ></TextArea>
-              </View>
-                <View>
+                <View style={Styles.starRating}>
+                    <StarRating
+                        disabled={false}
+                        maxStars={5}
+                        starSize={33}
+                        rating={starCount}
+                        selectedStar={(rating) => onStarRatingPress(rating)}
+                  / >
+                </View>
+                <View mx={5} mt={3}>
+                    <TextArea
+                        h={20}
+                        placeholder="Text Area Placeholder"
+                        w="100%"
+                        onChangeText={setReview}
+                    ></TextArea>
+                </View>
+                <View m={5}>
                     <Button onPress={submitReview}>Add Review</Button>
                 </View>
           </View>
           <ScrollView style={Styles.scrollView}>
+                <Text style={Styles.ReviewHeader}>They are saying...</Text>
               <View style={Styles.parentContainer}>
                   <View style={Styles.childContainer}>
                       <Image

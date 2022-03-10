@@ -4,7 +4,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Search from './IndexComponents/Search';
 import Chat from './IndexComponents/Chat';
-import Profile from './IndexComponents/Profile';
+import Profile from './IndexComponents/ProfileComponent/Profile';
 import Main from './IndexComponents/HomeComponent/Home.DashBoard';
 import NotificationScreen from './IndexComponents/NotificationComponents/NotificationScreen';
 
