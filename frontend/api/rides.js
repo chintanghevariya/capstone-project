@@ -1,7 +1,7 @@
 import axios from 'axios';
 import * as Loc from "expo-location";
 import { GetCurrentLocation } from '../components/IndexComponents/HomeComponent/GetCurrentLocation';
-import { getToken } from '../helpers/Token';
+import { getToken } from '../helpers/token';
 import { getUser } from '../helpers/user'
 
 const API_URL =

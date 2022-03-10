@@ -6,8 +6,7 @@ import {
 } from "native-base";
 import { AuthProvider, AuthStateValue } from "./context/AuthContext";
 import Routes from './components/Routes';
-import Setting from "./components/Setting/Setting";
-import Chat from "./components/IndexComponents/Chat";
+
 
 // Define the config
 const config = {
@@ -22,9 +21,7 @@ export default function App() {
   return (
     <NativeBaseProvider>
       <AuthProvider>
-        {/* <Routes /> */}
-        <Setting/>
-        {/* <Chat/> */}
+        <Routes />
       </AuthProvider>
     </NativeBaseProvider>
   );
