@@ -11,7 +11,7 @@ export async function getUserById(userId){
     const token = await getToken()
     try {
         const request = await axios.get(
-            `${API_URL}/users/`,
+            `${API_URL}/users/${userId}`,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -48,7 +48,7 @@ export async function getReviewsOfUser(userId) {
     const token = await getToken();
     try {
         const request = await axios.get(
-            `${API_URL}/users/${userId}/review`,
+            `${API_URL}/users/${userId}/reviews`,
             {
                 headers: {
                     "Content-Type": "application/json",

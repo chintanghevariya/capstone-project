@@ -96,7 +96,8 @@ class UserService {
     async getReviewOfUser(userId) {
         const reviews = await Review.find({
             forUser: userId
-        });
+        })
+        .populate("fromUser fromUser");
         return reviews;
     }
 }

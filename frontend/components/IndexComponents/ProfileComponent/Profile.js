@@ -1,20 +1,21 @@
-import { ScrollView,Alert,TouchableOpacity,SafeAreaView,StyleSheet,Image,ImageBackground} from 'react-native'
+import { Alert,TouchableOpacity,SafeAreaView,StyleSheet,Image,ImageBackground} from 'react-native'
 import StarRating from 'react-native-star-rating';
-import { View, Text, TextArea, Button } from 'native-base';
+import { View, Text, ScrollView, Heading, TextArea, Button } from 'native-base';
 import React, { useState, useEffect } from "react";
-import { createReview, getUserById } from '../../../api/users';
+import { createReview, getUserById, getReviewsOfUser } from '../../../api/users';
 
 export default function Profile({ route, navigation }) {
 
     const { userId } = route;
 
     const [user, setUser] = useState({});
+    const [reviews, setReviews] = useState([]);
     const [starCount,setstarCount] = useState(4);
     const [totalJobs, setTotalJobs] = useState(102);
     const [review, setReview] = useState("");
 
     useEffect(() => {
-        getUserById(userId)
+        getUserById(userId === undefined ? "" : userId)
             .then(response => {
                 const [result, error] = response;
                 if (error) {
@@ -22,8 +23,21 @@ export default function Profile({ route, navigation }) {
                     return;
                 }
                 setUser(result.data.data.user);
+                getUserReviews(result.data.data.user._id);
             })
     }, [])
+
+    const getUserReviews = (id) => {
+        getReviewsOfUser(id)
+            .then(response => {
+                const [result, error] = response;
+                if (error) {
+                    console.error(error);
+                    return;
+                }
+                setReviews(result.data.data);
+            })
+    } 
     
     const onStarRatingPress=(rating)=>
     {
@@ -49,103 +63,96 @@ export default function Profile({ route, navigation }) {
 
     const logout = async () => {
         alert("Log out Successfully")
-        // AsyncStorage.removeItem("user");
+        // AsyncStorage.removeItemds("useasdfdsfdafr");
         // await SecureStore.deleteItemAsync("token");
         // authContext.logoutUser();
     };
 
 
   return (
-      <SafeAreaView style={Styles.container}>
+      <View height={"full"}>
+        <View height={"1/3"}>
           <Text style={Styles.header}>Profile</Text>
           <View style={Styles.profileContainer}>
               <ImageBackground
                   source={require("../../../assets/Home1.png")}
                   style={{ width: "100%", height: "100%" }}
               >
-                  <Image
-                      source={require("../../../assets/user-1.png")}
-                      style={Styles.icons}
-                  ></Image>
-                  <Text style={Styles.driverName}>{ user.firstName + " " + user.lastName }</Text>
-                  <Text style={Styles.profileText}>Rating (154)</Text>
+                <View flex={1} alignItems={'center'} marginTop={2}>
+                    <Heading>{ user.firstName + " " + user.lastName }</Heading>
+                    <Text>Ratings (154)</Text>
+                    <View style={Styles.starRating}>
+                        <StarRating
+                            disabled={false}
+                            maxStars={5}
+                            starSize={33}
+                            rating={starCount}
+                        />
+                    </View>
+                    <Text>Jobs : {totalJobs}</Text>
+                </View>
+              </ImageBackground>
+          </View>
+        </View>
+          {
+            userId !== undefined &&
+              (<View height={"1/3"}>
                   <View style={Styles.starRating}>
                       <StarRating
                           disabled={false}
                           maxStars={5}
                           starSize={33}
                           rating={starCount}
-                      />
+                          selectedStar={(rating) => onStarRatingPress(rating)}
+                    / >
                   </View>
-                  <Text style={Styles.profileText}>Jobs : {totalJobs}</Text>
-              </ImageBackground>
-          </View>
-          <View>
-                <View style={Styles.starRating}>
-                    <StarRating
-                        disabled={false}
-                        maxStars={5}
-                        starSize={33}
-                        rating={starCount}
-                        selectedStar={(rating) => onStarRatingPress(rating)}
-                  / >
+                  <View mx={5} mt={3}>
+                      <TextArea
+                          h={20}
+                          placeholder="Text Area Placeholder"
+                          w="100%"
+                          onChangeText={setReview}
+                      ></TextArea>
+                  </View>
+                  <View m={5}>
+                      <Button onPress={submitReview}>Add Review</Button>
+                  </View>
+            </View>)
+          }
+          <ScrollView height={"2/3"} marginTop={10}>
+                <Text margin={2} fontSize={"xl"} fontWeight={"bold"}>They are saying...</Text>
+                <View>
+                    {
+                        reviews.map(review => (
+                            <View style={Styles.childContainer} key={review._id}>
+                                <View>
+                                    <Text>
+                                        { review.fromUser.firstName + " " + review.fromUser.lastName }
+                                    </Text>
+                                </View>
+                                <View>
+                                    <StarRating
+                                        disabled={true}
+                                        maxStars={5}
+                                        starSize={20}
+                                        rating={review.rating}
+                                    />
+                                </View>
+                                <Text>
+                                    {review.comment}
+                                </Text>
+                            </View>
+                        ))
+                    }
                 </View>
-                <View mx={5} mt={3}>
-                    <TextArea
-                        h={20}
-                        placeholder="Text Area Placeholder"
-                        w="100%"
-                        onChangeText={setReview}
-                    ></TextArea>
-                </View>
-                <View m={5}>
-                    <Button onPress={submitReview}>Add Review</Button>
-                </View>
-          </View>
-          <ScrollView style={Styles.scrollView}>
-                <Text style={Styles.ReviewHeader}>They are saying...</Text>
-              <View style={Styles.parentContainer}>
-                  <View style={Styles.childContainer}>
-                      <Image
-                          style={Styles.reviewIcon}
-                          source={require("../../../assets/user-5.png")}
-                      ></Image>
-                      <Text> Excellent , safe and professional driver... </Text>
-                  </View>
-                  <View style={Styles.childContainer}>
-                      <Image
-                          style={Styles.reviewIcon}
-                          source={require("../../../assets/user-5.png")}
-                      ></Image>
-                      <Text> Excellent , safe and professional driver... </Text>
-                  </View>
-                  <View style={Styles.childContainer}>
-                      <Image
-                          style={Styles.reviewIcon}
-                          source={require("../../../assets/user-5.png")}
-                      ></Image>
-                      <Text> Excellent , safe and professional driver... </Text>
-                  </View>
-                  <View style={Styles.childContainer}>
-                      <Image
-                          style={Styles.reviewIcon}
-                          source={require("../../../assets/user-5.png")}
-                      ></Image>
-                      <Text> Excellent , safe and professional driver... </Text>
-                  </View>
-                  <View style={Styles.childContainer}>
-                      <Image
-                          style={Styles.reviewIcon}
-                          source={require("../../../assets/user-5.png")}
-                      ></Image>
-                      <Text> Excellent , safe and professional driver... </Text>
-                  </View>
-              </View>
           </ScrollView>
-          <TouchableOpacity onPress={logout} style={Styles.logout}>
+          {
+            userId === undefined &&
+            <TouchableOpacity onPress={logout} style={Styles.logout}>
               <Text style={Styles.logoutText}>Log Out</Text>
           </TouchableOpacity>
-      </SafeAreaView>
+          }
+      </View>
   );
 }
 
@@ -157,23 +164,16 @@ const Styles = StyleSheet.create({
     },
     ReviewHeader:{
         fontSize:22,  
-        fontWeight:'500',  
-        margin : '5%',
-        marginTop : '8%',
+        fontWeight:'500',
     },
     container:{
         flex: 1,
         width : "100%",
     },
-    parentContainer:{
-       // borderWidth : 0.5,
-
-    },
     childContainer:{
         padding:10,
-        marginLeft : "5%",
-        marginRight : "5%",
-        borderRadius : 20,
+        borderRadius : 2,
+        margin: "1%",
         borderWidth : 0.2,
         justifyContent: 'center',
         flexDirection: 'row',
@@ -198,7 +198,6 @@ const Styles = StyleSheet.create({
         alignSelf:'center',
         fontWeight: '900',
         fontSize: 28,
-        marginTop : '2%'
     },
     
     profileText:{
@@ -229,10 +228,9 @@ const Styles = StyleSheet.create({
         width :50,
         height:50,
     },
-
     profileContainer:{
         borderWidth : 1,
+        height: "100%"
         //backgroundColor: '#afb3ba',
-        height : '38%',
     }
 })
