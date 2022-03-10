@@ -93,7 +93,7 @@ class UserService {
         return {};
     }
 
-    getReviewOfUser(userId) {
+    async getReviewOfUser(userId) {
         const reviews = await Review.find({
             forUser: userId
         });
