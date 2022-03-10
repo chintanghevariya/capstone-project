@@ -91,6 +91,12 @@ export default function Main({ navigation }) {
         });
     }
 
+    const goToProfile = () => {
+        navigation.navigate("Profile", {
+            userId: "622a6256935a001986b8bdc4"
+        })
+    }
+
     return (
         <ScrollView style={Styles.container}>
             <View
@@ -148,7 +154,7 @@ export default function Main({ navigation }) {
                 <Text style={{ marginLeft: 20, fontSize: 20 }}>
                     Rides around you
                 </Text>
-                <Button>Go to other profile</Button>
+                <Button onPress={goToProfile}>Go to other profile</Button>
                 {
                     rides.map((ride, index) => (
                         <RideContainer

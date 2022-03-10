@@ -6,8 +6,7 @@ import { createReview, getUserById, getReviewsOfUser } from '../../../api/users'
 
 export default function Profile({ route, navigation }) {
 
-    const { userId } = route;
-
+    const [userId, setUserId] = useState("");
     const [user, setUser] = useState({});
     const [reviews, setReviews] = useState([]);
     const [starCount,setstarCount] = useState(4);
@@ -15,7 +14,9 @@ export default function Profile({ route, navigation }) {
     const [review, setReview] = useState("");
 
     useEffect(() => {
-        getUserById(userId === undefined ? "" : userId)
+        const userId = route.params === undefined ? "" : route.params.userId;
+        setUserId(userId)
+        getUserById(userId)
             .then(response => {
                 const [result, error] = response;
                 if (error) {
@@ -96,7 +97,7 @@ export default function Profile({ route, navigation }) {
         </View>
           {
             userId !== undefined &&
-              (<View height={"1/3"}>
+              (<View height={"1/4"} marginTop={10}>
                   <View style={Styles.starRating}>
                       <StarRating
                           disabled={false}
@@ -119,7 +120,7 @@ export default function Profile({ route, navigation }) {
                   </View>
             </View>)
           }
-          <ScrollView height={"2/3"} marginTop={10}>
+          <ScrollView height={userId === undefined ? "2/3" : '1/3'} marginTop={10}>
                 <Text margin={2} fontSize={"xl"} fontWeight={"bold"}>They are saying...</Text>
                 <View>
                     {

@@ -18,6 +18,7 @@ import AddToWallet from "./payment/AddToWallet";
 import RideDetails from "./RideDetailComponents/RideDetails";
 import AllRides from "./IndexComponents/SearchComponent/AllRides";
 import StartRide from "./IndexComponents/Rides/StartRide";
+import Profile from './IndexComponents/ProfileComponent/Profile';
 
 const Stack = createNativeStackNavigator();
 
@@ -62,6 +63,7 @@ export default function Routes() {
                           <Stack.Screen name="RideForm" component={PostRide} />
                           <Stack.Screen name="Wallet" component={Wallet} />
                           <Stack.Screen name="AddCard" component={AddCard} />
+                          <Stack.Screen name="Profile" component={Profile} />
                           <Stack.Screen
                               name="AddToWallet"
                               component={AddToWallet}

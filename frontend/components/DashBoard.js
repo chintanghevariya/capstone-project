@@ -32,7 +32,7 @@ export default class DashBoard extends Component {
                         iconName = focused
                             ? "notifications-circle"
                             : "notifications-circle-outline";
-                    } else if (route.name === "Profile") {
+                    } else if (route.name === "You") {
                         iconName = focused
                             ? "ios-person"
                             : "ios-person-outline";
@@ -68,7 +68,7 @@ export default class DashBoard extends Component {
                 options={{ headerShown: true, tabBarBadge: 1 }}
             />
             <Tab.Screen
-                name="Profile"
+                name="You"
                 component={Profile}
                 options={{ headerShown: true }}
             />

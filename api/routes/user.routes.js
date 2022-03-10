@@ -7,9 +7,10 @@ const { verifyToken } = require('../helpers/token');
 const userRouter = express.Router();
 
 // Get ride by id route
-userRouter.get("/", verifyToken, async function (req, res, next) {
+userRouter.get("/:userId", verifyToken, async function (req, res, next) {
     try {
-        const user = await userService.getUserById(req.user._id);
+        const userId = req.params.userId || req.user._id;
+        const user = await userService.getUserById(userId);
         httpResponse.sendSuccess(res, "User fetched successfully", { user });
     } catch (e) {
         httpResponse.sendFailure(res, e.message);
