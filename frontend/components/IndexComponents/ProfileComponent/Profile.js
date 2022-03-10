@@ -1,8 +1,8 @@
 import {View,Text, ScrollView,Alert,TouchableOpacity,SafeAreaView,StyleSheet,Image,ImageBackground} from 'react-native'
 import StarRating from 'react-native-star-rating';
 import { TextArea } from 'native-base';
-import React, {useState} from 'react';
-import { createReview } from '../../../api/users';
+import React, { useState, useEffect } from "react";
+import { createReview, getUserById } from '../../../api/users';
 
 export default function Profile({ route, navigation }) {
 
@@ -11,6 +11,14 @@ export default function Profile({ route, navigation }) {
     const [starCount,setstarCount] = useState(4);
     const [totalJobs, setTotalJobs] = useState(102);
     const [review, setReview] = useState("");
+
+    useEffect(() => {
+        getUserById(userId)
+            .then(response => {
+                const [result, error] = response;
+            })
+        
+    }, [])
     
     const onStarRatingPress=(rating)=>
     {

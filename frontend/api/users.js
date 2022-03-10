@@ -44,3 +44,21 @@ export async function createReview(reviewDetails) {
         return [null, e.message];
     }
 }
+
+export async function getReviewsOfUser(userId) {
+    const token = await getToken();
+    try {
+        const request = await axios.get(
+            `${API_URL}/users/${userId}/review`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return [request, null];
+    } catch (e) {
+        return [null, e.message];
+    }
+}
