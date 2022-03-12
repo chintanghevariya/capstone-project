@@ -6,6 +6,13 @@ const { verifyToken } = require('../helpers/token');
 // Initialize router
 const userRouter = express.Router();
 
+// Get current user route
+userRouter.get("/", verifyToken, async function (req, res, next) {
+    const { user } = req;
+    console.log(user);
+    httpResponse.sendSuccess(res, "User retrieved successfully", { user })
+})
+
 // Get ride by id route
 userRouter.get("/:userId", verifyToken, async function (req, res, next) {
     try {

@@ -7,7 +7,10 @@ import { createReview, getUserById, getReviewsOfUser } from '../../../api/users'
 export default function Profile({ route, navigation }) {
 
     const [userId, setUserId] = useState("");
+    const [showReviewForm, setShowReviewForm] = useState(false);
+    const [ratingStars, setRatingStars] = useState(0);
     const [user, setUser] = useState({});
+    const [currentUser, setCurrentUser] = useState({});
     const [reviews, setReviews] = useState([]);
     const [starCount,setstarCount] = useState(4);
     const [totalJobs, setTotalJobs] = useState(102);
@@ -15,7 +18,17 @@ export default function Profile({ route, navigation }) {
 
     useEffect(() => {
         const userId = route.params === undefined ? "" : route.params.userId;
-        setUserId(userId)
+        setUserId(userId);
+        setShowReviewForm(route.params !== undefined);
+        getUserById("")
+            .then(response => {
+                const [result, error] = response;
+                if (error) {
+                    console.error("Current User", error);
+                    return;
+                }
+                setCurrentUser(result.data.data.user);
+            })
         getUserById(userId)
             .then(response => {
                 const [result, error] = response;
@@ -36,7 +49,9 @@ export default function Profile({ route, navigation }) {
                     console.error(error);
                     return;
                 }
+                const ratingStars = getRatingStar(result.data.data);
                 setReviews(result.data.data);
+                setRatingStars(ratingStars)
             })
     } 
     
@@ -47,7 +62,7 @@ export default function Profile({ route, navigation }) {
 
     const submitReview = () => {
         const reviewDetails = {
-            forUser: "622a566c859cdbd91539ff5a",
+            forUser: userId,
             rating: starCount,
             comment: review,
         }
@@ -58,8 +73,26 @@ export default function Profile({ route, navigation }) {
                     console.log(error);
                     return;
                 }
-                console.log("DONE");
+                const review = {
+                    ...reviewDetails,
+                    fromUser: currentUser
+                };
+                const newReviews = [ ...reviews ];
+                newReviews.unshift(review)
+                setReviews(newReviews)
+                setstarCount(0);
+                setReview("");
+                setRatingStars(newReviews);
             })
+    }
+
+    const getRatingStar = (allReviews) => {
+        let sum = 0;
+        for (const review of allReviews) {
+            sum += review.rating;
+        }
+        const avg = sum / allReviews.length;
+        return avg;
     }
 
     const logout = async () => {
@@ -81,22 +114,22 @@ export default function Profile({ route, navigation }) {
               >
                 <View flex={1} alignItems={'center'} marginTop={2}>
                     <Heading>{ user.firstName + " " + user.lastName }</Heading>
-                    <Text>Ratings (154)</Text>
+                    <Text>Ratings ({ reviews.length })</Text>
                     <View style={Styles.starRating}>
                         <StarRating
                             disabled={false}
                             maxStars={5}
                             starSize={33}
-                            rating={starCount}
+                            rating={ratingStars}
                         />
                     </View>
-                    <Text>Jobs : {totalJobs}</Text>
+                    <Text>Jobs : {user.numberOfRides}</Text>
                 </View>
               </ImageBackground>
           </View>
         </View>
           {
-            userId !== undefined &&
+            showReviewForm === true &&
               (<View height={"1/4"} marginTop={10}>
                   <View style={Styles.starRating}>
                       <StarRating
@@ -105,7 +138,7 @@ export default function Profile({ route, navigation }) {
                           starSize={33}
                           rating={starCount}
                           selectedStar={(rating) => onStarRatingPress(rating)}
-                    / >
+                    />
                   </View>
                   <View mx={5} mt={3}>
                       <TextArea
@@ -148,10 +181,10 @@ export default function Profile({ route, navigation }) {
                 </View>
           </ScrollView>
           {
-            userId === undefined &&
+            showReviewForm === false &&
             <TouchableOpacity onPress={logout} style={Styles.logout}>
-              <Text style={Styles.logoutText}>Log Out</Text>
-          </TouchableOpacity>
+                <Text style={Styles.logoutText}>Log Out</Text>
+            </TouchableOpacity>
           }
       </View>
   );
