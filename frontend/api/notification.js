@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getToken } from "../helpers/Token";
+import { getToken } from "../helpers/token";
 
 const API_URL =
     Platform.OS === "android"
