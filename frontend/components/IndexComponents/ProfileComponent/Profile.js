@@ -1,10 +1,15 @@
 import { Alert,TouchableOpacity,SafeAreaView,StyleSheet,Image,ImageBackground} from 'react-native'
 import StarRating from 'react-native-star-rating';
 import { View, Text, ScrollView, Heading, TextArea, Button } from 'native-base';
-import React, { useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { createReview, getUserById, getReviewsOfUser } from '../../../api/users';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store';
+import { AuthContext } from '../../../context/AuthContext';
 
 export default function Profile({ route, navigation }) {
+
+    const authContext = useContext(AuthContext);
 
     const [userId, setUserId] = useState("");
     const [showReviewForm, setShowReviewForm] = useState(false);
@@ -96,10 +101,9 @@ export default function Profile({ route, navigation }) {
     }
 
     const logout = async () => {
-        alert("Log out Successfully")
-        // AsyncStorage.removeItemds("useasdfdsfdafr");
-        // await SecureStore.deleteItemAsync("token");
-        // authContext.logoutUser();
+        AsyncStorage.removeItem("user");
+        await SecureStore.deleteItemAsync("token");
+        authContext.logoutUser();
     };
 
 
