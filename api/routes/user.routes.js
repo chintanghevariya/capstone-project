@@ -13,6 +13,16 @@ userRouter.get("/", verifyToken, async function (req, res, next) {
     httpResponse.sendSuccess(res, "User retrieved successfully", { user })
 })
 
+// Edit user route
+userRouter.put("/", verifyToken, async function (req, res, next) {
+    try {
+        const response = await userService.updateUser(req.user._id, req.body);
+        httpResponse.sendSuccess(res, "User updated successfully", response);
+    } catch (e) {
+        httpResponse.sendFailure(res, e.message);
+    }
+})
+
 // Get ride by id route
 userRouter.get("/:userId", verifyToken, async function (req, res, next) {
     try {

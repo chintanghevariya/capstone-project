@@ -100,6 +100,14 @@ class UserService {
         .populate("fromUser fromUser");
         return reviews;
     }
+
+    async updateUser(userId, properties) {
+        await User.findOneAndUpdate(
+            { _id: userId },
+            properties
+        );
+        return {};
+    }
 }
 
 module.exports = new UserService;
