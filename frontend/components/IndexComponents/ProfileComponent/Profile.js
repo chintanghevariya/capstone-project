@@ -6,6 +6,7 @@ import { createReview, getUserById, getReviewsOfUser } from '../../../api/users'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store';
 import { AuthContext } from '../../../context/AuthContext';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default function Profile({ route, navigation }) {
 
@@ -105,11 +106,30 @@ export default function Profile({ route, navigation }) {
         authContext.logoutUser();
     };
 
+    const navigateToSettings = () => {
+        navigation.navigate("Settings")
+    }
+
 
   return (
       <View height={"full"}>
         <View height={"1/3"}>
-          <Text style={Styles.header}>Profile</Text>
+            <View
+                padding={3}
+                flexDirection="row"
+                justifyContent={"space-between"}>
+                    <View>
+                        <Heading fontSize="2xl">
+                            Profile
+                        </Heading>
+                    </View>
+                {
+                    showReviewForm === false &&
+                    <Button backgroundColor='transparent' padding={0} onPress={navigateToSettings}>
+                        <Icon name="cog" size={32} />
+                    </Button>
+                }
+            </View>
           <View style={Styles.profileContainer}>
               <ImageBackground
                   source={require("../../../assets/Home1.png")}

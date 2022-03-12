@@ -23,7 +23,7 @@ export default function Setting() {
                             }>
             <View style={Styles.container}>
                 <View style={Styles.flexA}>
-                    <Text style={Styles.fText}>{set} Settings</Text>
+                    <Text style={Styles.fText}>Settings</Text>
                 </View>
                 <View style={Styles.parentContainer}>
                     <View style={Styles.profileContainer}>
@@ -139,7 +139,7 @@ const Styles = StyleSheet.create({
         alignItems: 'stretch'
     },
     flexA:{
-        marginTop : "20%",
+        marginTop : "5%",
         marginLeft : "10%",
         alignItems: 'stretch'
 

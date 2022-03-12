@@ -5,7 +5,7 @@ import Login from "./login";
 import Signup from "../components/Signup";
 import DashBoard from "../components/DashBoard";
 import SplashScreen from "./SplashScreen";
-import { getToken } from "../helpers/token";
+import { getToken } from "../helpers/Token";
 import ChatScreen from "./IndexComponents/ChatScreen";
 import { AuthContext } from "../context/AuthContext";
 import PostRide from "./IndexComponents/HomeComponent/PostRide";
@@ -19,6 +19,7 @@ import RideDetails from "./RideDetailComponents/RideDetails";
 import AllRides from "./IndexComponents/SearchComponent/AllRides";
 import StartRide from "./IndexComponents/Rides/StartRide";
 import Profile from './IndexComponents/ProfileComponent/Profile';
+import Setting from "./Setting/Setting";
 
 const Stack = createNativeStackNavigator();
 
@@ -77,6 +78,9 @@ export default function Routes() {
                                   headerBackTitleVisible: false,
                               })}
                           />
+                          <Stack.Screen
+                            name="Settings"
+                            component={Setting} />
                           <Stack.Screen
                             name="StartRide"
                             component={StartRide} />
