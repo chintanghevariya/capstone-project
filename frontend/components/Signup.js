@@ -8,7 +8,7 @@ import {
 import { Button, Heading, Input, View, Text, Radio, Stack } from 'native-base';
 import axios from 'axios';
 import { AuthContext } from "../context/AuthContext";
-import { setToken } from "../helpers/token";
+import { setToken } from "../helpers/Token";
 import { setUser } from "../helpers/user";
 import { registerUser } from "../api/auth";
 

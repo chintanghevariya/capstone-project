@@ -3,7 +3,7 @@ import { Button } from 'native-base'
 import axios from 'axios';
 import { Alert, View, Text, ImageBackground, TouchableOpacity, Dimensions, StyleSheet, TextInput } from 'react-native'
 import Loading from './Loading';
-import { setToken } from "../helpers/token";
+import { setToken } from "../helpers/Token";
 import { setUser } from "../helpers/user"
 import { AuthContext } from '../context/AuthContext';
 
@@ -79,7 +79,7 @@ export default function Login({ navigation }) {
                 };
                 setIsLoading(true);
                 const { data } = await axios.post(
-                    `http://192.168.0.158:4000/users/login`,
+                    `http://localhost:4000/users/login`,
                     {
                         email, // R@P.com
                         password, // Rutik123
