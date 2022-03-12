@@ -18,7 +18,6 @@ export default function Profile({ route, navigation }) {
     const [currentUser, setCurrentUser] = useState({});
     const [reviews, setReviews] = useState([]);
     const [starCount,setstarCount] = useState(4);
-    const [totalJobs, setTotalJobs] = useState(102);
     const [review, setReview] = useState("");
 
     useEffect(() => {
